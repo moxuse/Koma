@@ -6,5 +6,4 @@ export function registerApi(isDev: boolean): void {
     if (isDev) { console.log(arg) };
     e.reply('nyan', 'pong!');
   });
-
 }
