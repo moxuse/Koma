@@ -1,5 +1,6 @@
 import path from 'path';
-import { BrowserWindow, app, session } from 'electron';
+import { BrowserWindow, app, ipcMain, session } from 'electron';
+import { registerApi } from './api';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -10,7 +11,7 @@ const execPath =
 
 // 開発モードの場合はホットリロードする
 if (isDev) {
-  require('electron-reload')(__dirname, {
+  require('electron-reload')(__dirname + 'dist', {
     electron: path.resolve(__dirname, execPath),
     forceHardReset: true,
     hardResetMethod: 'exit',
@@ -20,8 +21,13 @@ if (isDev) {
 // make BrowserWindow
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
+    frame: false, // frameless
+    backgroundColor: '#2e2c29',
     webPreferences: {
-      preload: path.resolve(__dirname, 'settings.js'),
+      webSecurity: false,
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.resolve(__dirname, 'preload.js'),
     },
   });
 
@@ -30,13 +36,17 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
 
+  registerApi(isDev);
+
   // load app
   mainWindow.loadFile('index.html');
+
+  
 };
 
 app.whenReady().then(async () => {
   // if (isDev) { }
-  createWindow();
+  createWindow();  
 });
 
 // when close window

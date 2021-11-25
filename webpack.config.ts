@@ -15,7 +15,7 @@ const config: Configuration = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.json'],
   },
   entry: {
-    app: './src/desktop/index.tsx',
+    app: './src/view/index.tsx',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -50,7 +50,7 @@ const config: Configuration = {
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/desktop/index.html',
+      template: './src/view/index.html',
       filename: 'index.html',
       scriptLoading: 'blocking',
       inject: 'body',
