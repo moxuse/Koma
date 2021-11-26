@@ -1,8 +1,7 @@
 import { IpcMainEvent } from 'electron';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-
-import './styles.css';
+import WaveTables from './components/WaveTables';
 
 const App = (): JSX.Element => {
   useEffect(() => {
@@ -11,12 +10,16 @@ const App = (): JSX.Element => {
     })    
     window.api.nyan('fooo!');
   }, []);
-
+  
   return (
     <div>
-      <h1>Hello.</h1>
+      <WaveTables {...[{id: 'fooo'}]} />
     </div>
   );
+};
+
+App.defaultProps = {
+  props: [{ id: 'fooo' }]
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));

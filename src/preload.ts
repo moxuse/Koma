@@ -6,7 +6,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
   "api", {    
     nyan: async (data: string) => ipcRenderer.send('nyan', data),
-
     on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv))
   }
 );

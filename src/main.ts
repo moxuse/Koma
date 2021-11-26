@@ -23,7 +23,7 @@ if (isDev) {
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     frame: false, // frameless
-    backgroundColor: '#2e2c29',
+    backgroundColor: '#2e2c2c',
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,

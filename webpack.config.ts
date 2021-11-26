@@ -2,7 +2,6 @@ import path from 'path';
 import { Configuration } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const config: Configuration = {
   mode: 'development',
@@ -19,7 +18,7 @@ const config: Configuration = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: './', // webpack@5 + electron では必須の設定
+    publicPath: './', // webpack@5 + electron
     filename: '[name].js',
     assetModuleFilename: 'assets/[name][ext]',
   },
@@ -32,27 +31,19 @@ const config: Configuration = {
       },
       {
         test: /\.css$/,
-        use: [
-          /* セキュリティ対策のため style-loader は使用しない **/
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: { sourceMap: true },
-          },
-        ],
+        use:  ['style-loader', 'css-loader']
       },
       {
         test: /\.(bmp|ico|gif|jpe?g|png|svg|ttf|eot|woff?2?)$/,
         type: 'asset/resource',
-      },
+      }
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: './src/view/index.html',
       filename: 'index.html',
-      scriptLoading: 'blocking',
+      scriptLoading: 'module',
       inject: 'body',
       minify: false,
     }),
