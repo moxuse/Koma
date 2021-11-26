@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import WaveTable from '../WaveTable';
 
 import styled from 'styled-components';
@@ -12,12 +12,16 @@ export type WaveTableProps = {
 };
 
 const WaveTables = ({ props }: { props: Array<WaveTableProps> }): JSX.Element => {
+  useEffect(() => {
+    window.api.openFileDialog();
+  })
+  
   return (
     <WaveTableContainer>
       <ul>
       { props.map(wave => {
           return (<WaveTable {...wave} key={ wave.id } />)
-      }) }
+        }) }
       </ul>
     </WaveTableContainer>
   );

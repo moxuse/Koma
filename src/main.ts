@@ -1,6 +1,6 @@
 import path from 'path';
 import { BrowserWindow, app, ipcMain, session } from 'electron';
-import { registerApi } from './io/api';
+import registerApi from './io/registerApi';
 // import './view/preload';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -36,7 +36,7 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
   }
 
-  registerApi(isDev);
+  registerApi(mainWindow, isDev);
 
   // load app
   mainWindow.loadFile('index.html');
