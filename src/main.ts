@@ -1,6 +1,7 @@
 import path from 'path';
 import { BrowserWindow, app, ipcMain, session } from 'electron';
-import { registerApi } from './api';
+import { registerApi } from './io/api';
+// import './view/preload';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -9,7 +10,7 @@ const execPath =
     ? '../node_modules/electron/dist/electron.exe'
     : '../node_modules/.bin/electron';
 
-// 開発モードの場合はホットリロードする
+// hot reload elecron
 if (isDev) {
   require('electron-reload')(__dirname + 'dist', {
     electron: path.resolve(__dirname, execPath),
@@ -31,17 +32,14 @@ const createWindow = () => {
     },
   });
 
-  if (isDev) {
-    // devの場合はデベロッパーツールを開く
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+  if (isDev) {    
+    mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
   }
 
   registerApi(isDev);
 
   // load app
   mainWindow.loadFile('index.html');
-
-  
 };
 
 app.whenReady().then(async () => {

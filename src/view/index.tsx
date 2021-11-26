@@ -1,15 +1,15 @@
 import { IpcMainEvent } from 'electron';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import './styles.css';
 
 const App = (): JSX.Element => {
   useEffect(() => {
-    window.api.on('nyan', (e: IpcMainEvent, arg: any[]) => {
+    window.api.on('nyan', (_: IpcMainEvent, arg: any[]) => {
       console.log(arg);
     })    
-    window.api.nyan('Ping!');
+    window.api.nyan('fooo!');
   }, []);
 
   return (
