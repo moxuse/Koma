@@ -1,23 +1,18 @@
 
-import React from 'react';  
-import { WaveTableProps } from '../WaveTables';
-
+import React from 'react';
+import Table from '../../model/Table';
 import styled from 'styled-components';
 
 const WaveTableContainer = styled.div`
   width: 100%;
 `;
 
-const WaveTable = (props: WaveTableProps): JSX.Element =>  {
+const WaveTable = ({ table }: { table: Table }): JSX.Element =>  {
   return (
     <WaveTableContainer>
-      { props.id }
+      { table.getId() }
     </WaveTableContainer>
   )
 }
-
-WaveTable.defaultProps = {
-  props: { id: 'fooo' },
-};
 
 export default WaveTable;

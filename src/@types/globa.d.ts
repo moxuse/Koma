@@ -8,6 +8,7 @@ declare global {
   type IpcEvent = (e: IpcMainEvent, arg: any[]) => void;
 
   interface ContextBridge {
+    loadStore: () => void,
     openFileDialog: () => void,
     on: (channel: string, callback: IpcEvent) => void;
   }
