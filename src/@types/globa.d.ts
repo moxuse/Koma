@@ -9,7 +9,8 @@ declare global {
 
   interface ContextBridge {
     openFileDialog: () => void,
-    nyan: any,
-    on: (channel: string , callback: IpcEvent) => void
+    on: (channel: string, callback: IpcEvent) => void;
   }
 }
+
+

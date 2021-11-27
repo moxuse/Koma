@@ -1,5 +1,6 @@
 {
   "extends": ".",
+  "baseUrl": "./src",
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "dist"

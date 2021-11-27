@@ -4,7 +4,7 @@ import WaveTable from '../WaveTable';
 import styled from 'styled-components';
 
 const WaveTableContainer = styled.div`
-    width: 100%;
+  width: 100%;
 `;
 
 export type WaveTableProps = {
@@ -12,10 +12,6 @@ export type WaveTableProps = {
 };
 
 const WaveTables = ({ props }: { props: Array<WaveTableProps> }): JSX.Element => {
-  useEffect(() => {
-    window.api.openFileDialog();
-  })
-  
   return (
     <WaveTableContainer>
       <ul>
