@@ -1,50 +1,78 @@
+import { ActionCreator, Dispatch, Action } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk'; 
 import TableList from '../model/TableList';
+import Table from '../model/Table';
 
-export const LOAD_STORE_REQUEST = 'DELETE_VIDEOS_REQUEST'
-export const loadStoreRequest = () => {
-    return { type: LOAD_STORE_REQUEST, isFetching: true }
+export interface LoadStoreRequest {
+  type: 'LOAD_STORE_REQUEST', payload: { isFetching: true }
 }
 
-export const LOAD_STORE_SUCCESS = 'DELETE_VIDEOS_SUCCESS'
-const loadStoreSuccess = (tables: TableList) => {
-  return {
-    type: LOAD_STORE_SUCCESS,
-    isFetching: false,
-    tables: tables
-  }
+type LoadStoreSuccessPayload = {
+  isFetching: boolean,
+  tables: TableList
 }
 
-export const LOAD_STORE_FAILURE = 'LOAD_STORE_FAILURE'
-const loadStoreFailure = (error: string) => {
-  return {
-    type: LOAD_STORE_FAILURE,
-    isFetching: false,
-    error: error
-  }
+export interface LoadStoreSuccess {
+  type: 'LOAD_STORE_SUCCESS';
+  payload: LoadStoreSuccessPayload;
 }
 
-export type LoadStoreAction = ReturnType<
-    typeof loadStoreRequest |
-    typeof loadStoreSuccess |
-    typeof loadStoreFailure
->;
+type LoadStoreErrorPayload = {
+  isFetching: boolean,
+  error: string
+}
 
-export const loadStore = () => {
-  return (dispatch: any) => {
-    dispatch(loadStoreRequest())
-    
-    return new Promise((resolve, reject) => {
-      window.api.on('loadStoreSucseed', (_, arg: any[]) => {
-        dispatch(loadStoreSuccess(
-          new TableList(arg[0])
-        ));
-        resolve(arg[0]);
-      });
-      window.api.on('loadStoreFailed', (_, arg: any[]) => {
-        dispatch(loadStoreFailure(arg[0]));
-        reject(arg[0]);
-      });
-      window.api.loadStore();
-    })    
-  }
+export interface LoadStoreFailure {
+  type: 'LOAD_STORE_FAILURE',
+  payload: LoadStoreErrorPayload
+}
+
+export type LoadStoreAction = LoadStoreRequest | LoadStoreSuccess | LoadStoreFailure;
+
+/**
+ * Action Creator
+ */
+ export const loadStoreRequest: ActionCreator<LoadStoreAction> = (): LoadStoreAction => ({
+  type: 'LOAD_STORE_REQUEST',
+  payload: { isFetching: true }
+} as LoadStoreAction);
+
+export const loadStoreSuccess: ActionCreator<LoadStoreAction> = (
+  payload: LoadStoreSuccessPayload
+): LoadStoreAction => ({
+  type: 'LOAD_STORE_SUCCESS',
+  payload: payload
+} as LoadStoreAction);
+
+export const loadStoreFailure: ActionCreator<LoadStoreAction> = (
+  payload: LoadStoreErrorPayload
+): LoadStoreAction => ({
+  type: 'LOAD_STORE_FAILURE',
+  payload: payload
+} as LoadStoreAction);
+
+export const loadStore = (): ThunkAction<void, any, undefined, LoadStoreAction> => (
+  dispatch: Dispatch<Action>
+) => {
+  dispatch(loadStoreRequest({
+    isFetching: true,
+  }))
+  new Promise((resolve, reject) => {
+    window.api.on('loadStoreSucseed', (_, arg : any[]) => {
+      const list = new TableList.newFromTable(arg.tables.map(v => new Table(v)));
+      dispatch(loadStoreSuccess({
+        isFetching: false,
+        tables: list
+      }));
+      resolve(arg[0]);
+    });
+    window.api.on('loadStoreFailed', (_, error) => {
+      dispatch(loadStoreFailure({
+        isFetching: false,
+        error: error
+      }));
+      reject(error);
+    });
+    window.api.loadStore();
+  })
 }

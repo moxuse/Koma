@@ -3,56 +3,59 @@ import Table from "../model/table";
 import { ReadTableAction } from "../actions/readTable";
 import { LoadStoreAction } from "../actions/loadStore";
 
-import {
-  READ_TABLE_REQUEST, READ_TABLE_SUCCESS, READ_TABLE_FAILURE
-} from '../actions/readTable';
-import {
-  LOAD_STORE_REQUEST, LOAD_STORE_SUCCESS, LOAD_STORE_FAILURE
-} from '../actions/loadStore';
 import TableList from "../model/TableList";
 
-type TablesAction = ReadTableAction | LoadStoreAction;
-
-// const init = List(new Table({id:'', filePath: ''}));
-
-const initalState = {
+const storeInitalState = {
   isFetching: false,
-  tables: [],
+  item: undefined,
 }
 
-const tables = (state = initalState, action: any) => {
+export const loadStore = (state = storeInitalState, action: LoadStoreAction) => {
+  console.log('redux:0', state, action.type, action.payload);
   switch (action.type) {
-    case LOAD_STORE_REQUEST:
+    case 'LOAD_STORE_REQUEST':
       return {
-          isFetching: true
-        }
-    case LOAD_STORE_SUCCESS:
-      return {
-        isFetching: false,
-        tables: action.tables
+        isFetching: action.payload.isFetching,
       }
-    case LOAD_STORE_FAILURE:
+    case 'LOAD_STORE_SUCCESS':
       return {
-        isFetching: false,
-        tables: action.items
+        isFetching: action.payload.isFetching,
+        tables: action.payload.tables,
       }
-    case READ_TABLE_REQUEST:
+    case 'LOAD_STORE_FAILURE':
       return {
-        isFetching: true
+        isFetching: action.payload.isFetching,
+        error: action.payload.error
       }
-    case READ_TABLE_SUCCESS:
-      return {
-          isFetching: false,
-          item: action.item
-        }
-    case READ_TABLE_FAILURE:
-      return {
-          isFetching: false,
-          error: action.error
-      }      
     default:
-      return state
+      return state;
   }
 }
 
-export default tables;
+const tablesInitalState = {
+  isFetching: false,
+  item: [],
+}
+
+export const tables = (state = tablesInitalState, action: ReadTableAction) => {
+  switch (action.type) {
+    case 'READ_TABLE_REQUEST':
+      return {
+        isFetching: action.payload.isFetching,
+      }
+    case 'READ_TABLE_SUCCESS':
+      return {
+        isFetching: action.payload.isFetching,
+        item: action.payload.item
+      }
+    case 'READ_TABLE_FAILURE':
+      return {
+        isFetching: action.payload.isFetching,
+        error: action.payload.error
+      }      
+    default:
+      return state;
+  }
+}
+
+

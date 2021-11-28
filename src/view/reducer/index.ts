@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
-import tables from './tables'
+import { loadStore, tables } from './tables'
 
 const rootReducer = combineReducers({
-  tables
+  // tables,
+  loadStore
 })
 
 export default rootReducer

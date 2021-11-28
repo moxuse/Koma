@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import rootReducer from './reducer';
 import WaveTables from './components/WaveTables';
-import { readTable } from './actions/readTable'
+import { loadStore } from './actions/loadStore';
 import Table from './model/Table';
 
 const store = createStore(
@@ -15,14 +15,14 @@ const store = createStore(
   applyMiddleware(thunk, logger)
 )
 
-store.dispatch(readTable());
+store.dispatch(loadStore());
 
 const App = (): JSX.Element => {
   return (
     <Provider store = { store }>
       <div className = "App">
         <WaveTables></WaveTables>
-      </div>s
+      </div>
     </Provider>
   );
 };

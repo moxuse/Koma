@@ -1,15 +1,15 @@
 import fs from "fs";
 import TableList from "../view/model/TableList";
 
-const settingsPath = require(__dirname + '../store.json');
+const settings = require(__dirname + '\/../store.json');
 
 type StoreData = TableList;
 
 export const loadStore = (): Promise<StoreData> => {
   return new Promise((resolve, reject) => {
-    let json = fs.readFileSync(settingsPath, 'utf8');
-    if (json) {
-      return resolve(JSON.parse(json));    
+    // let json = settingsPath; //fs.readFileSync(settingsPath, 'utf8');
+    if (settings) {
+      return resolve(settings);    
     }    
     return reject('couldn\'t load store.json...');
     });

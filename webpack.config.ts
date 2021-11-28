@@ -2,6 +2,7 @@ import path from 'path';
 import { Configuration } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyPlugin from "copy-webpack-plugin";
 
 const config: Configuration = {
   mode: 'development',
@@ -47,6 +48,11 @@ const config: Configuration = {
       inject: 'body',
       minify: false,
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: "./store.json", to: "./" }
+      ],
+    })
   ],
   devtool: 'inline-source-map',
 };

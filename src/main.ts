@@ -1,9 +1,20 @@
 import path from 'path';
 import { BrowserWindow, app, ipcMain, session } from 'electron';
+import loadDevtool from 'electron-load-devtool';
 import registerApi from './io/registerApi';
-// import './view/preload';
+const os = require('os');
 
 const isDev = process.env.NODE_ENV === 'development';
+
+// debugger load
+const reactDevToolsPath = path.join(
+  os.homedir(),
+  '/Library/Application\ Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.21.0_0'
+)
+const reduxDevToolsPath = path.join(
+  os.homedir(),
+  '/Library/Application\ Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.2_0'
+)
 
 const execPath =
   process.platform === 'win32'
@@ -32,7 +43,7 @@ const createWindow = () => {
     },
   });
 
-  if (isDev) {    
+  if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
   }
 
@@ -40,11 +51,16 @@ const createWindow = () => {
 
   // load app
   mainWindow.loadFile('index.html');
+  
 };
 
 app.whenReady().then(async () => {
   // if (isDev) { }
-  createWindow();  
+  createWindow();
+  if (isDev) {
+    // await session.defaultSession.loadExtension(reactDevToolsPath);
+    // await session.defaultSession.loadExtension(reduxDevToolsPath);
+  }
 });
 
 // when close window

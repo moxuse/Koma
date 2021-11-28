@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import WaveTable from '../WaveTable';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
@@ -17,20 +17,22 @@ const WaveTables = (
     tables: TableList,
     handleReadTable: any
   }): JSX.Element => {
-    handleReadTable();
+    // handleReadTable();
   return (
     <WaveTableContainer>
       <ul>
-      { tables.getTables().map((table: Table) => {
-        return (<WaveTable table={table} key={ table.id } />)
-        }) }
+        {(!isFetching && tables) ? tables.getTables().map((table: Table) => {
+          return (<WaveTable table={table} key={table.id} />)
+        }) : <p>loading...</p>}
       </ul>
     </WaveTableContainer>
   );
 };
 
-function mapStateToProps({ tables }: {tables: TableList}) {
+function mapStateToProps({ loadStore: { isFetching, tables } }: {loadStore:{ isFetching: boolean, tables: TableList }}) {
+  console.log('in wavetables', isFetching, tables);
   return {
+    isFetching: isFetching,
     tables: tables,
   }
 }

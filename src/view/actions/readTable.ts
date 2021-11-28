@@ -1,41 +1,61 @@
+import { ActionCreator, Dispatch, Action } from 'redux';
 import Table from '../model/Table';
 
-export const READ_TABLE_REQUEST = 'READ_TABLE_REQUEST';
-export const readTableRequest = () => {
-  return {    
-    type: READ_TABLE_REQUEST,
-    isFetching: true
-  }
+export type ItemPayload = {
+  isFetching: true;
+  item: Table;
+};
+
+export interface ReadTableRequest extends Action {
+  type: 'READ_TABLE_REQUEST',
+  payload: ItemPayload
 }
 
-export const READ_TABLE_SUCCESS = 'READ_TABLE_SUCCESS';
-const readTableSuccess = (response: Table) => {
-  return {
-    type: READ_TABLE_SUCCESS,
-    isFetching: false,
-    item: response
-  }
+export interface ReadTableSuccess extends Action {
+  type: 'READ_TABLE_SUCCESS',
+  payload: ItemPayload
 }
 
-export const READ_TABLE_FAILURE = 'READ_TABLE_FAILURE';
-const readTableFailure = (error: string) => {
-  return {
-    type: READ_TABLE_FAILURE,
-    isFetching: false,
-    error: error
-  }
+export type ErrorPayload = {
+  isFetching: true;
+  error: string;
+};
+
+export interface ReadTableFailure extends Action {
+  type: 'READ_TABLE_FAILURE',
+  payload: ErrorPayload
 }
 
-export type ReadTableAction = ReturnType<
-    typeof readTableRequest |
-    typeof readTableSuccess |
-    typeof readTableFailure
->;
+export type ReadTableAction = ReadTableRequest | ReadTableSuccess | ReadTableFailure;
+
+/**
+ * Action Creator
+ */
+export const readTableRequest: ActionCreator<ReadTableAction> = (
+  payload: ItemPayload
+): ReadTableAction => ({
+  type: 'READ_TABLE_REQUEST',
+  payload
+} as ReadTableAction);
+
+export const readTableSuccess: ActionCreator<ReadTableAction> = (
+  payload: ItemPayload
+): ReadTableAction => ({
+  type: 'READ_TABLE_SUCCESS',
+  payload 
+} as ReadTableAction);
+
+export const readTableFailure: ActionCreator<ReadTableAction> = (
+  payload: ErrorPayload
+): ReadTableAction => ({
+  type: 'READ_TABLE_FAILURE',
+  payload 
+} as ReadTableAction);
+  
 
 export const readTable = () => {
   return (dispatch: any) => {
     dispatch(readTableRequest())
-    
     return new Promise((resolve, reject) => {
       window.api.on('openFileDialogSucseed', (_, arg: any[]) => {
         dispatch(readTableSuccess(

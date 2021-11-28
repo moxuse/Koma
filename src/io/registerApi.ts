@@ -14,9 +14,10 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
    * 'loadStoreFailed'
    */
   ipcMain.on('loadStore', (e) => {
+    if (isDev) { console.log('loadstore!! in api'); }
     Utils.loadStore().then((tables: Tables) => {
       e.reply('loadStoreSucseed', tables);
-    }).catch((err: any) => {
+    }).catch((err: any) => {      
       e.reply('loadStoreFailed', err);
     })
   })
