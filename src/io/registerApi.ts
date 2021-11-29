@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import * as WavDecoder from 'wav-decoder';
-import Tables from '../view/model/TableList';
+import TableList from '../view/model/TableList';
 import * as Utils from './Utils';
 
 // API register
@@ -15,7 +15,7 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
    */
   ipcMain.on('loadStore', (e) => {
     if (isDev) { console.log('loadstore!! in api'); }
-    Utils.loadStore().then((tables: Tables) => {
+    Utils.loadStore().then((tables: TableList) => {
       e.reply('loadStoreSucseed', tables);
     }).catch((err: any) => {      
       e.reply('loadStoreFailed', err);
@@ -59,7 +59,7 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
       return WavDecoder.decode(buffer, {});
     }).then((audioData) => {
       e.reply('loadWaveTableSucseed', audioData);
-      if (isDev) { console.log(audioData); }
+      if (isDev) { console.log('loaded buffer:',audioData); }
     }).catch((err: any) => {
       e.reply('loadWaveTableFailed', err);
     })

@@ -1,5 +1,6 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
-import { ThunkAction } from 'redux-thunk'; 
+import { ThunkAction } from 'redux-thunk';
+import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table from '../model/Table';
 
@@ -57,22 +58,18 @@ export const loadStore = (): ThunkAction<void, any, undefined, LoadStoreAction> 
   dispatch(loadStoreRequest({
     isFetching: true,
   }))
-  new Promise((resolve, reject) => {
-    window.api.on('loadStoreSucseed', (_, arg : any[]) => {
-      const list = new TableList.newFromTable(arg.tables.map(v => new Table(v)));
-      dispatch(loadStoreSuccess({
-        isFetching: false,
-        tables: list
-      }));
-      resolve(arg[0]);
-    });
-    window.api.on('loadStoreFailed', (_, error) => {
-      dispatch(loadStoreFailure({
-        isFetching: false,
-        error: error
-      }));
-      reject(error);
-    });
-    window.api.loadStore();
-  })
+  window.api.on('loadStoreSucseed', (_, arg: { tables: Table[] }) => {
+    const list: TableList = TableList.newFromTable(List(arg.tables));
+    dispatch(loadStoreSuccess({
+      isFetching: false,
+      tables: list
+    }));
+  });
+  window.api.on('loadStoreFailed', (_, error) => {
+    dispatch(loadStoreFailure({
+      isFetching: false,
+      error: error
+    }));
+  });
+  window.api.loadStore();
 }

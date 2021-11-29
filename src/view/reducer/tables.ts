@@ -5,17 +5,17 @@ import { LoadStoreAction } from "../actions/loadStore";
 
 import TableList from "../model/TableList";
 
-const storeInitalState = {
+const storeInitialState = {
   isFetching: false,
   tables: undefined,
+  error: undefined
 }
 
-export const loadStore = (state = storeInitalState, action: LoadStoreAction) => {
-  console.log('redux:0', state, action.type, action.payload);
+export const loadStore = (state = storeInitialState, action: LoadStoreAction) => {
   switch (action.type) {
     case 'LOAD_STORE_REQUEST':
       return {
-        isFetching: action.payload.isFetching,
+        isFetching: state.isFetching,
       }
     case 'LOAD_STORE_SUCCESS':
       return {
@@ -32,12 +32,12 @@ export const loadStore = (state = storeInitalState, action: LoadStoreAction) => 
   }
 }
 
-const tablesInitalState = {
+const tablesInitialState = {
   isFetching: false,
   item: [],
 }
 
-export const tables = (state = tablesInitalState, action: ReadTableAction) => {
+export const tables = (state = tablesInitialState, action: ReadTableAction) => {
   switch (action.type) {
     case 'READ_TABLE_REQUEST':
       return {

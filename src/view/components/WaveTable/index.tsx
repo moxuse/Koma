@@ -10,7 +10,8 @@ const WaveTableContainer = styled.div`
 const WaveTable = ({ table }: { table: Table }): JSX.Element =>  {
   return (
     <WaveTableContainer>
-      { table.getId() }
+      <p>{ table.id }</p>
+      <p>{ table.filePath }</p>
     </WaveTableContainer>
   )
 }

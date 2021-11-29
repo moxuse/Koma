@@ -1,6 +1,19 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
 import Table from '../model/Table';
 
+
+// TODO: rename to `loadWaveTableByDialog`
+
+
+
+
+
+
+
+
+
+
+
 export type ItemPayload = {
   isFetching: true;
   item: Table;
@@ -52,22 +65,17 @@ export const readTableFailure: ActionCreator<ReadTableAction> = (
   payload 
 } as ReadTableAction);
   
-
 export const readTable = () => {
   return (dispatch: any) => {
     dispatch(readTableRequest())
-    return new Promise((resolve, reject) => {
-      window.api.on('openFileDialogSucseed', (_, arg: any[]) => {
-        dispatch(readTableSuccess(
-          new Table({ id: '' + Math.random(), filePath: arg[0] })
-        ));
-        resolve(arg[0]);
-      });
-      window.api.on('openFileDialofFailed', (_, arg: any[]) => {
-        dispatch(readTableFailure(arg[0]));
-        reject(arg[0]);
-      });
-      window.api.openFileDialog();
-    })
+    window.api.on('openFileDialogSucseed', (_, arg: string[]) => {
+      dispatch(readTableSuccess(
+        new Table({ id: '' + Math.random(), filePath: arg[0] })
+      ));
+    });
+    window.api.on('openFileDialofFailed', (_, arg: string[]) => {
+      dispatch(readTableFailure(arg[0]));
+    });
+    window.api.openFileDialog();
   }
 }

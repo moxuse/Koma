@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 import { loadStore, tables } from './tables'
-import { waveTables } from './waveTable';
+import { waveTable } from './waveTable';
 
 const rootReducer = combineReducers({
   tables,
   loadStore,
-  waveTables
+  waveTable
 })
 
 export default rootReducer

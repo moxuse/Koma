@@ -2,13 +2,12 @@ import { List } from 'immutable';
 import Table from "../model/table";
 import { LoadWaveTableAction } from "../actions/loadWaveTable";
 
-
-const waveTableInitalState = {
+const waveTableInitialState = {
   isFetching: false,
   table: [],
 }
 
-export const waveTables = (state = waveTableInitalState, action: LoadWaveTableAction) => {
+export const waveTable = (state = waveTableInitialState, action: LoadWaveTableAction) => {
   switch (action.type) {
     case 'LOAD_WAVE_TABLE_REQUEST':
       return {

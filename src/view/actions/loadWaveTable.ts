@@ -65,23 +65,19 @@ export const loadWaveTable = (filePath: string): ThunkAction<void, any, undefine
     isFetching: true,
     filePath: filePath
   }))
-  new Promise((resolve, reject) => {
-    window.api.on('loadWaveTableSucseed', (_, arg: any[]) => {
-      console.log('action:W', arg);
-      const t = new Table(arg.table);
-      dispatch(loadWaveTableSuccess({
-        isFetching: false,
-        table: t
-      }));
-      resolve(arg[0]);
-    });
-    window.api.on('loadStoreFailed', (_, error) => {
-      dispatch(loadWaveTableFailure({
-        isFetching: false,
-        error: error
-      }));
-      reject(error);
-    });
-    window.api.loadWaveTable(filePath);
-  })
+  window.api.on('loadWaveTableSucseed', (_, arg: { table: Table }) => {
+    const t = new Table(arg.table);
+    dispatch(loadWaveTableSuccess({
+      isFetching: false,
+      table: t
+    }));
+
+  });
+  window.api.on('loadStoreFailed', (_, error) => {
+    dispatch(loadWaveTableFailure({
+      isFetching: false,
+      error: error
+    }));
+  });
+  window.api.loadWaveTable(filePath);
 }
