@@ -1,4 +1,4 @@
-declare module 'wav-decoder' {
+declare module 'wav-decoder';/* {
   export type AudioData = {
     numberOfChannels: number;
     length: number;
@@ -7,3 +7,4 @@ declare module 'wav-decoder' {
   }
   export function decode(bffer: Buffer, opt: {}): (bffer: Buffer, opt: {}) => Promise<AudioData>;
 }
+*/

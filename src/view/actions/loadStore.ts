@@ -1,5 +1,5 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk'; 
+import { ThunkAction } from 'redux-thunk'; 
 import TableList from '../model/TableList';
 import Table from '../model/Table';
 

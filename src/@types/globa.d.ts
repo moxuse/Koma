@@ -10,6 +10,7 @@ declare global {
   interface ContextBridge {
     loadStore: () => void,
     openFileDialog: () => void,
+    loadWaveTable: (filePath: string) => void,
     on: (channel: string, callback: IpcEvent) => void;
   }
 }

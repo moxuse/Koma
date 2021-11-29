@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
-import WavDecoder from 'wav-decoder';
+import * as WavDecoder from 'wav-decoder';
 import Tables from '../view/model/TableList';
 import * as Utils from './Utils';
 
@@ -31,7 +31,7 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
    * 'openFileDialofFailed'
    */
   ipcMain.on('openFileDialog', (e) => {
-    dialog.showOpenDialog( window, { properties: ["openFile",   'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
+    dialog.showOpenDialog( window, { properties: ["openFile", 'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
     ).then((result) => {
       if (result.canceled) { e.reply('openFileDialogCanceled') }
       
@@ -46,4 +46,23 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
     })
   })
   // window.api.openFileDialog();
+
+  /**
+   * Read Wav file from path
+   * returns
+   * 'loadWaveTable'
+   * 'loadWaveTableSucseed'
+   * 'loadWaveTableFailed'
+   */
+  ipcMain.on('loadWaveTable', (e, filePath) => {
+    Utils.readFile(filePath).then((buffer: Buffer) => {
+      return WavDecoder.decode(buffer, {});
+    }).then((audioData) => {
+      e.reply('loadWaveTableSucseed', audioData);
+      if (isDev) { console.log(audioData); }
+    }).catch((err: any) => {
+      e.reply('loadWaveTableFailed', err);
+    })
+  })
+  // window.api.loadWaveTable(filePath);
 }

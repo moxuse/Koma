@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import WaveTable from '../WaveTable';
+import DropSection from '../DropSection';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { connect } from 'react-redux';
@@ -17,13 +18,14 @@ const WaveTables = (
     tables: TableList,
     handleReadTable: any
   }): JSX.Element => {
-    // handleReadTable();
+  
   return (
     <WaveTableContainer>
       <ul>
         {(!isFetching && tables) ? tables.getTables().map((table: Table) => {
           return (<WaveTable table={table} key={table.id} />)
         }) : <p>loading...</p>}
+        <DropSection />
       </ul>
     </WaveTableContainer>
   );

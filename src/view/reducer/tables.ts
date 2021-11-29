@@ -7,7 +7,7 @@ import TableList from "../model/TableList";
 
 const storeInitalState = {
   isFetching: false,
-  item: undefined,
+  tables: undefined,
 }
 
 export const loadStore = (state = storeInitalState, action: LoadStoreAction) => {
@@ -41,7 +41,7 @@ export const tables = (state = tablesInitalState, action: ReadTableAction) => {
   switch (action.type) {
     case 'READ_TABLE_REQUEST':
       return {
-        isFetching: action.payload.isFetching,
+        isFetching: state.isFetching,
       }
     case 'READ_TABLE_SUCCESS':
       return {
