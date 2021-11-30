@@ -58,7 +58,7 @@ app.whenReady().then(async () => {
   // if (isDev) { }
   createWindow();
   if (isDev) {
-    // await session.defaultSession.loadExtension(reactDevToolsPath);
+    await session.defaultSession.loadExtension(reactDevToolsPath);
     // await session.defaultSession.loadExtension(reduxDevToolsPath);
   }
 });
