@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import Table from "../model/table";
+import Table from "../model/Table";
 import { ReadTableAction } from "../actions/readTable";
 import { LoadStoreAction } from "../actions/loadStore";
 

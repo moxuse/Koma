@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import Table from "../model/table";
+import Table from "../model/Table";
 import { LoadWaveTableAction } from "../actions/loadWaveTable";
 
 const waveTableInitialState = {
