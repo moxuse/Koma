@@ -9,11 +9,6 @@ import Table from '../model/Table';
 
 
 
-
-
-
-
-
 export type ItemPayload = {
   isFetching: true;
   item: Table;
@@ -66,7 +61,7 @@ export const readTableFailure: ActionCreator<ReadTableAction> = (
 } as ReadTableAction);
   
 export const readTable = () => {
-  return (dispatch: any) => {
+  return (dispatch: Dispatch<Action>) => {
     dispatch(readTableRequest())
     window.api.on('openFileDialogSucseed', (_, arg: string[]) => {
       dispatch(readTableSuccess(
@@ -77,5 +72,4 @@ export const readTable = () => {
       dispatch(readTableFailure(arg[0]));
     });
     window.api.openFileDialog();
-  }
-}
+  }}

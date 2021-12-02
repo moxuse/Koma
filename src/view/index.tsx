@@ -8,10 +8,11 @@ import logger from 'redux-logger';
 import rootReducer from './reducer';
 import WaveTables from './components/WaveTables';
 import { loadStore } from './actions/loadStore';
+import * as TableReducer from "./reducer/tables";
 import Table from './model/Table';
 
 const store = createStore(
-  rootReducer,
+  TableReducer.loadStore,
   applyMiddleware(thunk, logger)
 )
 

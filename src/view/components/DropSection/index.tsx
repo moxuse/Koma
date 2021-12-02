@@ -13,7 +13,7 @@ const DropSectionContainer = styled.li`
 const DropSection = ({ handleDrop }: { handleDrop: any }): JSX.Element => {
   let ref = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
-  const onDragOver = useCallback((e) => {
+  const onDragOver = useCallback((e: DragEvent) => {
     setDragging(true);
     if (e.preventDefault) {
       e.preventDefault();
@@ -21,21 +21,18 @@ const DropSection = ({ handleDrop }: { handleDrop: any }): JSX.Element => {
       return false;
     }
   }, []);
-  const onDragReave = useCallback(() => {
+  const onDragReave = useCallback((_) => {
     setDragging(false);
   }, []);
-  const onDrop = useCallback((e) => {
-    // const data_transfer = e.dataTransfer;
-    // var buffer = data_transfer.getData("text");
-    // console.log('droped.....', buffer)
+  const onDrop = useCallback((e: DragEvent) => {
     e.stopPropagation();
     if (e.preventDefault) {      
       e.preventDefault();
     } else {
       return false;
     }
-    const files = e.dataTransfer.files;
-    if (files.length >= 1) {
+    const files = e.dataTransfer?.files;
+    if (files && files.length >= 1) {
       handleDrop(files[0].path);  
     }
     setDragging(false);    

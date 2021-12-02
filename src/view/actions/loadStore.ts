@@ -52,24 +52,24 @@ export const loadStoreFailure: ActionCreator<LoadStoreAction> = (
   payload: payload
 } as LoadStoreAction);
 
-export const loadStore = (): ThunkAction<void, any, undefined, LoadStoreAction> => (
-  dispatch: Dispatch<Action>
-) => {
-  dispatch(loadStoreRequest({
-    isFetching: true,
-  }))
-  window.api.on('loadStoreSucseed', (_, arg: { tables: Table[] }) => {
-    const list: TableList = TableList.newFromTable(List(arg.tables));
-    dispatch(loadStoreSuccess({
-      isFetching: false,
-      tables: list
-    }));
-  });
-  window.api.on('loadStoreFailed', (_, error) => {
-    dispatch(loadStoreFailure({
-      isFetching: false,
-      error: error
-    }));
-  });
-  window.api.loadStore();
+export const loadStore = () => {
+  return async (dispatch: Dispatch<LoadStoreAction>) => {
+    dispatch(loadStoreRequest({
+      isFetching: true,
+    }))
+    window.api.on('loadStoreSucseed', (_, arg: { tables: Table[] }) => {
+      const list: TableList = TableList.newFromTable(List(arg.tables));
+      dispatch(loadStoreSuccess({
+        isFetching: false,
+        tables: list
+      }));
+    });
+    window.api.on('loadStoreFailed', (_, error) => {
+      dispatch(loadStoreFailure({
+        isFetching: false,
+        error: error
+      }));
+    });
+    window.api.loadStore();
+  }
 }
