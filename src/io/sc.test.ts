@@ -8,7 +8,7 @@ describe('boot scsynth', () => {
     const bufNum = 4000;
     expect(server_).toBeTruthy;
     return new Promise((resolve, reject) => {
-      server_.receive.subscribe(function (msg) {
+      server_.receive.subscribe((msg) => {
         if (msg[0] == '/done') {
           expect(msg[0]).toEqual('/done');
           server_.send.msg(['/b_query', bufNum]);
