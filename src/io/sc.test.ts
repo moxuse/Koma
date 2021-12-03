@@ -95,12 +95,8 @@ describe('buffer write at scsynth', () => {
         if (msg[0] == '/done') {
           expect(msg).toBeTruthy;
           if (msg[1] == '/b_write') {            
-            server_.quit();
-            resolve();            
+            server_.quit();      
           }
-        }
-        if (msg == null) {
-          reject();
         }
       });
       setTimeout(() => {
