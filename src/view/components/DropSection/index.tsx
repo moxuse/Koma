@@ -10,7 +10,7 @@ const DropSectionContainer = styled.li`
   background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#FFFFFF"}
 `;
 
-const DropSection = ({ handleDrop }: { handleDrop: any }): JSX.Element => {
+const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean, handleDrop: any, children: any }): JSX.Element => {
   let ref = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
   const onDragOver = useCallback((e: DragEvent) => {
@@ -52,6 +52,9 @@ const DropSection = ({ handleDrop }: { handleDrop: any }): JSX.Element => {
     <>
       <DropSectionContainer dragging={ dragging }>
         <div ref={ref}>
+          <div>
+            {children}
+          </div>
           {'+'}
         </div>
       </DropSectionContainer>
@@ -59,13 +62,12 @@ const DropSection = ({ handleDrop }: { handleDrop: any }): JSX.Element => {
   );
 };
 
-// function mapStateToProps({ loadWaveTable: { isFetching } }: {loadWaveTable:{ isFetching: boolean }}) {
-//   console.log('in wavetables', isFetching);
-//   return {
-//     isFetching: isFetching,
-//     // tables: table,
-//   }
-// }
+function mapStateToProps({ isFetching }: { isFetching: boolean }) {
+  console.log('in wavetables', isFetching);
+  return {
+    isFetching: isFetching
+  }
+}
 
 function mapDispatchToProps(dispatch: any) {
   return {
@@ -73,4 +75,4 @@ function mapDispatchToProps(dispatch: any) {
   }
 }
 
-export default connect(null, mapDispatchToProps)(DropSection)
+export default connect(mapStateToProps, mapDispatchToProps)(DropSection)

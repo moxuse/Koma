@@ -58,7 +58,6 @@ describe('declar synthdef', () => {
     const a = await sc.server.boot().then((server) => {
       server_ = server;
     })
-
     expect(server_.isRunning).toEqual(true);
 
     const recorder = await server_.synthDef(

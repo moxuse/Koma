@@ -71,9 +71,8 @@ export const loadWaveTable = (filePath: string): ThunkAction<void, any, undefine
       isFetching: false,
       table: t
     }));
-
   });
-  window.api.on('loadStoreFailed', (_, error) => {
+  window.api.on('loadWaveTableFailed', (_, error) => {
     dispatch(loadWaveTableFailure({
       isFetching: false,
       error: error

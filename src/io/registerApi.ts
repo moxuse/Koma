@@ -31,7 +31,7 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
    * 'openFileDialofFailed'
    */
   ipcMain.on('openFileDialog', (e) => {
-    dialog.showOpenDialog( window, { properties: ["openFile", 'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
+    dialog.showOpenDialog(window, { properties: ["openFile", 'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
     ).then((result) => {
       if (result.canceled) { e.reply('openFileDialogCanceled') }
       

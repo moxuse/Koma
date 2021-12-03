@@ -10,6 +10,9 @@ import styled from 'styled-components';
 
 const WaveTableContainer = styled.div`
   width: 100%;
+  ul {
+    padding: 4px;
+  }
 `;
 
 const WaveTables = (
@@ -19,20 +22,23 @@ const WaveTables = (
     handleReadTable: any
   }): JSX.Element => {
   
+  const getTables = useEffect(() => {
+  }, [tables])
+
   return (
     <WaveTableContainer>
       <ul>
-        {(!isFetching && tables) ? tables.getTables().map((table: Table) => {
-          return (<WaveTable table={table} key={table.id} />)
-        }) : <p>loading...</p>}
-        <DropSection />
+        <DropSection>
+        {!isFetching && tables ? tables.getTables().map((table: Table) => {
+      return (<WaveTable table={table} key={table.id} />)
+    }) : <p>loading...</p>}
+        </DropSection>
       </ul>
     </WaveTableContainer>
   );
 };
 
-function mapStateToProps({ loadStore: { isFetching, tables } }: {loadStore:{ isFetching: boolean, tables: TableList }}) {
-  console.log('in wavetables', isFetching, tables);
+function mapStateToProps({ isFetching, tables }: { isFetching: boolean, tables: TableList }) {
   return {
     isFetching: isFetching,
     tables: tables,

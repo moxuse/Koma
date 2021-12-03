@@ -39,7 +39,7 @@ export const tables = (state = tablesInitialState, action: ReadTableAction) => {
   switch (action.type) {
     case 'READ_TABLE_REQUEST':
       return {
-        isFetching: state.isFetching,
+        isFetching: action.payload.isFetching,
       }
     case 'READ_TABLE_SUCCESS':
       return {

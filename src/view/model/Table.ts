@@ -1,20 +1,25 @@
 import { Record } from 'immutable';
 
-const DefaultTable = {
+export type TableType = {
+  id: string;
+  filePath: string | undefined;
+  buffer: Float32Array | undefined;
+}
+
+const DefaultTable: TableType = {
   id: 'id',
   filePath: '',
-  // buffer: [0.0]
+  buffer: undefined
 }
 
 export default class Table extends Record(DefaultTable) {
   getId() {
     return this.get('id');
   }
-  
   getFliePath() {
     return this.get('filePath');
   }
-  // getBuffer() {
-  //   return this.get('buffer')
-  // }
+  getBuffer() {
+    return this.get('buffer')
+  }
 }

@@ -1,10 +1,13 @@
 import { List } from 'immutable';
 import Table from "../model/Table";
+import TableList from "../model/TableList";
 import { LoadWaveTableAction } from "../actions/loadWaveTable";
+import { LoadStoreSuccessPayload } from "../actions/loadStore";
 
-const waveTableInitialState = {
+
+const waveTableInitialState: LoadStoreSuccessPayload = {
   isFetching: false,
-  table: [],
+  tables: undefined
 }
 
 export const waveTable = (state = waveTableInitialState, action: LoadWaveTableAction) => {
@@ -15,9 +18,12 @@ export const waveTable = (state = waveTableInitialState, action: LoadWaveTableAc
         filePath: action.payload.filePath,
       }
     case 'LOAD_WAVE_TABLE_SUCCESS':
-      return {
-        isFetching: action.payload.isFetching,
-        item: action.payload.table
+      if (state.tables) {
+        return {
+          isFetching: action.payload.isFetching,
+          item: action.payload.table,
+          tables: TableList.appendTable(state.tables, action.payload.table)
+        }
       }
     case 'LOAD_WAVE_TABLE_FAILURE':
       return {

@@ -25,4 +25,8 @@ export default class TableList extends Record(DefaultTableList) {
       return table.getId() !== id
     }));
   }
+
+  static appendTable(target: TableList, table: Table) {
+    return new TableList(target.getTables().push(table));
+  }
 }

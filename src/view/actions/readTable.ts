@@ -1,12 +1,7 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
 import Table from '../model/Table';
 
-
 // TODO: rename to `loadWaveTableByDialog`
-
-
-
-
 
 
 export type ItemPayload = {

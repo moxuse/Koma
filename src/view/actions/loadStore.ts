@@ -8,9 +8,9 @@ export interface LoadStoreRequest {
   type: 'LOAD_STORE_REQUEST', payload: { isFetching: true }
 }
 
-type LoadStoreSuccessPayload = {
+export type LoadStoreSuccessPayload = {
   isFetching: boolean,
-  tables: TableList
+  tables: TableList | undefined
 }
 
 export interface LoadStoreSuccess {
