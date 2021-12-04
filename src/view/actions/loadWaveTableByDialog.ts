@@ -1,12 +1,12 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
 import Table from '../model/Table';
-
-// TODO: rename to `loadWaveTableByDialog`
-
+import Sample from '../model/Sample';
+import { getNewId, ommitFileName } from './helper';
 
 export type ItemPayload = {
   isFetching: true;
-  item: Table;
+  table: Table;
+  sample: Sample;
 };
 
 export interface ReadTableRequest extends Action {
@@ -55,16 +55,29 @@ export const readTableFailure: ActionCreator<ReadTableAction> = (
   payload 
 } as ReadTableAction);
   
-export const readTable = () => {
+export const loadWaveTableByDialog = () => {
   return (dispatch: Dispatch<Action>) => {
     dispatch(readTableRequest())
-    window.api.on('openFileDialogSucseed', (_, arg: string[]) => {
-      dispatch(readTableSuccess(
-        new Table({ id: '' + Math.random(), filePath: arg[0] })
-      ));
+    window.api.on!('loadWaveTableByDialogSucseed', (_, { filePath, audioData }) => {
+    const sampleId = getNewId();
+    const s = new Sample({ id: sampleId, filePath, buffer: audioData.channelData[0] });
+      const t = new Table({
+        id: getNewId(),
+        name: ommitFileName(filePath),
+        bufnum: 9000,
+        sample: sampleId,
+        slice: undefined
+      });
+      dispatch(readTableSuccess({
+        isFetching: false,
+        table: t,
+        sample: s
+      }));
+      window.api.removeAllListeners('loadWaveTableByDialogSucseed');
     });
-    window.api.on('openFileDialofFailed', (_, arg: string[]) => {
-      dispatch(readTableFailure(arg[0]));
+    window.api.on!('loadWaveTableByDialogFailed', (_, arg: Error) => {
+      dispatch(readTableFailure(arg));
+      window.api.removeAllListeners('loadWaveTableByDialogFailed');
     });
-    window.api.openFileDialog();
+    window.api.loadWaveTableByDialog();
   }}

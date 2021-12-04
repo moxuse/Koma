@@ -17,7 +17,7 @@ const DragAreaStyle = styled.div`
 `;
 
 const store = createStore(
-  TableReducer.loadStore,
+  rootReducer,
   applyMiddleware(thunk, logger)
 )
 
@@ -36,7 +36,7 @@ const App = (): JSX.Element => {
 };
 
 App.defaultProps = {
-  props: new Table({ id: '01', filePath: '' })
+  props: undefined
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));

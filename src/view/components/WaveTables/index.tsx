@@ -4,7 +4,7 @@ import DropSection from '../DropSection';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { connect } from 'react-redux';
-import { readTable, ReadTableAction } from '../../actions/readTable';
+import { loadWaveTableByDialog } from '../../actions/loadWaveTableByDialog';
 
 import styled from 'styled-components';
 
@@ -16,38 +16,50 @@ const WaveTableContainer = styled.div`
 `;
 
 const WaveTables = (
-  { isFetching, tables, handleReadTable }: {
+  { isFetching, tables, handleLoadWaveTableByDialog }: {
     isFetching?: boolean,
     tables: TableList,
-    handleReadTable: any
+    handleLoadWaveTableByDialog: any
   }): JSX.Element => {
   
-  const getTables = useEffect(() => {
-  }, [tables])
+  const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
+    return tables.getBufferDataForSampleId(table.getSample());
+  }
+  const getTables = () => {
+    return (
+      !isFetching && tables ? tables.getTables().map((table: Table) => {
+        return (<WaveTable
+          table={table}
+          bufferData={getBufferData(tables, table)}
+          key={table.id} />
+        )
+      }) : <p>{`loading...`}</p>
+    )
+  };
 
   return (
     <WaveTableContainer>
-      <ul>
-        <DropSection>
-        {!isFetching && tables ? tables.getTables().map((table: Table) => {
-      return (<WaveTable table={table} key={table.id} />)
-    }) : <p>loading...</p>}
-        </DropSection>
-      </ul>
+      <DropSection>
+        <ul>        
+          {getTables()}        
+        </ul>
+      </DropSection>
     </WaveTableContainer>
   );
 };
 
-function mapStateToProps({ isFetching, tables }: { isFetching: boolean, tables: TableList }) {
+function mapStateToProps(
+  { waveTable } : any
+) {
   return {
-    isFetching: isFetching,
-    tables: tables,
+    isFetching: waveTable.isFetching,
+    tables: waveTable.tables,
   }
 }
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleReadTable: () => dispatch(readTable())
+    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
   }
 }
 

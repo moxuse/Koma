@@ -57,18 +57,20 @@ export const loadStore = () => {
     dispatch(loadStoreRequest({
       isFetching: true,
     }))
-    window.api.on('loadStoreSucseed', (_, arg: { tables: Table[] }) => {
-      const list: TableList = TableList.newFromTable(List(arg.tables));
+    window.api.on!('loadStoreSucseed', (_, arg: { tables: Table[] }) => {
+      const list: TableList = TableList.newFromTableList(List(arg.tables));
       dispatch(loadStoreSuccess({
         isFetching: false,
         tables: list
       }));
+      window.api.removeAllListeners('loadStoreSucseed');
     });
-    window.api.on('loadStoreFailed', (_, error) => {
+    window.api.on!('loadStoreFailed', (_, error) => {
       dispatch(loadStoreFailure({
         isFetching: false,
         error: error
       }));
+      window.api.removeAllListeners('loadStoreFailed');
     });
     window.api.loadStore();
   }

@@ -7,6 +7,7 @@ import * as Utils from './Utils';
 
 // API register
 export default function registerApi(window: BrowserWindow, isDev: boolean): void {
+  console.log('register events for the api');
   /**
    * Load Store file
    * returns
@@ -26,22 +27,22 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
   /**
    * Read Wav file from path
    * returns
-   * 'openFileDialogCanceled'
-   * 'openFileDialogSucseed'
-   * 'openFileDialofFailed'
+   * 'loadWaveTableByDialogCanceled'
+   * 'loadWaveTableByDialogSucseed'
+   * 'loadWaveTableByDialogFailed'
    */
-  ipcMain.on('openFileDialog', (e) => {
+  ipcMain.on('loadWaveTableByDialog', (e) => {
     dialog.showOpenDialog(window, { properties: ["openFile", 'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
     ).then((result) => {
-      if (result.canceled) { e.reply('openFileDialogCanceled') }
+      if (result.canceled) { e.reply('loadWaveTableByDialogCanceled') }
       
       Utils.readFile(result.filePaths[0]).then((buffer: Buffer) => {
         return WavDecoder.decode(buffer, {});
       }).then((audioData) => {
-        e.reply('openFileDialogSucseed', result.filePaths);
+        e.reply('loadWaveTableByDialogSucseed', { filePath: result.filePaths[0], audioData });
         if (isDev) { console.log(audioData); }
       }).catch((err: any) => {
-        e.reply('openFileDialofFailed', err);
+        e.reply('loadWaveTableByDialogFailed', err);
       })
     })
   })
@@ -59,7 +60,7 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
       return WavDecoder.decode(buffer, {});
     }).then((audioData) => {
       e.reply('loadWaveTableSucseed', audioData);
-      if (isDev) { console.log('loaded buffer:',audioData); }
+      if (isDev) { console.log('loaded audio data:',audioData) }
     }).catch((err: any) => {
       e.reply('loadWaveTableFailed', err);
     })

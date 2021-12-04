@@ -8,26 +8,23 @@ const GraphConatainer = styled.div`
   height: 80px;
 `;
 
-const Graph = ({ table }: { table: Table }): JSX.Element => {
+const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
   const [context,setContext] = useState<CanvasRenderingContext2D>()
   const [buffer, setBuffer] = useState<Float32Array>();
   const graphRef = useRef<HTMLCanvasElement>(null);
   useEffect(()=>{
     if (graphRef.current) {
+      setBuffer(bufferData);
       const canvasContext = graphRef.current.getContext("2d") as CanvasRenderingContext2D;
       setContext(canvasContext)
     }
   },[])
   useEffect(() => {
-    if (table.buffer) {
-      const current = table.buffer;
-      if (current && context) {
-        setBuffer(current);
-        context.fillStyle = 'green';
-        buffer?.forEach((val, i) => context.fillRect(i * 10, 60, 10, val * 10));
-      }
+    if (buffer && context) {      
+      context.fillStyle = 'green';
+      buffer?.forEach((val, i) => context.fillRect(i * 0.125, 30, 0.125, val * 100));
     }
-  }, [buffer, context])
+  }, [bufferData, context])
   return (
     <GraphConatainer>
       <canvas width="180" height="80" ref={graphRef}></canvas>

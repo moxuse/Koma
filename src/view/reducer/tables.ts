@@ -1,38 +1,12 @@
 import { List } from 'immutable';
 import Table from "../model/Table";
-import { ReadTableAction } from "../actions/readTable";
-import { LoadStoreAction } from "../actions/loadStore";
+import { ReadTableAction } from "../actions/loadWaveTableByDialog";
 
 import TableList from "../model/TableList";
 
-const storeInitialState = {
-  isFetching: false
-}
-
-export const loadStore = (state = storeInitialState, action: LoadStoreAction) => {
-  switch (action.type) {
-    case 'LOAD_STORE_REQUEST':
-      return {
-        isFetching: state.isFetching
-      }
-    case 'LOAD_STORE_SUCCESS':
-      return {
-        isFetching: action.payload?.isFetching,
-        tables: action.payload?.tables
-      }
-    case 'LOAD_STORE_FAILURE':
-      return {
-        isFetching: action.payload.isFetching,
-        error: action.payload.error
-      }
-    default:
-      return state;
-  }
-}
-
 const tablesInitialState = {
   isFetching: false,
-  item: [],
+  tables: new TableList(),
 }
 
 export const tables = (state = tablesInitialState, action: ReadTableAction) => {
@@ -42,9 +16,10 @@ export const tables = (state = tablesInitialState, action: ReadTableAction) => {
         isFetching: action.payload.isFetching,
       }
     case 'READ_TABLE_SUCCESS':
+      const t = TableList.appendTable(state.tables, action.payload.table);
       return {
         isFetching: action.payload.isFetching,
-        item: action.payload.item
+        tables: TableList.appendSample(t, action.payload.sample)
       }
     case 'READ_TABLE_FAILURE':
       return {

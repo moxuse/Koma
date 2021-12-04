@@ -5,7 +5,7 @@ import { loadWaveTable, LoadWaveTableAction } from '../../actions/loadWaveTable'
 
 import styled from 'styled-components';
 
-const DropSectionContainer = styled.li`
+const DropSectionContainer = styled.div`
   width: 100%;
   background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#FFFFFF"}
 `;
@@ -13,6 +13,7 @@ const DropSectionContainer = styled.li`
 const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean, handleDrop: any, children: any }): JSX.Element => {
   let ref = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
+
   const onDragOver = useCallback((e: DragEvent) => {
     setDragging(true);
     if (e.preventDefault) {
@@ -44,7 +45,7 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
     return () => {
       ref.current!.removeEventListener('drop', onDrop, false);
       ref.current!.removeEventListener('dragover', onDragOver, false);
-      ref.current!.addEventListener("dragleave" , onDragReave, false);
+      ref.current!.removeEventListener("dragleave" , onDragReave, false);
     }
   },[])
   
@@ -63,7 +64,6 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
 };
 
 function mapStateToProps({ isFetching }: { isFetching: boolean }) {
-  console.log('in wavetables', isFetching);
   return {
     isFetching: isFetching
   }

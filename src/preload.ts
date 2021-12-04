@@ -6,9 +6,10 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
   "api", {
     loadStore: async () => ipcRenderer.send('loadStore'),
-    openFileDialog: async () => ipcRenderer.send('openFileDialog'),
+    loadWaveTableByDialog: async () => ipcRenderer.send('loadWaveTableByDialog'),
     loadWaveTable: async (filePath: string) => ipcRenderer.send('loadWaveTable', filePath),
 
-    on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv))
+    on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv)),
+    removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel)
   }
 );

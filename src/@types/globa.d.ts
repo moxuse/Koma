@@ -1,4 +1,5 @@
 import { ContextBridge, IpcRenderer, IpcMainEvent } from 'electron';
+import { AudioData } from 'wav-decoder';
 import Table from '../view/model/Table';
 import TableList from '../view/model/TableList';
 
@@ -8,17 +9,21 @@ declare global {
   }
 
   type IcpEventArg =
-    { table: Table } &
-    string[] &
-    { tables: Table[] };
+    AudioData &
+    { tables: Table } &
+    { filePath: string, audioData: AudioData } &
+    { tables: Table[] } &
+    Error;
   
-  type IpcEvent = (e: IpcMainEvent, arg: IcpEventArg) => void;
+  type IpcEvent = ((e: IpcMainEvent, arg: IcpEventArg) => void) | undefined;
 
   interface ContextBridge {
+    settings: any,
     loadStore: () => void,
-    openFileDialog: () => void,
+    loadWaveTableByDialog: () => void,
     loadWaveTable: (filePath: string) => void,
     on: (channel: string, callback: IpcEvent) => void;
+    removeAllListeners: (channel: string) => void;
   }
 }
 
