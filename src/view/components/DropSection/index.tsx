@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Table from '../../model/Table';
+import { Dispatch, Action } from 'redux';
 import { connect } from 'react-redux';
 import { loadWaveTable, LoadWaveTableAction } from '../../actions/loadWaveTable';
 
@@ -55,6 +56,7 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
         <div ref={ref}>
           <div>
             {children}
+            {isFetching ? (<div>{`loading`}</div>) : (<></>) }
           </div>
           {'+'}
         </div>
@@ -63,13 +65,14 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
   );
 };
 
-function mapStateToProps({ isFetching }: { isFetching: boolean }) {
+function mapStateToProps({ waveTable: { isFetching, error } }: { waveTable: { isFetching: boolean, error: string }}) {
   return {
-    isFetching: isFetching
+    isFetching,
+    error
   }
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: any ) {
   return {
     handleDrop: (filePath: string) => dispatch(loadWaveTable(filePath))
   }

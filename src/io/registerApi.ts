@@ -32,7 +32,10 @@ export default function registerApi(window: BrowserWindow, isDev: boolean): void
    * 'loadWaveTableByDialogFailed'
    */
   ipcMain.on('loadWaveTableByDialog', (e) => {
-    dialog.showOpenDialog(window, { properties: ["openFile", 'openDirectory'], filters: [{ name: "msplr", extensions: ["wav"] }] },
+    dialog.showOpenDialog(window, {
+      properties: ["openFile", 'openDirectory'],
+      filters: [{ name: "msplr", extensions: ["wav"] }]
+    },
     ).then((result) => {
       if (result.canceled) { e.reply('loadWaveTableByDialogCanceled') }
       

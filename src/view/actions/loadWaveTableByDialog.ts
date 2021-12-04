@@ -54,7 +54,12 @@ export const readTableFailure: ActionCreator<ReadTableAction> = (
   type: 'READ_TABLE_FAILURE',
   payload 
 } as ReadTableAction);
-  
+
+const removeEvents = () => {
+  window.api.removeAllListeners('loadWaveTableByDialogSucseed');
+  window.api.removeAllListeners('loadWaveTableByDialogFailed');
+}
+
 export const loadWaveTableByDialog = () => {
   return (dispatch: Dispatch<Action>) => {
     dispatch(readTableRequest())
@@ -73,11 +78,11 @@ export const loadWaveTableByDialog = () => {
         table: t,
         sample: s
       }));
-      window.api.removeAllListeners('loadWaveTableByDialogSucseed');
+      removeEvents();
     });
     window.api.on!('loadWaveTableByDialogFailed', (_, arg: Error) => {
       dispatch(readTableFailure(arg));
-      window.api.removeAllListeners('loadWaveTableByDialogFailed');
+      removeEvents();
     });
     window.api.loadWaveTableByDialog();
   }}

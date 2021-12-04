@@ -27,7 +27,7 @@ const WaveTables = (
   }
   const getTables = () => {
     return (
-      !isFetching && tables ? tables.getTables().map((table: Table) => {
+      (!isFetching) && tables ? tables.getTables().map((table: Table) => {
         return (<WaveTable
           table={table}
           bufferData={getBufferData(tables, table)}

@@ -26,6 +26,7 @@ export const waveTable = (state = waveTableInitialState, action: LoadWaveTableAc
     case 'LOAD_WAVE_TABLE_FAILURE':
       return {
         isFetching: action.payload.isFetching,
+        tables: state.tables,
         error: action.payload.error
       }      
     default:

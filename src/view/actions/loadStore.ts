@@ -52,6 +52,11 @@ export const loadStoreFailure: ActionCreator<LoadStoreAction> = (
   payload: payload
 } as LoadStoreAction);
 
+const removeEvents = () => {
+  window.api.removeAllListeners('loadStoreSucseed');
+  window.api.removeAllListeners('loadStoreFailed');
+}
+
 export const loadStore = () => {
   return async (dispatch: Dispatch<LoadStoreAction>) => {
     dispatch(loadStoreRequest({
@@ -63,14 +68,14 @@ export const loadStore = () => {
         isFetching: false,
         tables: list
       }));
-      window.api.removeAllListeners('loadStoreSucseed');
+      removeEvents();
     });
     window.api.on!('loadStoreFailed', (_, error) => {
       dispatch(loadStoreFailure({
         isFetching: false,
         error: error
       }));
-      window.api.removeAllListeners('loadStoreFailed');
+      removeEvents();
     });
     window.api.loadStore();
   }

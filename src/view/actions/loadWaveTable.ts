@@ -62,8 +62,13 @@ export const loadWaveTableFailure: ActionCreator<LoadWaveTableAction> = (
   payload
 } as LoadWaveTableAction);
 
+const removeEvents = () => {
+  window.api.removeAllListeners('loadWaveTableSucseed');
+  window.api.removeAllListeners('loadWaveTableFailed');
+}
+
 export const loadWaveTable = (filePath: string) => (
-  dispatch: Dispatch<Action>
+  dispatch: Dispatch<LoadWaveTableAction>
 ) => {
   dispatch(loadWaveTableRequest({
     isFetching: true,
@@ -84,14 +89,14 @@ export const loadWaveTable = (filePath: string) => (
       table: t,
       sample: s
     }));
-    window.api.removeAllListeners('loadWaveTableSucseed');
+    removeEvents()
   });
   window.api.on!('loadWaveTableFailed', (_, error) => {
     dispatch(loadWaveTableFailure({
       isFetching: false,
       error: error
     }));
-    window.api.removeAllListeners('loadWaveTableFailed');
+    removeEvents();
   });
   window.api.loadWaveTable(filePath);
 }
