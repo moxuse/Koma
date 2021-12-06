@@ -10,8 +10,10 @@ describe('void test', () => {
   test('void test', () => {
     expect(true).toEqual(true);
   });
-})
+});
+
 /*
+
 describe('boot scsynth', () => {
   it('boot and allocate/read Buffer, recieve done msg', async () => {
     const server_ = await sc.server.boot();
@@ -155,7 +157,7 @@ describe('communicate between remote scsynth with osc', () => {
   });
 });
 
-
+/*
 describe('recive task message from lang', () => {
   it('osc test', async () => {
     const bufNum = 4000;
@@ -227,5 +229,6 @@ describe('recive task message from lang', () => {
     }
   });
 });
-*/
 
+
+*/
