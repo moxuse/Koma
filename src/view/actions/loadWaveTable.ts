@@ -1,5 +1,4 @@
-import { ActionCreator, Dispatch, Action } from 'redux';
-import { ThunkAction } from 'redux-thunk';
+import { ActionCreator, Dispatch } from 'redux';
 import { AudioData } from 'wav-decoder';
 import Table from '../model/Table';
 import Sample from '../model/Sample';

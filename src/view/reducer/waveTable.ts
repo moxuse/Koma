@@ -1,5 +1,3 @@
-import { List } from 'immutable';
-import Table from "../model/Table";
 import TableList from "../model/TableList";
 import { LoadWaveTableAction } from "../actions/loadWaveTable";
 

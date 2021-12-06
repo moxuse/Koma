@@ -1,4 +1,4 @@
-import { ContextBridge, IpcRenderer, IpcMainEvent } from 'electron';
+import { IpcMainEvent } from 'electron';
 import { AudioData } from 'wav-decoder';
 import Table from '../view/model/Table';
 import TableList from '../view/model/TableList';

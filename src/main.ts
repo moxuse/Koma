@@ -46,12 +46,11 @@ const createWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
   }
-
+  
   registerApi(mainWindow, isDev);
 
   // load app
   mainWindow.loadFile('index.html');
-  
 };
 
 app.whenReady().then(async () => {

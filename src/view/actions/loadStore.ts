@@ -1,5 +1,4 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table from '../model/Table';

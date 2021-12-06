@@ -1,4 +1,3 @@
-import { IpcMainEvent } from 'electron';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -9,8 +8,6 @@ import logger from 'redux-logger';
 import rootReducer from './reducer';
 import WaveTables from './components/WaveTables';
 import { loadStore } from './actions/loadStore';
-import * as TableReducer from "./reducer/tables";
-import Table from './model/Table';
 
 const DragAreaStyle = styled.div`
   -webkit-app-region: drag;
