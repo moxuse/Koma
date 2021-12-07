@@ -126,14 +126,8 @@ export default class SCSynth {
     }
   }
 
-  allocReadBuffer(bufNum: number, file: string) {
-    if (this.mode === 'internal') {
-      this.server.send.msg(['/b_allocRead', bufNum, file]);
-    } else if (this.mode === 'remote') {
-      const message = new OSC.Message(['b_allocRead'], bufNum, file);
-      const binary = message.pack()
-      this.socket.send(new Buffer(binary), 0, binary.byteLength, 57110, 'localhost');
-    }
+  allocReadBuffer(bufnum: number, file: string) {
+    this.sendMsg(['/b_allocRead', bufnum, file]);
   }
 
   loadSynthDefFromFile(name: string, file: string) {
@@ -142,15 +136,15 @@ export default class SCSynth {
     }
   }
 
+  playBuffer(nodeId: number, bufnum: number) {    
+    this.sendMsg(['/s_new', 'player', nodeId, 1, 0, 'buffer', bufnum]);
+  }
+
   freeBuffer() {
     
   }
 
   sliceBuffer() {
-    
-  }
-
-  playBuffer() {
     
   }
 
