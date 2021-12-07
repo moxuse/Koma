@@ -1,7 +1,7 @@
 import sc from "supercolliderjs";
 import SCSynth from './SCSynth';
 
-const playerStnthDefFilePath = __dirname + "./'\/../../../media/player.scd";
+const audioInStnthDefFilePath = __dirname + "./'\/../../../media/audioIn.scd";
 const recorderStnthDefFilePath = __dirname + "./'\/../../../media/recorder.scd";
 const sampleFilePath = __dirname + '\/../../media/sample.wav';
 
@@ -30,7 +30,7 @@ describe('scStnth Class check internal server boot', () => {
 });
 
 
-describe('scStnth Class check remote server boot and sync', () => {
+describe('scSytnth Class check remote server boot and sync', () => {
   it('try boot and set remote mode', async () => {
     const scSynth = new SCSynth();
     return new Promise(async (resolve, reject) => {
@@ -46,7 +46,7 @@ describe('scStnth Class check remote server boot and sync', () => {
 
 */
 
-describe('scStnth server buffer allocation', () => {
+describe('scSytnth server buffer allocation', () => {
   it('on Remote', async () => {
     const scSynth = new SCSynth();
     return new Promise(async (resolve, reject) => {

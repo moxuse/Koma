@@ -9,13 +9,13 @@ const GraphConatainer = styled.div`
 `;
 
 const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
-  const [context,setContext] = useState<CanvasRenderingContext2D>()
+  const [context,setContext] = useState<CanvasRenderingContext2D | null>()
   const [buffer, setBuffer] = useState<Float32Array>();
   const graphRef = useRef<HTMLCanvasElement>(null);
   useEffect(()=>{
     if (graphRef.current) {
       setBuffer(bufferData);
-      const canvasContext = graphRef.current.getContext("2d") as CanvasRenderingContext2D;
+      const canvasContext = graphRef.current.getContext("2d");
       setContext(canvasContext)
     }
   },[])

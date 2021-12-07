@@ -17,7 +17,7 @@ export default class SCSynth {
   private server: any;
   private listennersRemote: Array<{ name: string, event: SCSynthEvent }>;
   private listennersInternal: Array<{ name: string, event: SCSynthEvent }>;
-  private udpPort: number = 8000;
+  private  udpPort: number = 8000;
 
   constructor() {
     this.mode = 'remote';

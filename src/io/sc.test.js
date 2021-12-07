@@ -13,7 +13,6 @@ describe('void test', () => {
 });
 
 /*
-
 describe('boot scsynth', () => {
   it('boot and allocate/read Buffer, recieve done msg', async () => {
     const server_ = await sc.server.boot();
@@ -72,19 +71,19 @@ describe('declar synthdef', () => {
     })
     expect(server_.isRunning).toEqual(true);
 
-    const recorder = await server_.synthDef(
-      "recorder",
+    const audioIn = await server_.synthDef(
+      "audioIn",
       `{ arg out = 40;
         Out.ar(out, SoundIn.ar(0));
       }`,
     );
-    const player = await server_.synthDef(
-      "playerInAudio",
+    const recorder = await server_.synthDef(
+      "recorder",
       `{ arg out = 40, buffer = 0;
         RecordBuf.ar(In.ar(out,1), buffer, loop: 0, doneAction: 2);
       }`,
     );
-    await Promise.all([a, recorder, player]);
+    await Promise.all([a, audioIn, recorder]);
     return server_.quit();
   });
   
@@ -99,9 +98,10 @@ describe('buffer write at scsynth', () => {
       const a = await sc.server.boot().then((server) => {
         server_ = server;
       })
+      
       expect(server_).toBeTruthy;
       await server_.loadSynthDef("recorder", __dirname + "./'\/../../../media/recorder.scd");
-      await server_.loadSynthDef("player", __dirname + "./'\/../../../media/player.scd");
+      await server_.loadSynthDef("audioIn", __dirname + "./'\/../../../media/audioIn.scd");
       await server_.receive.subscribe((msg) => {
         if (msg[0] == '/done') {
           expect(msg).toBeTruthy;
@@ -112,8 +112,8 @@ describe('buffer write at scsynth', () => {
       });
       setTimeout(() => {
         server_.send.msg(['/b_alloc', bufNum, 44100 * (duration / 1000), 1]);
-        server_.send.msg(['/s_new', 'recorder', 2000, 1, 0]);
-        server_.send.msg(['/s_new', 'player', 3000, 1, 0, 'buffer', bufNum]);
+        server_.send.msg(['/s_new', 'audioIn', 2000, 1, 0]);
+        server_.send.msg(['/s_new', 'recorder', 3000, 1, 0, 'buffer', bufNum]);
         setTimeout(() => {
           server_.send.msg(['/n_free', 3000]);
           server_.send.msg(['/n_free', 2000]);
@@ -209,8 +209,8 @@ describe('recive task message from lang', () => {
 
       setTimeout(() => {
         server_.send.msg(['/b_alloc', bufNum, 44100 * (duration / 1000), 1]);
-        server_.send.msg(['/s_new', 'recorder', 2000, 1, 0]);
-        server_.send.msg(['/s_new', 'player', 3000, 1, 0, 'buffer', bufNum]);
+        server_.send.msg(['/s_new', 'audioIn', 2000, 1, 0]);
+        server_.send.msg(['/s_new', 'recorder', 3000, 1, 0, 'bufNum', bufNum]);
 
         setTimeout(async () => {
           server_.send.msg(['/n_free', 3000]);
@@ -229,6 +229,4 @@ describe('recive task message from lang', () => {
     }
   });
 });
-
-
 */
