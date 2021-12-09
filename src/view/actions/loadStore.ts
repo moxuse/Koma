@@ -35,21 +35,21 @@ export type LoadStoreAction = LoadStoreRequest | LoadStoreSuccess | LoadStoreFai
  export const loadStoreRequest: ActionCreator<LoadStoreAction> = (): LoadStoreAction => ({
   type: 'LOAD_STORE_REQUEST',
   payload: { isFetching: true }
-} as LoadStoreAction);
+});
 
 export const loadStoreSuccess: ActionCreator<LoadStoreAction> = (
   payload: LoadStoreSuccessPayload
 ): LoadStoreAction => ({
   type: 'LOAD_STORE_SUCCESS',
   payload: payload
-} as LoadStoreAction);
+});
 
 export const loadStoreFailure: ActionCreator<LoadStoreAction> = (
   payload: LoadStoreErrorPayload
 ): LoadStoreAction => ({
   type: 'LOAD_STORE_FAILURE',
   payload: payload
-} as LoadStoreAction);
+});
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadStoreSucseed');

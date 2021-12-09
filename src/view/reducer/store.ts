@@ -12,7 +12,6 @@ export const loadStore = (state = storeInitialState, action: LoadStoreAction) =>
       return {
         isFetching: state.isFetching
       }
-      break;
     case 'LOAD_STORE_SUCCESS':
       return {
         isFetching: action.payload?.isFetching,
@@ -23,7 +22,6 @@ export const loadStore = (state = storeInitialState, action: LoadStoreAction) =>
         isFetching: action.payload.isFetching,
         error: action.payload.error
       }
-      break;
     default:
       return state;
   }

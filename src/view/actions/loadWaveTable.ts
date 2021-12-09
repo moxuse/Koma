@@ -45,21 +45,21 @@ export const loadWaveTableRequest: ActionCreator<LoadWaveTableAction> = (
  ): LoadWaveTableAction => ({
   type: 'LOAD_WAVE_TABLE_REQUEST',
   payload
-} as LoadWaveTableAction);
+});
 
 export const loadWaveTableSuccess: ActionCreator<LoadWaveTableAction> = (
   payload: LoadWaveTableSuccessPayload
 ): LoadWaveTableAction => ({
   type: 'LOAD_WAVE_TABLE_SUCCESS',
   payload
-} as LoadWaveTableAction);
+});
 
 export const loadWaveTableFailure: ActionCreator<LoadWaveTableAction> = (
   payload: LoadWaveTableErrorPayload
 ): LoadWaveTableAction => ({
   type: 'LOAD_WAVE_TABLE_FAILURE',
   payload
-} as LoadWaveTableAction);
+});
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableSucseed');
@@ -73,13 +73,14 @@ export const loadWaveTable = (filePath: string) => (
     isFetching: true,
     filePath: filePath
   }))
-  window.api.on!('loadWaveTableSucseed', (_, arg: AudioData) => {
+  window.api.on!('loadWaveTableSucseed', (_, arg: { bufnum: number, data: AudioData }) => {
+    console.log('args......', arg)
     const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, filePath, buffer: arg.channelData[0] });
+    const s = new Sample({ id: sampleId, filePath, buffer: arg.data.channelData[0] });
     const t = new Table({
       id: getNewId(),
       name: ommitFileName(filePath),
-      bufnum: 9000,
+      bufnum: arg.bufnum,
       sample: sampleId,
       slice: undefined
     });

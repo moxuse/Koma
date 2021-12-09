@@ -44,20 +44,54 @@ describe('scSytnth Class check remote server boot and sync', () => {
   });
 });
 
-*/
-
 describe('scSytnth server buffer allocation', () => {
   it('on Remote', async () => {
     const scSynth = new SCSynth();
     return new Promise(async (resolve, reject) => {
-      scSynth.subscribeRemote('/done', async (msg) => {
+      scSynth.subscribe('/done', async (msg) => {
         console.log(msg);
         resolve(expect(msg ? msg[0] : msg).toEqual('/b_allocRead'));
       })
       await scSynth.boot();
-      expect(scSynth.mode).toEqual('remote');
+      // expect(scSynth.mode).toEqual('remote');
       scSynth.allocReadBuffer(bufNum, sampleFilePath);
       
     });
   });
 });
+
+describe('scSytnth server buffer allocation', () => {
+  it('on Remote', async () => {
+    const scSynth = new SCSynth();
+    return new Promise(async (resolve, reject) => {      
+      await scSynth.boot();
+      const bunnum = await scSynth.allocReadBuffer(sampleFilePath)
+        .catch((e) => {
+          console.log('ERROR!!', e.error)
+        });
+      console.log('RESULT', bunnum)
+      expect(bunnum).toBeTruthy();
+      resolve(0);
+    });
+  });
+});
+
+
+describe('scSytnth server load synthDef', () => {
+  it('on Remote', async () => {
+    const scSynth = new SCSynth();
+    return new Promise(async (resolve, reject) => {      
+      await scSynth.boot();
+      // expect(scSynth.mode).toEqual('remote');
+      const bunnum = await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath)
+        .catch((e) => {
+          console.log('ERROR!!', e.error);
+        });
+      console.log('RESULT', bunnum)
+      expect(bunnum).toBeTruthy();
+      resolve(0);
+    });
+  });
+});
+
+*/

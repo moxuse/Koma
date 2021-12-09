@@ -157,7 +157,7 @@ describe('communicate between remote scsynth with osc', () => {
   });
 });
 
-/*
+
 describe('recive task message from lang', () => {
   it('osc test', async () => {
     const bufNum = 4000;

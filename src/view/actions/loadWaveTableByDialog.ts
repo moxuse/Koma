@@ -39,21 +39,21 @@ export const readTableRequest: ActionCreator<ReadTableAction> = (
 ): ReadTableAction => ({
   type: 'READ_TABLE_REQUEST',
   payload
-} as ReadTableAction);
+});
 
 export const readTableSuccess: ActionCreator<ReadTableAction> = (
   payload: ItemPayload
 ): ReadTableAction => ({
   type: 'READ_TABLE_SUCCESS',
   payload 
-} as ReadTableAction);
+});
 
 export const readTableFailure: ActionCreator<ReadTableAction> = (
   payload: ErrorPayload
 ): ReadTableAction => ({
   type: 'READ_TABLE_FAILURE',
   payload 
-} as ReadTableAction);
+});
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableByDialogSucseed');
@@ -85,4 +85,5 @@ export const loadWaveTableByDialog = () => {
       removeEvents();
     });
     window.api.loadWaveTableByDialog();
-  }}
+  }
+}
