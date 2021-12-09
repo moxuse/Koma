@@ -51,7 +51,6 @@ const removeEvents = () => {
 
 export const player = (bufnum: number) => {
   return (dispatch: Dispatch<Action>) => {
-    console.log('action dispatch', bufnum);
     dispatch(playerRequest({
       isPlaying: true,
       bufnum: bufnum,

@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Table from '../../model/Table';
 import Graph from './Graph';
@@ -25,21 +25,34 @@ const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, e
   {
     table: Table, bufferData: Float32Array | undefined, handlePlayer: any, isPlaying: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
+  const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
+  const [playButtonActive, setPlayButtonActive] = useState<boolean>(true);
   
   const clickPlay = useCallback(() => {
     handlePlayer(table.getBufnum());
-  },[]);
+  }, []);
+  
+  useEffect(() => {
+    setCurrentBufnum(table.getBufnum());
+  }, [table])
 
+  /* 
+  TODO buttonstyling
+  useEffect(() => {
+    setPlayButtonActive(isPlaying && (currentBufnum === playerBufnum));
+  }, [isPlaying, playerBufnum, currentBufnum]);
+  console.log('playButtonActive', playButtonActive)
+  */
   return (
     <WaveTableContainer>
-      <p>{table.getId()}</p>
+      {/* <p>{table.getId()}</p> */}
       <p>{table.getName()}</p>
       <p>{table.getBufnum()}</p>
       {bufferData ?
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
       }
-      <PlayButton isPlaying={isPlaying} onClick={clickPlay}>
+      <PlayButton isPlaying={playButtonActive} onClick={clickPlay}>
         {`Play`}
       </PlayButton>
     </WaveTableContainer>
