@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Table from '../../model/Table';
 import styled from 'styled-components';
 
+const width = 200;
+const height = 60;
+
 const GraphConatainer = styled.div`
   margin: 2px;
-  width: 180px;
-  height: 80px;
+  width: ${width}px;
+  height: ${height}px;
 `;
 
 const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
@@ -16,18 +19,21 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
     if (graphRef.current) {
       setBuffer(bufferData);
       const canvasContext = graphRef.current.getContext("2d");
-      setContext(canvasContext)
+      setContext(canvasContext);
+
     }
   },[])
   useEffect(() => {
-    if (buffer && context) {      
+    if (buffer && context) {
       context.fillStyle = 'green';
-      buffer?.forEach((val, i) => context.fillRect(i * 0.125, 30, 0.125, val * 100));
+      const pixcelParSample = width / buffer.length;
+      console.log(buffer.length, pixcelParSample);
+      buffer?.forEach((val, i) => context.fillRect(i * pixcelParSample, height * 0.5, pixcelParSample, val * height * 0.5));
     }
   }, [bufferData, context])
   return (
     <GraphConatainer>
-      <canvas width="180" height="80" ref={graphRef}></canvas>
+      <canvas width={width} height={height} ref={graphRef}></canvas>
     </GraphConatainer>
   )
 }

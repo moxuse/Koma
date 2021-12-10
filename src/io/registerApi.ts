@@ -10,7 +10,7 @@ import SCLang from './SCLang';
 const playerStnthDefFilePath = __dirname + "./'\/../../../media/player.scd";
 const recorderStnthDefFilePath = __dirname + "./'\/../../../media/recorder.scd";
 const audioInStnthDefFilePath = __dirname + "./'\/../../../media/audioIn.scd";
-
+const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
 let scLang: SCLang;
@@ -20,7 +20,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   console.log('register events for the api');
   
   scSynth = new SCSynth({
-    numBuffers: '12000'
+    numBuffers: optionNumBuffers
   });
   scLang = new SCLang();
   await scSynth.boot();
@@ -30,7 +30,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
     scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
   } else {
-    scLang.loadSynthDefs();
+    await scLang.loadSynthDefs();
   }
   /**
    * Load Store file
@@ -114,6 +114,5 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     e.reply('playerSuccess', bufnum);
   })
   // window.api.playerSuccess(bufnum);
-
 
 }

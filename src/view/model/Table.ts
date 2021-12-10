@@ -16,7 +16,7 @@ export type TableType = {
 const DefaultTable: TableType = {
   id: 'id',
   name: 'default',
-  bufnum: 9000,
+  bufnum: 600,
   sample: undefined,
   slice: undefined,
 }

@@ -61,8 +61,7 @@ const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, e
 
 function mapStateToProps(
   { player } : any
-) {
-  return {
+) {  return {
     isPlaying: player.isPlaying,
     playerBufnum: player.bufnum,
     error: player.error

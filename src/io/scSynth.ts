@@ -18,7 +18,7 @@ export default class SCSynth {
   public mode: SCSynthMode;
   private eventId: number = 0;
   private nodeId: number = 8000;
-  private bufnum: number = 4000;
+  private bufnum: number = 600;
   private socket;
   private server: any;
   private options: ServerOptions;
@@ -101,7 +101,7 @@ export default class SCSynth {
       });
     });
     this.socket.on('error', (err) => {
-      console.log(`client err：\n${err.stack}`);
+      console.log(`client err: \n${err.stack}`);
     });
   }
 

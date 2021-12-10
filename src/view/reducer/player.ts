@@ -2,7 +2,7 @@ import { PlayerAction } from "../actions/palyer";
 
 const playerInitialState = {
   isPlaying: false,
-  bufnum: 9000,
+  bufnum: 600,
   error: undefined,
 }
 
