@@ -1,5 +1,5 @@
 import path from 'path';
-import { Configuration } from 'webpack';
+import { Configuration, ProvidePlugin } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from "copy-webpack-plugin";
@@ -13,6 +13,19 @@ const config: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.json'],
+    alias: {
+      process: "process/browser",
+      util: "util"
+    },
+    fallback: {
+      "assert": require.resolve('assert'),
+      "fs": false,
+      "util": require.resolve('util'),
+      "net": false,
+      "path": false,
+      "stream": false,
+      "constants": require.resolve('constants')
+    } 
   },
   entry: {
     app: './src/view/index.tsx',
@@ -52,7 +65,11 @@ const config: Configuration = {
       patterns: [
         { from: "./store.json", to: "./" }
       ],
-    })
+    }),
+    new ProvidePlugin({
+      process: 'process/browser',
+      util: 'utils'
+    }),
   ],
   devtool: 'inline-source-map',
 };

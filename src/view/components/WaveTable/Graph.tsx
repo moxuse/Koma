@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Table from '../../model/Table';
 import styled from 'styled-components';
 
-const width = 200;
+const width = 150;
 const height = 60;
 
 const GraphConatainer = styled.div`
-  margin: 2px;
+  margin: 2px 0 2px 0;
+  display: inline-table;
+  background-color: #1C1C1C;
   width: ${width}px;
   height: ${height}px;
 `;
@@ -20,12 +22,11 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
       setBuffer(bufferData);
       const canvasContext = graphRef.current.getContext("2d");
       setContext(canvasContext);
-
     }
   },[])
   useEffect(() => {
     if (buffer && context) {
-      context.fillStyle = 'green';
+      context.fillStyle = 'white';
       const pixcelParSample = width / buffer.length;
       console.log(buffer.length, pixcelParSample);
       buffer?.forEach((val, i) => context.fillRect(i * pixcelParSample, height * 0.5, pixcelParSample, val * height * 0.5));

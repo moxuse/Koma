@@ -38,13 +38,14 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'loadStoreSucseed'
    * 'loadStoreFailed'
    */
-  ipcMain.on('loadStore', (e) => {
-    if (isDev) { console.log('loadstore!! in api'); }
-    Utils.loadStore().then((tables: TableList) => {
-      e.reply('loadStoreSucseed', tables);
-    }).catch((err: any) => {      
-      e.reply('loadStoreFailed', err);
-    })
+  ipcMain.on('loadSetting', (e) => {
+    if (isDev) { console.log('loadSetting!! in api'); }
+    // Utils.loadStore().then((tables: TableList) => {
+    //   e.reply('loadSettingSucseed', tables);
+    // }).catch((err: any) => {      
+    //   e.reply('loadSettingFailed', err);
+    // })
+    e.reply('loadSettingFailed', new Error('not implimented yet.'));
   })
   // window.api.loadStore();
 

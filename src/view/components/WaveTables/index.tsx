@@ -4,7 +4,7 @@ import DropSection from '../DropSection';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { connect } from 'react-redux';
-import { loadWaveTableByDialog } from '../../actions/loadWaveTableByDialog';
+// import { loadWaveTableByDialog } from '../../actions/loadWaveTable/ByDialog';
 
 import styled from 'styled-components';
 
@@ -15,11 +15,15 @@ const WaveTableContainer = styled.div`
   }
 `;
 
+const WaveTableList = styled.ul`
+  margin: 0;
+  padding: 0px;
+`;
+
 const WaveTables = (
-  { isFetching, tables, handleLoadWaveTableByDialog }: {
+  { isFetching, tables }: {
     isFetching?: boolean,
     tables: TableList,
-    handleLoadWaveTableByDialog: any
   }): JSX.Element => {
   
   const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
@@ -27,7 +31,7 @@ const WaveTables = (
   }
   const getTables = () => {
     return (
-      (!isFetching) && tables ? tables.getTables().map((table: Table) => {
+      (!isFetching) && tables ? tables.getTables()?.map((table: Table) => {
         return (<WaveTable
           table={table}
           bufferData={getBufferData(tables, table)}
@@ -40,26 +44,26 @@ const WaveTables = (
   return (
     <WaveTableContainer>
       <DropSection>
-        <ul>        
+        <WaveTableList>        
           {getTables()}        
-        </ul>
+        </WaveTableList>
       </DropSection>
     </WaveTableContainer>
   );
 };
 
 function mapStateToProps(
-  { waveTable } : any
+  { waveTables } : any
 ) {
   return {
-    isFetching: waveTable.isFetching,
-    tables: waveTable.tables,
+    isFetching: waveTables.isFetching,
+    tables: waveTables.tables,
   }
 }
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
+    // handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
   }
 }
 

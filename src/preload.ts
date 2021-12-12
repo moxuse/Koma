@@ -5,7 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
  **/ 
 contextBridge.exposeInMainWorld(
   "api", {
-    loadStore: async () => ipcRenderer.send('loadStore'),
+    loadSetting: async () => ipcRenderer.send('loadSetting'),
     loadWaveTableByDialog: async () => ipcRenderer.send('loadWaveTableByDialog'),
     loadWaveTable: async (filePath: string) => ipcRenderer.send('loadWaveTable', filePath),
     playerRequest: async (bufnum: number) => { console.log('in ipc render!', bufnum); return ipcRenderer.send('playerRequest', bufnum) },

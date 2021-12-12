@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import { player } from '../../actions/palyer';
 
 const WaveTableContainer = styled.li`
-  background-color: gray;
+  color: white;
+  -webkit-app-region: none;
   margin: 4px 0px 4px 0px;
   width: 100%;
   p {
@@ -18,7 +19,11 @@ const WaveTableContainer = styled.li`
 `;
 
 const PlayButton = styled.button`
-  background-color: ${(props: {isPlaying: boolean}) => props.isPlaying ? 'white': 'gray'};
+  color: white;
+  background-color: ${(props: { isPlaying: boolean }) => props.isPlaying ? 'white' : 'gray'};
+  border: 1px solid #111;
+  background: #2C2C2C;
+  box-shadow: inset 1px 1px 1px #0C0C0C;
 `;
 
 const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, error }:
@@ -26,7 +31,7 @@ const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, e
     table: Table, bufferData: Float32Array | undefined, handlePlayer: any, isPlaying: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
-  const [playButtonActive, setPlayButtonActive] = useState<boolean>(true);
+  const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
   
   const clickPlay = useCallback(() => {
     handlePlayer(table.getBufnum());
@@ -46,15 +51,15 @@ const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, e
   return (
     <WaveTableContainer>
       {/* <p>{table.getId()}</p> */}
+      <PlayButton isPlaying={playButtonActive} onClick={clickPlay}>
+        {`>`}
+      </PlayButton>
       <p>{table.getName()}</p>
       <p>{table.getBufnum()}</p>
       {bufferData ?
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
       }
-      <PlayButton isPlaying={playButtonActive} onClick={clickPlay}>
-        {`Play`}
-      </PlayButton>
     </WaveTableContainer>
   )
 };

@@ -1,39 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { createStore, applyMiddleware } from 'redux';
+import { PersistGate } from 'redux-persist/es/integration/react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import logger from 'redux-logger';
-import rootReducer from './reducer';
 import WaveTables from './components/WaveTables';
-import { loadStore } from './actions/loadStore';
+import { configReducer } from '../view/reducer';
+const { store, persistor } = configReducer();
 
 const DragAreaStyle = styled.div`
   -webkit-app-region: drag;
 `;
 
-const store = createStore(
-  rootReducer,
-  applyMiddleware(thunk, logger)
-)
-
-store.dispatch(loadStore());
+const AppContainer = styled.div`
+  margin-top: 40px;`;
 
 const App = (): JSX.Element => {
+
   return (
     <DragAreaStyle>
-      <Provider store = { store }>
-        <div className = "App">
-          <WaveTables></WaveTables>
-        </div>
-      </Provider>
-    </DragAreaStyle>
-  );
-};
-
-App.defaultProps = {
-  props: undefined
+      <Provider store={store}>
+        <PersistGate loading={<div>Loading..</div>} persistor={persistor}>
+          <AppContainer className = "App">
+            <WaveTables></WaveTables>
+          </AppContainer>
+        </PersistGate>
+        </Provider>
+    </DragAreaStyle >
+  )
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));

@@ -2,13 +2,14 @@ import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Table from '../../model/Table';
 import { Dispatch, Action } from 'redux';
 import { connect } from 'react-redux';
-import { loadWaveTable, LoadWaveTableAction } from '../../actions/loadWaveTable';
+import { loadWaveTables, LoadWaveTableAction } from '../../actions/waveTables';
 
 import styled from 'styled-components';
 
 const DropSectionContainer = styled.div`
+  color: white;
   width: 100%;
-  background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#FFFFFF"}
+  background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#2C2C2C"}
 `;
 
 const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean, handleDrop: any, children: any }): JSX.Element => {
@@ -24,8 +25,7 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
     }
   }, []);
   const onDragReave = useCallback((_) => {
-    setDragging(false);
-  }, []);
+    setDragging(false);  }, []);
   const onDrop = useCallback((e: DragEvent) => {
     e.stopPropagation();
     if (e.preventDefault) {      
@@ -65,7 +65,7 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
   );
 };
 
-function mapStateToProps({ waveTable: { isFetching, error } }: { waveTable: { isFetching: boolean, error: string }}) {
+function mapStateToProps({ waveTables: { isFetching, error } }: { waveTables: { isFetching: boolean, error: string }}) {
   return {
     isFetching,
     error
@@ -74,7 +74,7 @@ function mapStateToProps({ waveTable: { isFetching, error } }: { waveTable: { is
 
 function mapDispatchToProps(dispatch: any ) {
   return {
-    handleDrop: (filePath: string) => dispatch(loadWaveTable(filePath))
+    handleDrop: (filePath: string) => dispatch(loadWaveTables(filePath))
   }
 }
 

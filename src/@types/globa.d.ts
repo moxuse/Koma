@@ -19,8 +19,7 @@ declare global {
   type IpcEvent = ((e: IpcMainEvent, arg: IcpEventArg) => void) | undefined;
 
   interface ContextBridge {
-    settings: any,
-    loadStore: () => void,
+    loadSetting: () => void,
     loadWaveTableByDialog: () => void,
     loadWaveTable: (filePath: string) => void,
     playerRequest: (bufnum: number) => void,

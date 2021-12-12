@@ -1,8 +1,8 @@
 import { ActionCreator, Dispatch } from 'redux';
 import { AudioData } from 'wav-decoder';
-import Table from '../model/Table';
-import Sample from '../model/Sample';
-import { getNewId, ommitFileName } from './helper';
+import Table from '../../model/Table';
+import Sample from '../../model/Sample';
+import { getNewId, ommitFileName } from '../helper';
 
 type LoadWaveTableRequestPayload = {
   isFetching: boolean,
@@ -66,7 +66,7 @@ const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableFailed');
 }
 
-export const loadWaveTable = (filePath: string) => (
+export const loadWaveTables = (filePath: string) => (
   dispatch: Dispatch<LoadWaveTableAction>
 ) => {
   dispatch(loadWaveTableRequest({
@@ -74,7 +74,6 @@ export const loadWaveTable = (filePath: string) => (
     filePath: filePath
   }))
   window.api.on!('loadWaveTableSucseed', (_, arg: { bufnum: number, data: AudioData }) => {
-    console.log('args......', arg)
     const sampleId = getNewId();
     const s = new Sample({ id: sampleId, filePath, buffer: arg.data.channelData[0] });
     const t = new Table({

@@ -2,6 +2,7 @@ import path from 'path';
 import { BrowserWindow, app, ipcMain, session } from 'electron';
 import loadDevtool from 'electron-load-devtool';
 import registerApi from './io/registerApi';
+const fsExtra = require('fs-extra');
 const os = require('os');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -34,7 +35,7 @@ if (isDev) {
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     frame: false, // frameless
-    backgroundColor: '#2e2c2c',
+    backgroundColor: '#2c2c2c',
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
@@ -61,6 +62,8 @@ app.whenReady().then(async () => {
     // await session.defaultSession.loadExtension(reduxDevToolsPath);
   }
 });
+
+fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
 app.once('window-all-closed', () => app.quit());

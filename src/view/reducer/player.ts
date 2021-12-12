@@ -1,6 +1,6 @@
-import { PlayerAction } from "../actions/palyer";
+import { PlayerRequestPayload, PlayerAction } from "../actions/palyer";
 
-const playerInitialState = {
+const playerInitialState: PlayerRequestPayload = {
   isPlaying: false,
   bufnum: 600,
   error: undefined,
@@ -11,7 +11,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
     case 'PLAYER_REQUEST':
       return {
         isPlaying: true,
-        bufnum: action.payload,
+        bufnum: action.payload.bufnum,
         error: undefined
       }
     case 'PLAYER_SUCCESS':

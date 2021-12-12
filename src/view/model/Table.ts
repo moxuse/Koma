@@ -38,7 +38,7 @@ export default class Table extends Record(DefaultTable) {
     return this.get('slice');
   }
 
-  updateSlice(slice: Slice) {
+  private updateSlice(slice: Slice) {
     this.set('slice', slice);
   }
   static updateSlice(target: Table, newSlice: Slice) {
