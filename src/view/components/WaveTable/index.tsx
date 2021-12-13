@@ -49,7 +49,7 @@ const WaveTable = ({ table, bufferData, handlePlayer, isAllocated, isPlaying, pl
   console.log('playButtonActive', playButtonActive)
   */
   return (
-    <WaveTableContainer>
+    <WaveTableContainer key={table.getId()}>
       {/* <p>{table.getId()}</p> */}
       <PlayButton isPlaying={playButtonActive} onClick={clickPlay}>
         {`>`}

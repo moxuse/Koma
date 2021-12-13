@@ -24,11 +24,15 @@ const WaveTables = ({ isFetching, tables } : {
     isFetching: boolean,
     tables: TableList,
 }): JSX.Element => {
-  
-    const isAllcated = useCallback((tables: TableList, table: Table): boolean => {
-      console.log('alloc?', table.getSample(), TableList.getAllocatedSampleById(tables, table.getSample()));
+    // const [isAllocated, setIsAllocated] = useState<boolean>(false);
+
+    const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
+      console.log('alloc?', table.getSample(), TableList.getAllocatedSampleById(tables, table.getSample()!));
+      // setIsAllocated(TableList.getAllocatedSampleById(tables, table.getSample()!));
       return TableList.getAllocatedSampleById(tables, table.getSample()!);
     }, [isFetching, tables])
+  
+  
 
     const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
       return tables.getBufferDataForSampleId(table.getSample());
@@ -40,7 +44,7 @@ const WaveTables = ({ isFetching, tables } : {
           return (<WaveTable
             table={table}
             bufferData={getBufferData(tables, table)}
-            isAllocated={isAllcated(tables, table)}
+            isAllocated={isAllocated(tables, table)}
             key={table.id} />
           )
         }) : <p>{`loading...`}</p>

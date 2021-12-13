@@ -27,13 +27,11 @@ export const playerFailure = (
   payload 
 });
 
-
 export type PlayerAction = (
   | ReturnType<typeof playerRequest>
   | ReturnType<typeof playerSuccess>
   | ReturnType<typeof playerFailure>
 )
-
 
 const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');

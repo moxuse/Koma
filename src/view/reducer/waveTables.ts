@@ -21,10 +21,10 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         error: state.error
       }
     case 'LOAD_WAVE_TABLE_SUCCESS':
-      const newTableList = TableList.appendTable(state.tables, action.payload.table!);
+      const newTableList = TableList.appendSample(state.tables, action.payload.sample!);
       return {
         isFetching: action.payload.isFetching,
-        tables: TableList.appendSample(newTableList, action.payload.sample!),
+        tables: TableList.appendTable(newTableList, action.payload.table!),
         error: state.error
       }
     case 'LOAD_WAVE_TABLE_FAILURE':

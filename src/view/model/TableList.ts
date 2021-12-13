@@ -45,19 +45,24 @@ export default class TableList extends Record(DefaultTableList) {
     }).get(0);
   }
 
+  /**
+   * 
+   * TODO test
+   */
   static getSampleIndexById(target: TableList, id: string): number | null {
     return target.getSamples().forEach((sample, i) => {
       if (sample.getId() !== id) { return i }
     });
   }
   
-  static getAllocatedSampleById(target: TableList, id: string): boolean { 
-    target.getSamples().forEach((sample, i) => {
+  static getAllocatedSampleById(target: TableList, id: string): boolean {
+    let alloc = false;
+    target.getSamples().forEach(sample => {
       if (sample.getId() === id) {
-        return sample.getAllocated();
+        alloc = sample.getAllocated();
       }
-    });
-    return false;
+    })
+    return alloc;
   }
 
   static newFromTableList(tables: List<Table>): TableList {
