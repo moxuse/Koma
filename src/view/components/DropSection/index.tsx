@@ -58,7 +58,7 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
             {children}
             {isFetching ? (<div>{`loading`}</div>) : (<></>) }
           </div>
-          {'+'}
+          {'[ + ]'}
         </div>
       </DropSectionContainer>
     </>
