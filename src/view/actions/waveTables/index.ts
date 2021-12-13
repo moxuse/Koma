@@ -4,62 +4,42 @@ import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import { getNewId, ommitFileName } from '../helper';
 
-type LoadWaveTableRequestPayload = {
+export type LoadWaveTableRequestPayload = {
   isFetching: boolean,
-  filePath: string
+  filePath: string,
+  table: Table | undefined,
+  sample: Sample | undefined,
+  error: Error | undefined
 }
-
-export interface LoadWaveTableRequest {
-  type: 'LOAD_WAVE_TABLE_REQUEST',
-  payload: LoadWaveTableRequestPayload
-}
-
-type LoadWaveTableSuccessPayload = {
-  isFetching: boolean,
-  table: Table,
-  sample: Sample
-}
-
-export interface LoadWaveTableSuccess {
-  type: 'LOAD_WAVE_TABLE_SUCCESS';
-  payload: LoadWaveTableSuccessPayload;
-}
-
-type LoadWaveTableErrorPayload = {
-  isFetching: boolean,
-  error: string
-}
-
-export interface LoadWaveTableFailure {
-  type: 'LOAD_WAVE_TABLE_FAILURE',
-  payload: LoadWaveTableErrorPayload
-}
-
-export type LoadWaveTableAction = LoadWaveTableRequest | LoadWaveTableSuccess | LoadWaveTableFailure;
-
 /**
  * Action Creator
  */
-export const loadWaveTableRequest: ActionCreator<LoadWaveTableAction> = (
+export const loadWaveTableRequest = (
    payload: LoadWaveTableRequestPayload
- ): LoadWaveTableAction => ({
+ ) => ({
   type: 'LOAD_WAVE_TABLE_REQUEST',
   payload
 });
 
-export const loadWaveTableSuccess: ActionCreator<LoadWaveTableAction> = (
-  payload: LoadWaveTableSuccessPayload
-): LoadWaveTableAction => ({
+export const loadWaveTableSuccess = (
+  payload: LoadWaveTableRequestPayload
+) => ({
   type: 'LOAD_WAVE_TABLE_SUCCESS',
   payload
 });
 
-export const loadWaveTableFailure: ActionCreator<LoadWaveTableAction> = (
-  payload: LoadWaveTableErrorPayload
-): LoadWaveTableAction => ({
+export const loadWaveTableFailure = (
+  payload: LoadWaveTableRequestPayload
+) => ({
   type: 'LOAD_WAVE_TABLE_FAILURE',
   payload
 });
+
+export type LoadWaveTableAction = (
+  | ReturnType<typeof loadWaveTableRequest>
+  | ReturnType<typeof loadWaveTableSuccess>
+  | ReturnType<typeof loadWaveTableFailure>
+)
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableSucseed');
@@ -71,11 +51,16 @@ export const loadWaveTables = (filePath: string) => (
 ) => {
   dispatch(loadWaveTableRequest({
     isFetching: true,
-    filePath: filePath
+    filePath: filePath,
+    table: undefined,
+    sample: undefined,
+    error: undefined
   }))
   window.api.on!('loadWaveTableSucseed', (_, arg: { bufnum: number, data: AudioData }) => {
+    
     const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, filePath, buffer: arg.data.channelData[0] });
+    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: arg.data.channelData[0] });
+    console.log('SUNCKDJJ',s.getAllocated())
     const t = new Table({
       id: getNewId(),
       name: ommitFileName(filePath),
@@ -86,13 +71,18 @@ export const loadWaveTables = (filePath: string) => (
     dispatch(loadWaveTableSuccess({
       isFetching: false,
       table: t,
-      sample: s
+      sample: s,
+      filePath: filePath,
+      error: undefined
     }));
     removeEvents()
   });
   window.api.on!('loadWaveTableFailed', (_, error) => {
     dispatch(loadWaveTableFailure({
       isFetching: false,
+      filePath: filePath,
+      table: undefined,
+      sample: undefined,
       error: error
     }));
     removeEvents();

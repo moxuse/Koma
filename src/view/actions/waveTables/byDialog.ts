@@ -1,55 +1,45 @@
 import { ActionCreator, Dispatch, Action } from 'redux';
+import { LoadWaveTableRequestPayload } from './index';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import { getNewId, ommitFileName } from '../helper';
 
 export type ItemPayload = {
-  isFetching: true;
+  isFetching: boolean;
   table: Table | undefined;
   sample: Sample | undefined;
   error: Error | undefined;
 };
 
-export interface LoadWaveTableByDialogRequest extends Action {
-  type: 'LOAD_WAVE_TABLE_BY_DIALOG_REQUEST',
-  payload: ItemPayload
-}
-
-export interface LoadWaveTableByDialogSuccess extends Action {
-  type: 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS',
-  payload: ItemPayload
-}
-
-export interface LoadWaveTableByDialogFailure extends Action {
-  type: 'LOAD_WAVE_TABLE_BY_DIALOG_FAILURE',
-  payload: ItemPayload
-}
-
-export type LoadWaveTableByDialogAction = LoadWaveTableByDialogRequest | LoadWaveTableByDialogSuccess | LoadWaveTableByDialogFailure;
-
 /**
  * Action Creator
  */
-export const loadWaveTableByDialogRequest: ActionCreator<LoadWaveTableByDialogAction> = (
-  payload: ItemPayload
-): LoadWaveTableByDialogAction => ({
+export const loadWaveTableByDialogRequest = (
+  payload: LoadWaveTableRequestPayload
+) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_REQUEST',
   payload
 });
 
-export const loadWaveTableByDialogSuccess: ActionCreator<LoadWaveTableByDialogAction> = (
-  payload: ItemPayload
-): LoadWaveTableByDialogAction => ({
+export const loadWaveTableByDialogSuccess = (
+  payload: LoadWaveTableRequestPayload
+) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS',
   payload 
 });
 
-export const loadWaveTableByDialogFailure: ActionCreator<LoadWaveTableByDialogAction> = (
-  payload: ItemPayload
-): LoadWaveTableByDialogAction => ({
+export const loadWaveTableByDialogFailure = (
+  payload: LoadWaveTableRequestPayload
+) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_FAILURE',
   payload 
 });
+
+export type LoadWaveTableByDialogAction = (
+  | ReturnType<typeof loadWaveTableByDialogRequest>
+  | ReturnType<typeof loadWaveTableByDialogSuccess>
+  | ReturnType<typeof loadWaveTableByDialogFailure>
+)
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableByDialogSucseed');
@@ -57,16 +47,17 @@ const removeEvents = () => {
 }
 
 export const loadWaveTableByDialog = () => {
-  return (dispatch: Dispatch<Action>) => {
+  return (dispatch: Dispatch<LoadWaveTableByDialogAction>) => {
     dispatch(loadWaveTableByDialogRequest({
       isFetching: true,
-        table: undefined,
-        sample: undefined,
-        error: undefined
+      table: undefined,
+      filePath: '',
+      sample: undefined,
+      error: undefined
     }))
     window.api.on!('loadWaveTableByDialogSucseed', (_, { filePath, audioData }) => {
     const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, filePath, buffer: audioData.channelData[0] });
+    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: audioData.channelData[0] });
       const t = new Table({
         id: getNewId(),
         name: ommitFileName(filePath),
@@ -76,6 +67,7 @@ export const loadWaveTableByDialog = () => {
       });
       dispatch(loadWaveTableByDialogSuccess({
         isFetching: false,
+        filePath: '',
         table: t,
         sample: s,
         error: undefined
@@ -86,6 +78,7 @@ export const loadWaveTableByDialog = () => {
       dispatch(loadWaveTableByDialogFailure(
         {
           isFetching: false,
+          filePath: '',
           table: undefined,
           sample: undefined,
           error: arg

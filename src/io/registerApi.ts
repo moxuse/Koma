@@ -116,4 +116,21 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   })
   // window.api.playerSuccess(bufnum);
 
+  /**
+   * 
+   * allocBufferRequest
+   * allocBufferSucseed
+   * allocBufferFailed
+   */
+  ipcMain.on('allocBufferRequest', (e, filePath) => {
+    if (isDev) { console.log('allocBufferRequest', e, filePath) }    
+    scSynth.allocReadBuffer(filePath).then((msg) => {
+      e.reply('allocBufferSucseed', { bufnum: msg.value, filePath: filePath});
+      if (isDev) { console.log('allocBuffer:', { bufnum: msg.value, filePath: filePath}) }
+    }).catch((err: any) => {
+      e.reply('allocBufferFailed', err);
+    });
+  })
+  // window.api.allocBuffer(bufnum);
+
 }

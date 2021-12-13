@@ -37,7 +37,7 @@ const createWindow = () => {
     frame: false, // frameless
     backgroundColor: '#2c2c2c',
     webPreferences: {
-      webSecurity: false,
+      // webSecurity: false,
       nodeIntegration: true,
       contextIsolation: true,
       preload: path.resolve(__dirname, 'preload.js'),
@@ -55,10 +55,9 @@ const createWindow = () => {
 };
 
 app.whenReady().then(async () => {
-  // if (isDev) { }
   createWindow();
   if (isDev) {
-    await session.defaultSession.loadExtension(reactDevToolsPath);
+    // await session.defaultSession.loadExtension(reactDevToolsPath);
     // await session.defaultSession.loadExtension(reduxDevToolsPath);
   }
 });

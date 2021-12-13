@@ -15,7 +15,6 @@ const AppContainer = styled.div`
   margin-top: 40px;`;
 
 const App = (): JSX.Element => {
-
   return (
     <DragAreaStyle>
       <Provider store={store}>

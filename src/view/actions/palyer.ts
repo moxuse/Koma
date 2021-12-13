@@ -6,43 +6,34 @@ export type PlayerRequestPayload = {
   error: Error | undefined
 }
 
-export interface PlayerRequest {
-  type: 'PLAYER_REQUEST',
+export const playerRequest = (
   payload: PlayerRequestPayload
-}
-
-export interface PlayerSuccess {
-  type: 'PLAYER_SUCCESS',
-  payload: PlayerRequestPayload
-}
-
-export interface PlayerFailure {
-  type: 'PLAYER_FAILURE',
-  payload: PlayerRequestPayload
-}
-
-export type PlayerAction = PlayerRequest | PlayerSuccess | PlayerFailure;
-
-export const playerRequest: ActionCreator<PlayerAction> = (
-  payload: PlayerRequestPayload
-): PlayerAction => ({
+) => ({
   type: 'PLAYER_REQUEST',
   payload 
 });
 
-export const playerSuccess: ActionCreator<PlayerAction> = (
+export const playerSuccess  = (
   payload: PlayerRequestPayload
-): PlayerAction => ({
+) => ({
   type: 'PLAYER_SUCCESS',
   payload 
 });
 
-export const playerFailure: ActionCreator<PlayerAction> = (
+export const playerFailure = (
   payload: PlayerRequestPayload
-): PlayerAction => ({
+) => ({
   type: 'PLAYER_FAILURE',
   payload 
 });
+
+
+export type PlayerAction = (
+  | ReturnType<typeof playerRequest>
+  | ReturnType<typeof playerSuccess>
+  | ReturnType<typeof playerFailure>
+)
+
 
 const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');
@@ -50,7 +41,7 @@ const removeEvents = () => {
 }
 
 export const player = (bufnum: number) => {
-  return (dispatch: Dispatch<Action>) => {
+  return (dispatch: Dispatch<PlayerAction>) => {
     dispatch(playerRequest({
       isPlaying: true,
       bufnum: bufnum,

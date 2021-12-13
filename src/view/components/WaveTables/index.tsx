@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { connect } from 'react-redux';
-// import { loadWaveTableByDialog } from '../../actions/loadWaveTable/ByDialog';
+import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
 
 import styled from 'styled-components';
 
@@ -20,26 +20,33 @@ const WaveTableList = styled.ul`
   padding: 0px;
 `;
 
-const WaveTables = (
-  { isFetching, tables }: {
-    isFetching?: boolean,
+const WaveTables = ({ isFetching, tables } : {
+    isFetching: boolean,
     tables: TableList,
-  }): JSX.Element => {
+}): JSX.Element => {
   
-  const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
-    return tables.getBufferDataForSampleId(table.getSample());
-  }
-  const getTables = () => {
-    return (
-      (!isFetching) && tables ? tables.getTables()?.map((table: Table) => {
-        return (<WaveTable
-          table={table}
-          bufferData={getBufferData(tables, table)}
-          key={table.id} />
-        )
-      }) : <p>{`loading...`}</p>
-    )
-  };
+    const isAllcated = useCallback((tables: TableList, table: Table): boolean => {
+      console.log('alloc?', table.getSample(), TableList.getAllocatedSampleById(tables, table.getSample()));
+      return TableList.getAllocatedSampleById(tables, table.getSample()!);
+    }, [isFetching, tables])
+
+    const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
+      return tables.getBufferDataForSampleId(table.getSample());
+    }
+
+    const getTables = () => {
+      return (
+        ((!isFetching) && tables) ? tables.tables.map((table: Table) => {
+          return (<WaveTable
+            table={table}
+            bufferData={getBufferData(tables, table)}
+            isAllocated={isAllcated(tables, table)}
+            key={table.id} />
+          )
+        }) : <p>{`loading...`}</p>
+      )
+    };
+  
 
   return (
     <WaveTableContainer>
@@ -63,7 +70,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    // handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
+    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
   }
 }
 

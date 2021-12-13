@@ -65,7 +65,11 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
   );
 };
 
-function mapStateToProps({ waveTables: { isFetching, error } }: { waveTables: { isFetching: boolean, error: string }}) {
+function mapStateToProps({
+  waveTables: { isFetching, error }
+}: {
+  waveTables: { isFetching: boolean, error: string }
+}) {
   return {
     isFetching,
     error

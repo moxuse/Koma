@@ -50,6 +50,15 @@ export default class TableList extends Record(DefaultTableList) {
       if (sample.getId() !== id) { return i }
     });
   }
+  
+  static getAllocatedSampleById(target: TableList, id: string): boolean { 
+    target.getSamples().forEach((sample, i) => {
+      if (sample.getId() === id) {
+        return sample.getAllocated();
+      }
+    });
+    return false;
+  }
 
   static newFromTableList(tables: List<Table>): TableList {
     return new TableList().set('tables', tables);

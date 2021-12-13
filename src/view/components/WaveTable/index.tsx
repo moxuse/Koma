@@ -26,9 +26,9 @@ const PlayButton = styled.button`
   box-shadow: inset 1px 1px 1px #0C0C0C;
 `;
 
-const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, error }:
+const WaveTable = ({ table, bufferData, handlePlayer, isAllocated, isPlaying, playerBufnum, error }:
   {
-    table: Table, bufferData: Float32Array | undefined, handlePlayer: any, isPlaying: boolean, playerBufnum: number, error: Error
+    table: Table, bufferData: Float32Array | undefined, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
@@ -60,6 +60,7 @@ const WaveTable = ({ table, bufferData, handlePlayer, isPlaying, playerBufnum, e
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
       }
+      { isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
     </WaveTableContainer>
   )
 };
