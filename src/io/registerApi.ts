@@ -26,9 +26,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   await scSynth.boot();
   await scLang.boot();
   if (scSynth.mode === 'internal') {
-    scSynth.loadSynthDefFromFile('player', playerStnthDefFilePath);
-    scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
-    scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('player', playerStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
   } else {
     await scLang.loadSynthDefs();
   }
