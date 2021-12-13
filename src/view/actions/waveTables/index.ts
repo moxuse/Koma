@@ -35,10 +35,18 @@ export const loadWaveTableFailure = (
   payload
 });
 
+export const deleteWaveTableRequest = (
+  payload: LoadWaveTableRequestPayload
+) => ({ 
+  type: 'DELETE_WAVE_TABLE_REQUEST',
+  payload
+})
+
 export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableRequest>
   | ReturnType<typeof loadWaveTableSuccess>
   | ReturnType<typeof loadWaveTableFailure>
+  | ReturnType<typeof deleteWaveTableRequest>
 )
 
 const removeEvents = () => {
@@ -60,7 +68,6 @@ export const loadWaveTables = (filePath: string) => (
     
     const sampleId = getNewId();
     const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: arg.data.channelData[0] });
-    console.log('SUNCKDJJ',s.getAllocated())
     const t = new Table({
       id: getNewId(),
       name: ommitFileName(filePath),
@@ -88,4 +95,16 @@ export const loadWaveTables = (filePath: string) => (
     removeEvents();
   });
   window.api.loadWaveTable(filePath);
+}
+
+export const deleteWaveTable = (table: Table, sample: Sample) => (
+  dispatch: Dispatch<LoadWaveTableAction>
+) => {
+  dispatch(deleteWaveTableRequest({
+    isFetching: false,
+    filePath: sample.getFilePath() || '',
+    table: table,
+    sample: sample,
+    error: undefined
+  }))
 }

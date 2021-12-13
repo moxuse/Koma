@@ -29,7 +29,12 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
       context.fillStyle = 'white';
       const pixcelParSample = width / buffer.length;
       console.log(buffer.length, pixcelParSample);
-      buffer?.forEach((val, i) => context.fillRect(i * pixcelParSample, height * 0.5, pixcelParSample, val * height * 0.5));
+      buffer?.forEach((val, i) => context.fillRect(
+        i * pixcelParSample,
+        height * 0.5,
+        pixcelParSample,
+        val * height * 0.5
+      ));
     }
   }, [bufferData, context])
   return (

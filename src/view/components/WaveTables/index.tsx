@@ -27,22 +27,23 @@ const WaveTables = ({ isFetching, tables } : {
     // const [isAllocated, setIsAllocated] = useState<boolean>(false);
 
     const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
-      console.log('alloc?', table.getSample(), TableList.getAllocatedSampleById(tables, table.getSample()!));
-      // setIsAllocated(TableList.getAllocatedSampleById(tables, table.getSample()!));
       return TableList.getAllocatedSampleById(tables, table.getSample()!);
     }, [isFetching, tables])
-  
-  
 
     const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
       return tables.getBufferDataForSampleId(table.getSample());
     }
+  
+  const getSample = (tables: TableList, table: Table) => {
+    return TableList.getSampleById(tables, table.getSample()!)
+  }
 
     const getTables = () => {
       return (
         ((!isFetching) && tables) ? tables.tables.map((table: Table) => {
           return (<WaveTable
             table={table}
+            sample={getSample(tables, table)!}
             bufferData={getBufferData(tables, table)}
             isAllocated={isAllocated(tables, table)}
             key={table.id} />

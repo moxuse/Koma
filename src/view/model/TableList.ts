@@ -29,19 +29,19 @@ export default class TableList extends Record(DefaultTableList) {
 
   static getTableById(target: TableList, id: string): Table | undefined {
     return target.getTables().filter(table => {
-      return table.getId() !== id;
+      return table.getId() === id;
     }).get(0);
   }
 
   static getTableIndexById(target: TableList, id: string): number | null {
     return target.getTables().forEach((table, i) => {
-      if (table.getId() !== id) { return i }
+      if (table.getId() === id) { return i }
     });
   }
 
   static getSampleById(target: TableList, id: string): Sample | undefined {
     return target.getSamples().filter(sample => {
-      return sample.getId() !== id;
+      return sample.getId() === id;
     }).get(0);
   }
 
@@ -51,7 +51,7 @@ export default class TableList extends Record(DefaultTableList) {
    */
   static getSampleIndexById(target: TableList, id: string): number | null {
     return target.getSamples().forEach((sample, i) => {
-      if (sample.getId() !== id) { return i }
+      if (sample.getId() === id) { return i }
     });
   }
   
@@ -82,20 +82,21 @@ export default class TableList extends Record(DefaultTableList) {
   }
 
   static deleteTable(target: TableList, targetId: string): TableList {
-    const filtered = target.getTables().filter(t => { t.getId() !== targetId });
-    return target.set('tables', filtered).set('samples', target.getSamples());
+    const filtered = target.getTables().filter(t => t.getId() !== targetId);
+    return TableList.newFromSampleList(target.getSamples()).set('tables', filtered);
   }
 
   static deleteSample(target: TableList, targetId: string): TableList {
-    const filtered = target.getSamples().filter(s => { s.getId() !== targetId });
-    return target.set('tables', target.getTables()).set('samples', filtered);
+    const filtered = target.getSamples().filter(s => s.getId() !== targetId);
+    console.log(target.getTables().size)
+    return TableList.newFromTableList(target.getTables()).set('samples', filtered);
   }
 
   static updateTable(target: TableList, tableId: string, newTable: Table): TableList {
     const matchedIndex = TableList.getTableIndexById(target, tableId);
     if (matchedIndex) {
       const newTables = target.getTables().update(matchedIndex, () => newTable);
-      return target.set('tables', newTables).set('samples', target.getSamples());
+      return new TableList().set('tables', newTables).set('samples', target.getSamples());
     }
     return target;
   }

@@ -2,9 +2,11 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Table from '../../model/Table';
+import Sample from '../../model/Sample';
 import Graph from './Graph';
 import styled from 'styled-components';
 import { player } from '../../actions/palyer';
+import { deleteWaveTable } from '../../actions/waveTables';;
 
 const WaveTableContainer = styled.li`
   color: white;
@@ -18,7 +20,7 @@ const WaveTableContainer = styled.li`
   }
 `;
 
-const PlayButton = styled.button`
+const StyledButton = styled.button`
   color: white;
   background-color: ${(props: { isPlaying: boolean }) => props.isPlaying ? 'white' : 'gray'};
   border: 1px solid #111;
@@ -26,9 +28,10 @@ const PlayButton = styled.button`
   box-shadow: inset 1px 1px 1px #0C0C0C;
 `;
 
-const WaveTable = ({ table, bufferData, handlePlayer, isAllocated, isPlaying, playerBufnum, error }:
-  {
-    table: Table, bufferData: Float32Array | undefined, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
+const WaveTable = ({
+  table, sample, bufferData, handlePlayer, deleteHandler, isAllocated, isPlaying, playerBufnum, error
+  }:{
+    table: Table, sample: Sample, bufferData: Float32Array | undefined, deleteHandler: any, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
@@ -36,6 +39,10 @@ const WaveTable = ({ table, bufferData, handlePlayer, isAllocated, isPlaying, pl
   const clickPlay = useCallback(() => {
     handlePlayer(table.getBufnum());
   }, []);
+
+  const deleTable = useCallback(() => { 
+    deleteHandler(table, sample)
+  }, [])
   
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
@@ -51,11 +58,12 @@ const WaveTable = ({ table, bufferData, handlePlayer, isAllocated, isPlaying, pl
   return (
     <WaveTableContainer key={table.getId()}>
       {/* <p>{table.getId()}</p> */}
-      <PlayButton isPlaying={playButtonActive} onClick={clickPlay}>
-        {`>`}
-      </PlayButton>
+      <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
+        {`[ > ]`}
+      </StyledButton>
       <p>{table.getName()}</p>
       <p>{table.getBufnum()}</p>
+      <StyledButton isPlaying={playButtonActive} onClick={deleTable}>{`[ x ]`}</StyledButton>
       {bufferData ?
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
@@ -76,7 +84,8 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handlePlayer: (bufnum: number) => dispatch(player(bufnum))
+    handlePlayer: (bufnum: number) => dispatch(player(bufnum)),
+    deleteHandler: (taable: Table, sample: Sample) => dispatch(deleteWaveTable(taable, sample))
   }
 }
 

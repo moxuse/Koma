@@ -52,6 +52,13 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         tables: state.tables,
         error: action.payload.error
       }
+    case 'DELETE_WAVE_TABLE_REQUEST':
+      let target = TableList.deleteSample(state.tables, action.payload.sample!.getId());
+      return {
+        isFetching: false,
+        tables: TableList.deleteTable(target, action.payload.table!.getId()),
+        error: state.error
+      }
     case ReduxPersistConstants.PERSIST:
       console.log('on PERSIST', state, action);
       return state;
