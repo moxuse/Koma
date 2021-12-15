@@ -7,9 +7,9 @@ import * as Utils from './Utils';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 
-const playerStnthDefFilePath = __dirname + "./'\/../../../media/player.scd";
-const recorderStnthDefFilePath = __dirname + "./'\/../../../media/recorder.scd";
-const audioInStnthDefFilePath = __dirname + "./'\/../../../media/audioIn.scd";
+const playerStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/player.scd";
+const recorderStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/recorder.scd";
+const audioInStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/audioIn.scd";
 const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
@@ -23,29 +23,28 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     numBuffers: optionNumBuffers
   });
   scLang = new SCLang();
-  await scSynth.boot();
-  await scLang.boot();
-  if (scSynth.mode === 'internal') {
-    await scSynth.loadSynthDefFromFile('player', playerStnthDefFilePath);
-    await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
-    await scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
-  } else {
-    await scLang.loadSynthDefs();
-  }
   /**
    * Load Store file
    * returns
    * 'loadStoreSucseed'
    * 'loadStoreFailed'
    */
-  ipcMain.on('loadSetting', (e) => {
+  ipcMain.on('loadSetting', async (e) => {
     if (isDev) { console.log('loadSetting!! in api'); }
+    await scSynth.checkRemoteHealth().then(isHealthy => { 
+      if (isHealthy) { 
+        window.webContents.postMessage('booted', { mode: scSynth.mode });
+      } else {}      
+    });
+
+    e.reply('loadSettingSucseed');
+    
     // Utils.loadStore().then((tables: TableList) => {
     //   e.reply('loadSettingSucseed', tables);
     // }).catch((err: any) => {      
     //   e.reply('loadSettingFailed', err);
     // })
-    e.reply('loadSettingFailed', new Error('not implimented yet.'));
+    // e.reply('loadSettingFailed', new Error('not implimented yet.'));
   })
   // window.api.loadStore();
 
@@ -133,4 +132,19 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   })
   // window.api.allocBuffer(bufnum);
 
+  /**
+   * after set apis then boot server and lang.
+   */
+  await scSynth.boot().then((e) => {
+    window.webContents.postMessage('booted', { mode: scSynth.mode });
+  });
+  
+  await scLang.boot();
+  if (scSynth.mode === 'internal') {
+    await scSynth.loadSynthDefFromFile('player', playerStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
+  } else {
+    await scLang.loadSynthDefs();
+  }
 }

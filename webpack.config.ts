@@ -34,7 +34,7 @@ const config: Configuration = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './', // webpack@5 + electron
     filename: '[name].js',
-    assetModuleFilename: 'assets/[name][ext]',
+    assetModuleFilename: 'media/[name][ext]',
   },
   module: {
     rules: [
@@ -61,11 +61,11 @@ const config: Configuration = {
       inject: 'body',
       minify: false,
     }),
-    new CopyPlugin({
-      patterns: [
-        { from: "./store.json", to: "./" }
-      ],
-    }),
+    // new CopyPlugin({
+    //   patterns: [
+    //     { from: "./store.json", to: "./" }
+    //   ],
+    // }),
     new ProvidePlugin({
       process: 'process/browser',
       util: 'utils'

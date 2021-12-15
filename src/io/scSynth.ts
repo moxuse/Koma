@@ -61,13 +61,16 @@ export default class SCSynth {
     const foundRemote = await this.checkRemoteHealth();
     if (!foundRemote) {
       return this.tryBoot();
+    } else { 
+      return false;
     };
   }
 
-  private async checkRemoteHealth() {
+  public async checkRemoteHealth() {
     return new Promise(async (resolve, reject) => {
       const timeout = setTimeout(() => resolve(false), 1000);
-      this.subscribeRemote('/synced', async (msg) => {
+      const syncedId = this.subscribeRemote('/synced', async (msg) => {
+        this.unsubscribe(syncedId);
         if (msg && msg[0] === 0) {
           clearTimeout(timeout);
           resolve(true);
@@ -83,7 +86,7 @@ export default class SCSynth {
         this.server = server;
         this.mode = 'internal';
         await this.initInternalListeners();
-        resolve(0);
+        resolve(1);
       })
     }).catch((error: Error) => {
       this.mode = 'remote';

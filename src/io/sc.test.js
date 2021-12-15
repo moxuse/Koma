@@ -1,6 +1,6 @@
 const sc = require('supercolliderjs');
-const sampleFilePath = __dirname + '\/../../media/sample.wav';
-const bufferWriteFilePath = __dirname + '\/../../media/test.wav';
+const sampleFilePath = __dirname + '\/../../media/sound/sample.wav';
+const bufferWriteFilePath = __dirname + '\/../../media/sound/test.wav';
 
 const dgram = require('dgram');
 const OSC = require('osc-js');

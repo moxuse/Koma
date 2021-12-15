@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld(
     playerRequest: async (bufnum: number) => ipcRenderer.send('playerRequest', bufnum),
 
     on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv)),
+    once: (channel: string, callback: any) => ipcRenderer.once(channel, (event, argv) => callback(event, argv)),
     removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel)
   }
 );

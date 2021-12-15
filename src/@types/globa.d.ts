@@ -9,6 +9,7 @@ declare global {
   }
 
   type IcpEventArg =
+    { mode: string } &
     { bufnum: number, data: AudioData } &
     { tables: Table } &
     { filePath: string, audioData: AudioData } &
@@ -24,6 +25,7 @@ declare global {
     loadWaveTable: (filePath: string) => void,
     playerRequest: (bufnum: number) => void,
     on: (channel: string, callback: IpcEvent) => void;
+    once: (channel: string, callback: IpcEvent) => void;
     removeAllListeners: (channel: string) => void;
   }
 }

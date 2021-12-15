@@ -2,6 +2,7 @@ import { ActionCreator, Dispatch, Action } from 'redux';
 import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table from '../model/Table';
+import { BlobOptions } from 'buffer';
 
 export interface LoadSettingRequest {
   type: 'LOAD_SETTING_REQUEST', payload: { isFetching: true }
@@ -9,8 +10,18 @@ export interface LoadSettingRequest {
 
 export type LoadSettingPayload = {
   isFetching: boolean,
-  tables: TableList | undefined,
+  mode: string,
   error: Error | undefined
+}
+
+export type BootedPayload = {
+  booted: boolean,
+  mode: string,
+}
+
+export interface BootedActioon { 
+  type: 'BOOTED';
+  payload: BootedPayload;
 }
 
 export interface LoadSettingSuccess {
@@ -23,12 +34,19 @@ export interface LoadSettingFailure {
   payload: LoadSettingPayload
 }
 
-export type LoadSettingAction = LoadSettingRequest | LoadSettingSuccess | LoadSettingFailure;
+export type LoadSettingAction = BootedActioon | LoadSettingRequest | LoadSettingSuccess | LoadSettingFailure;
 
 /**
  * Action Creator
  */
- export const loadSettingRequest: ActionCreator<LoadSettingAction> = (): LoadSettingAction => ({
+export const bootedRequets: ActionCreator<LoadSettingAction> = (
+  payload: BootedPayload
+): LoadSettingAction => ({
+  type: 'BOOTED',
+  payload
+});
+
+export const loadSettingRequest: ActionCreator<LoadSettingAction> = (): LoadSettingAction => ({
   type: 'LOAD_SETTING_REQUEST',
   payload: { isFetching: true }
 });
@@ -52,16 +70,24 @@ const removeEvents = () => {
   window.api.removeAllListeners('loadSettingFailed');
 }
 
+export const booted = () => {
+  return (dispatch: Dispatch<LoadSettingAction>) => {
+    console.log('setting listen once')
+    window.api.once('booted', (_, arg: { mode: string }) => {
+      console.log('dispatched...booted?')
+      dispatch(bootedRequets({ mode: arg.mode }));
+    });
+  }
+}
+
 export const loadSetting = () => {
   return async (dispatch: Dispatch<LoadSettingAction>) => {
     dispatch(loadSettingRequest({
       isFetching: true,
     }))
-    window.api.on!('loadSettingSucseed', (_, arg: { tables: Table[] }) => {
-      const list: TableList = TableList.newFromTableList(List(arg.tables));
+    window.api.on!('loadSettingSucseed', (_, arg: {}) => {
       dispatch(loadSettingSuccess({
         isFetching: false,
-        tables: list
       }));
       removeEvents();
     });

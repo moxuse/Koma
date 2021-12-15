@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistReducer, createTransform } from 'redux-persist';
 // import immutableTransform from "redux-persist-transform-immutable";
 import { Record } from 'immutable'; 
@@ -74,7 +74,7 @@ const TransformTables = createTransform(
 
 const rootPersistConfig = {
   key: 'root',
-  blacklist: ['player'],
+  blacklist: ['player', 'loadSetting' ],
   whitelist: ['waveTables'],
   storage: storage,
   transforms: [TransformTables],
@@ -83,7 +83,7 @@ const rootPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  // loadSetting,
+  loadSetting,
   waveTables,
   player
 });

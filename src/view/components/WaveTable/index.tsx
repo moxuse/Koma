@@ -5,7 +5,7 @@ import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Graph from './Graph';
 import styled from 'styled-components';
-import { player } from '../../actions/palyer';
+import { player } from '../../actions/buffer/palyer';
 import { deleteWaveTable } from '../../actions/waveTables';;
 
 const WaveTableContainer = styled.li`
@@ -63,7 +63,9 @@ const WaveTable = ({
       </StyledButton>
       <p>{table.getName()}</p>
       <p>{table.getBufnum()}</p>
-      <StyledButton isPlaying={playButtonActive} onClick={deleTable}>{`[ x ]`}</StyledButton>
+      <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
+        {`[ x ]`}
+      </StyledButton>
       {bufferData ?
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
@@ -90,4 +92,3 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WaveTable)
-

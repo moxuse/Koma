@@ -1,4 +1,4 @@
-import { PlayerRequestPayload, PlayerAction } from "../actions/palyer";
+import { PlayerRequestPayload, PlayerAction } from "../actions/buffer/palyer";
 
 const playerInitialState: PlayerRequestPayload = {
   isPlaying: false,

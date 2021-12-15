@@ -12,7 +12,11 @@ const DropSectionContainer = styled.div`
   background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#2C2C2C"}
 `;
 
-const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean, handleDrop: any, children: any }): JSX.Element => {
+const DropSection = ({
+  booted, isFetching, handleDrop, children
+}: {
+  booted: boolean, isFetching: boolean, handleDrop: any, children: any
+}): JSX.Element => {
   let ref = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -39,16 +43,19 @@ const DropSection = ({ isFetching, handleDrop, children }: { isFetching: boolean
     }
     setDragging(false);    
   }, []);
-  useEffect(() => {
-    ref.current!.addEventListener('drop', onDrop, false)
-    ref.current!.addEventListener("dragover", onDragOver, false);
-    ref.current!.addEventListener("dragleave" , onDragReave, false);
+  useEffect(() => {    
+    if (booted) {
+      console.log('appen event ad Drug  area============>')
+      ref.current!.addEventListener('drop', onDrop, false)
+      ref.current!.addEventListener("dragover", onDragOver, false);
+      ref.current!.addEventListener("dragleave", onDragReave, false);
+    }
     return () => {
       ref.current!.removeEventListener('drop', onDrop, false);
       ref.current!.removeEventListener('dragover', onDragOver, false);
       ref.current!.removeEventListener("dragleave" , onDragReave, false);
     }
-  },[])
+  }, [booted])
   
   return (
     <>

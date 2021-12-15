@@ -3,6 +3,7 @@ import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
+import { loadSetting, booted } from '../../actions/setting';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
 
@@ -20,19 +21,26 @@ const WaveTableList = styled.ul`
   padding: 0px;
 `;
 
-const WaveTables = ({ isFetching, tables } : {
-    isFetching: boolean,
-    tables: TableList,
+const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting }: {
+  booted: boolean,
+  isFetching: boolean,
+  tables: TableList,
+  onceLiestenBooted: any,
+  loadSetting: any
 }): JSX.Element => {
     // const [isAllocated, setIsAllocated] = useState<boolean>(false);
+  useEffect(() => {
+    onceLiestenBooted();
+    loadSetting();
+  }, []);
 
-    const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
-      return TableList.getAllocatedSampleById(tables, table.getSample()!);
-    }, [isFetching, tables])
+  const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
+    return TableList.getAllocatedSampleById(tables, table.getSample()!);
+  }, [isFetching, tables])
 
-    const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
-      return tables.getBufferDataForSampleId(table.getSample());
-    }
+  const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
+    return tables.getBufferDataForSampleId(table.getSample());
+  }
   
   const getSample = (tables: TableList, table: Table) => {
     return TableList.getSampleById(tables, table.getSample()!)
@@ -52,10 +60,9 @@ const WaveTables = ({ isFetching, tables } : {
       )
     };
   
-
   return (
     <WaveTableContainer>
-      <DropSection>
+      <DropSection booted={booted}>
         <WaveTableList>        
           {getTables()}        
         </WaveTableList>
@@ -65,9 +72,10 @@ const WaveTables = ({ isFetching, tables } : {
 };
 
 function mapStateToProps(
-  { waveTables } : any
+  { waveTables, loadSetting }: any
 ) {
   return {
+    booted: loadSetting.booted,
     isFetching: waveTables.isFetching,
     tables: waveTables.tables,
   }
@@ -75,7 +83,9 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog())
+    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog()),
+    loadSetting: () => dispatch(loadSetting()),
+    onceLiestenBooted: () => dispatch(booted()),
   }
 }
 
