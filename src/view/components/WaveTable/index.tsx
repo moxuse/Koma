@@ -5,6 +5,7 @@ import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Graph from './Graph';
 import styled from 'styled-components';
+import { allocReadBuffer } from '../../actions/buffer';
 import { player } from '../../actions/buffer/palyer';
 import { deleteWaveTable } from '../../actions/waveTables';;
 
@@ -29,9 +30,9 @@ const StyledButton = styled.button`
 `;
 
 const WaveTable = ({
-  table, sample, bufferData, handlePlayer, deleteHandler, isAllocated, isPlaying, playerBufnum, error
+  table, sample, bufferData, handlePlayer, deleteHandler, allocBuffer, booted, isAllocated, isPlaying, playerBufnum, error
   }:{
-    table: Table, sample: Sample, bufferData: Float32Array | undefined, deleteHandler: any, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
+    table: Table, sample: Sample, bufferData: Float32Array | undefined, deleteHandler: any, allocBuffer: any, booted: boolean, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
@@ -47,6 +48,16 @@ const WaveTable = ({
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
   }, [table])
+
+  useEffect(() => {
+    console.log('booted,', booted, 'Allocated,', isAllocated);
+    if (booted) { 
+      console.log('booted,2', isAllocated);
+      if (!isAllocated) { 
+        allocBuffer(currentBufnum, sample.getFilePath());
+      }
+    }
+  }, [booted, isAllocated])
 
   /* 
   TODO buttonstyling
@@ -87,7 +98,8 @@ function mapStateToProps(
 function mapDispatchToProps(dispatch: any) {
   return {
     handlePlayer: (bufnum: number) => dispatch(player(bufnum)),
-    deleteHandler: (taable: Table, sample: Sample) => dispatch(deleteWaveTable(taable, sample))
+    deleteHandler: (table: Table, sample: Sample) => dispatch(deleteWaveTable(table, sample)),
+    allocBuffer: (bufnum: number, filePath: string) => dispatch(allocReadBuffer(bufnum, filePath))
   }
 }
 

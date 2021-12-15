@@ -8,7 +8,8 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { loadSetting } from './setting';
 import { waveTables } from './waveTables'
-import { player } from './player';
+import { allocReadBuffer } from './buffer'
+import { player } from './buffer/player';
 import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table, { Slice } from '../model/Table';
@@ -74,7 +75,7 @@ const TransformTables = createTransform(
 
 const rootPersistConfig = {
   key: 'root',
-  blacklist: ['player', 'loadSetting' ],
+  blacklist: ['player', 'allocReadBuffer', 'loadSetting' ],
   whitelist: ['waveTables'],
   storage: storage,
   transforms: [TransformTables],
@@ -85,6 +86,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   loadSetting,
   waveTables,
+  allocReadBuffer,
   player
 });
 

@@ -69,13 +69,22 @@ export default class SCSynth {
   public async checkRemoteHealth() {
     return new Promise(async (resolve, reject) => {
       const timeout = setTimeout(() => resolve(false), 1000);
-      const syncedId = this.subscribeRemote('/synced', async (msg) => {
+      let syncedId = this.subscribeRemote('/synced', async (msg) => {
         this.unsubscribe(syncedId);
         if (msg && msg[0] === 0) {
           clearTimeout(timeout);
           resolve(true);
-        }
-      })
+        };
+      });
+      if (this.mode == 'internal') {
+        syncedId = this.subscribeInternal('/synced', async (msg) => {
+          this.unsubscribe(syncedId);
+          if (msg && msg[0] === 0) {
+            clearTimeout(timeout);
+            resolve(true);
+          };
+        });
+      };
       this.sendMsg(['/sync']);
     })
   }

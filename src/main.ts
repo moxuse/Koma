@@ -37,7 +37,6 @@ const createWindow = () => {
     frame: false, // frameless
     backgroundColor: '#2c2c2c',
     webPreferences: {
-      // webSecurity: false,
       nodeIntegration: true,
       contextIsolation: true,
       preload: path.resolve(__dirname, 'preload.js'),
@@ -62,7 +61,7 @@ app.whenReady().then(async () => {
   }
 });
 
-fsExtra.emptyDirSync(app.getPath('userData'));
+// fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
 app.once('window-all-closed', () => app.quit());

@@ -24,6 +24,7 @@ declare global {
     loadWaveTableByDialog: () => void,
     loadWaveTable: (filePath: string) => void,
     playerRequest: (bufnum: number) => void,
+    allocBufferRequest: (nufnum: number, filePath: string) => void,
     on: (channel: string, callback: IpcEvent) => void;
     once: (channel: string, callback: IpcEvent) => void;
     removeAllListeners: (channel: string) => void;

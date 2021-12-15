@@ -45,7 +45,6 @@ const DropSection = ({
   }, []);
   useEffect(() => {    
     if (booted) {
-      console.log('appen event ad Drug  area============>')
       ref.current!.addEventListener('drop', onDrop, false)
       ref.current!.addEventListener("dragover", onDragOver, false);
       ref.current!.addEventListener("dragleave", onDragReave, false);
@@ -63,9 +62,9 @@ const DropSection = ({
         <div ref={ref}>
           <div>
             {children}
-            {isFetching ? (<div>{`loading`}</div>) : (<></>) }
+            {/* {isFetching ? (<div>{`loading`}</div>) : (<></>) } */}
           </div>
-          {'[ + ]'}
+          {booted ? '[ + ]' : `synth server not booted`}
         </div>
       </DropSectionContainer>
     </>

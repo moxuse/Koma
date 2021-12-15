@@ -121,11 +121,10 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * allocBufferSucseed
    * allocBufferFailed
    */
-  ipcMain.on('allocBufferRequest', (e, filePath) => {
-    if (isDev) { console.log('allocBufferRequest', e, filePath) }    
+  ipcMain.on('allocBufferRequest', (e, bufnum, filePath) => {
+    if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath) }    
     scSynth.allocReadBuffer(filePath).then((msg) => {
-      e.reply('allocBufferSucseed', { bufnum: msg.value, filePath: filePath});
-      if (isDev) { console.log('allocBuffer:', { bufnum: msg.value, filePath: filePath}) }
+      e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath});
     }).catch((err: any) => {
       e.reply('allocBufferFailed', err);
     });

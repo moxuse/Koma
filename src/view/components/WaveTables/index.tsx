@@ -46,19 +46,20 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
     return TableList.getSampleById(tables, table.getSample()!)
   }
 
-    const getTables = () => {
-      return (
-        ((!isFetching) && tables) ? tables.tables.map((table: Table) => {
-          return (<WaveTable
-            table={table}
-            sample={getSample(tables, table)!}
-            bufferData={getBufferData(tables, table)}
-            isAllocated={isAllocated(tables, table)}
-            key={table.id} />
-          )
-        }) : <p>{`loading...`}</p>
-      )
-    };
+  const getTables = () => {
+    return (
+      (tables) ? tables.tables.map((table: Table) => {
+        return (<WaveTable
+          table={table}
+          sample={getSample(tables, table)!}
+          bufferData={getBufferData(tables, table)}
+          isAllocated={isAllocated(tables, table)}
+          booted={booted}
+          key={table.id} />
+        )
+      }) : <p>{`loading...`}</p>
+    )
+  };
   
   return (
     <WaveTableContainer>
