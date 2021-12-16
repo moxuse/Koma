@@ -54,7 +54,7 @@ const WaveTable = ({
     if (booted) { 
       console.log('booted,2', isAllocated);
       if (!isAllocated) { 
-        allocBuffer(currentBufnum, sample.getFilePath());
+        allocBuffer(currentBufnum, sample);
       }
     }
   }, [booted, isAllocated])
@@ -66,6 +66,7 @@ const WaveTable = ({
   }, [isPlaying, playerBufnum, currentBufnum]);
   console.log('playButtonActive', playButtonActive)
   */
+
   return (
     <WaveTableContainer key={table.getId()}>
       {/* <p>{table.getId()}</p> */}
@@ -99,7 +100,7 @@ function mapDispatchToProps(dispatch: any) {
   return {
     handlePlayer: (bufnum: number) => dispatch(player(bufnum)),
     deleteHandler: (table: Table, sample: Sample) => dispatch(deleteWaveTable(table, sample)),
-    allocBuffer: (bufnum: number, filePath: string) => dispatch(allocReadBuffer(bufnum, filePath))
+    allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample))
   }
 }
 

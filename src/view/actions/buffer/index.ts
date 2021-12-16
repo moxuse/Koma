@@ -1,4 +1,6 @@
 import { Dispatch } from 'redux';
+import Sample from '../../model/Sample';
+import { updateWaveTable, LoadWaveTableAction } from '../waveTables';
 
 export type AllocReadBufferRequestPayload = {
   filePath: string | undefined,
@@ -38,20 +40,22 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 }
 
-export const allocReadBuffer = (bufnum: number, filePath: string) => {
-  return (dispatch: Dispatch<AllocReadBufferAction>) => {
+export const allocReadBuffer = (bufnum: number, sample: Sample) => {
+  return (dispatch: Dispatch<AllocReadBufferAction | any>) => {
     dispatch(allocReadBufferRequest({
-      filePath: filePath,
+      filePath: sample.getFilePath(),
       bufnum: bufnum,
       error: undefined,
     }));
     window.api.on!('allocBufferSucseed', (_, ard: { bufnum: number,filePath: string }) => {
       dispatch(allocReadBufferSucceed({
-        filePath: filePath,
+        filePath: sample.getFilePath(),
         bufnum: bufnum,
         error: undefined,
       }));
       removeEvents();
+      const newSample = new Sample(sample).set('allocated', true);
+      dispatch(updateWaveTable(newSample));
     });
     window.api.on!('allocBufferFailed', (_, arg: Error) => {
       dispatch(allocReadBufferFailed({
@@ -61,6 +65,6 @@ export const allocReadBuffer = (bufnum: number, filePath: string) => {
       }));
       removeEvents();
     });
-    window.api.allocBufferRequest(bufnum, filePath);
+    window.api.allocBufferRequest(bufnum, sample.getFilePath()!);
   }
 }

@@ -8,7 +8,9 @@ const settingInitialState: LoadSettingPayload & BootedPayload = {
   error: undefined,
 }
 
-export const loadSetting = (state = settingInitialState, action: LoadSettingAction) => {
+export const loadSetting = (
+  state = settingInitialState, action: LoadSettingAction
+) => {
   switch (action.type) {
     case 'BOOTED':
       return {

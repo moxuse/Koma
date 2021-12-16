@@ -88,7 +88,6 @@ export default class TableList extends Record(DefaultTableList) {
 
   static deleteSample(target: TableList, targetId: string): TableList {
     const filtered = target.getSamples().filter(s => s.getId() !== targetId);
-    console.log(target.getTables().size)
     return TableList.newFromTableList(target.getTables()).set('samples', filtered);
   }
 

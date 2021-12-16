@@ -51,7 +51,7 @@ export const player = (bufnum: number) => {
         bufnum: bufnum,
         error: undefined,
       }));
-      removeEvents();
+      removeEvents();      
     });
     window.api.on!('playerFailure', (_, arg: Error) => {
       dispatch(playerFailure({

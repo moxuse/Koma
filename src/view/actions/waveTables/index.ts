@@ -42,11 +42,19 @@ export const deleteWaveTableRequest = (
   payload
 })
 
+export const updateWaveTableRequest = (
+  payload: LoadWaveTableRequestPayload
+) => ({ 
+  type: 'UPDATE_WAVE_TABLE_REQUEST',
+  payload
+})
+
 export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableRequest>
   | ReturnType<typeof loadWaveTableSuccess>
   | ReturnType<typeof loadWaveTableFailure>
   | ReturnType<typeof deleteWaveTableRequest>
+  | ReturnType<typeof updateWaveTableRequest>
 )
 
 const removeEvents = () => {
@@ -104,6 +112,18 @@ export const deleteWaveTable = (table: Table, sample: Sample) => (
     isFetching: false,
     filePath: sample.getFilePath() || '',
     table: table,
+    sample: sample,
+    error: undefined
+  }))
+}
+
+export const updateWaveTable = (sample: Sample) => (
+  dispatch: Dispatch<LoadWaveTableAction>
+) => { 
+  dispatch(updateWaveTableRequest({
+    isFetching: false,
+    filePath: sample.getFilePath() || '',
+    table: undefined,
     sample: sample,
     error: undefined
   }))

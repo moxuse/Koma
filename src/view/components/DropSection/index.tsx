@@ -9,7 +9,7 @@ import styled from 'styled-components';
 const DropSectionContainer = styled.div`
   color: white;
   width: 100%;
-  background-color: ${(props: {dragging: boolean}) => props.dragging ? "#F6A900" : "#2C2C2C"}
+  background-color: ${(props: { dragging: boolean }) => props.dragging ? "#F6A900" : "#2C2C2C"}
 `;
 
 const DropSection = ({
