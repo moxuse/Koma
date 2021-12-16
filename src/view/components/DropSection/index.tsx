@@ -64,7 +64,6 @@ const DropSection = ({
             {children}
             {/* {isFetching ? (<div>{`loading`}</div>) : (<></>) } */}
           </div>
-          {booted ? '[ + ]' : `synth server not booted`}
         </div>
       </DropSectionContainer>
     </>

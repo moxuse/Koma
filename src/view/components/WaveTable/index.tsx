@@ -50,12 +50,8 @@ const WaveTable = ({
   }, [table])
 
   useEffect(() => {
-    console.log('booted,', booted, 'Allocated,', isAllocated);
-    if (booted) { 
-      console.log('booted,2', isAllocated);
-      if (!isAllocated) { 
-        allocBuffer(currentBufnum, sample);
-      }
+    if (booted && !isAllocated) { 
+      allocBuffer(currentBufnum, sample);
     }
   }, [booted, isAllocated])
 

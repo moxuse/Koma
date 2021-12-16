@@ -21,18 +21,30 @@ const WaveTableList = styled.ul`
   padding: 0px;
 `;
 
-const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting }: {
+const PlusButton = styled.button`
+  color: white;
+  border: 1px solid #111;
+  background: #2C2C2C;
+  box-shadow: inset 1px 1px 1px #0C0C0C;
+`;
+
+const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting, handlePlusButton }: {
   booted: boolean,
   isFetching: boolean,
   tables: TableList,
   onceLiestenBooted: any,
-  loadSetting: any
+  loadSetting: any,
+  handlePlusButton: any
 }): JSX.Element => {
     // const [isAllocated, setIsAllocated] = useState<boolean>(false);
   useEffect(() => {
     onceLiestenBooted();
     loadSetting();
   }, []);
+
+  const onClickePlusButton = useCallback(() => {
+    handlePlusButton();
+  }, [])
 
   const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
     return TableList.getAllocatedSampleById(tables, table.getSample()!);
@@ -65,8 +77,9 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
     <WaveTableContainer>
       <DropSection booted={booted}>
         <WaveTableList>        
-          {getTables()}        
+          {getTables()} 
         </WaveTableList>
+        {booted ? (<PlusButton onClick={onClickePlusButton}>{'[ + ]'}</PlusButton>) : `synth server not booted`}
       </DropSection>
     </WaveTableContainer>
   );
@@ -84,7 +97,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleLoadWaveTableByDialog: () => dispatch(loadWaveTableByDialog()),
+    handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),
   }
