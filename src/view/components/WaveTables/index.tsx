@@ -59,6 +59,7 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
   };
 
   const getTables = () => {
+    
     return (
       (tables) ? tables.tables.map((table: Table) => {
         return (<WaveTable

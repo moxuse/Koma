@@ -5,5 +5,5 @@ declare module 'wav-decoder' {
     sampleRate: number;
     channelData: [Float32Array];
   }
-  export function decode(bffer: Buffer, opt: {}): (bffer: Buffer, opt: {}) => Promise<AudioData>;
+  export function decode(bffer: Buffer, opt: {}): Promise<AudioData>;
 }

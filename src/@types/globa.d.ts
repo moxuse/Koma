@@ -10,9 +10,9 @@ declare global {
 
   type IcpEventArg =
     { mode: string } &
-    { bufnum: number, data: AudioData } &
     { tables: Table } &
-    { filePath: string, audioData: AudioData } &
+    { bufnum: number, data: { ommited: Float32Array, detailed: Float32Array} } &    
+    { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array} } &
     { bufnum: number } &
     { tables: Table[] } &
     Error;

@@ -55,9 +55,9 @@ export const loadWaveTableByDialog = () => {
       sample: undefined,
       error: undefined
     }));
-    window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, audioData }) => {
+    window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, data }) => {
       const sampleId = getNewId();
-      const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: audioData.channelData[0] });
+      const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
       const t = new Table({
         id: getNewId(),
         name: ommitFileName(filePath),

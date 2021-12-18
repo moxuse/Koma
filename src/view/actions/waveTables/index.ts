@@ -72,14 +72,13 @@ export const loadWaveTables = (filePath: string) => (
     sample: undefined,
     error: undefined
   }))
-  window.api.on!('loadWaveTableSucseed', (_, arg: { bufnum: number, data: AudioData }) => {
-    
+  window.api.on!('loadWaveTableSucseed', (_, { bufnum, filePath, data }) => {
     const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: arg.data.channelData[0] });
+    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
     const t = new Table({
       id: getNewId(),
       name: ommitFileName(filePath),
-      bufnum: arg.bufnum,
+      bufnum: bufnum,
       sample: sampleId,
       slice: undefined
     });

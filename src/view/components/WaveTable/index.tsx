@@ -55,14 +55,6 @@ const WaveTable = ({
     }
   }, [booted, isAllocated])
 
-  /* 
-  TODO buttonstyling
-  useEffect(() => {
-    setPlayButtonActive(isPlaying && (currentBufnum === playerBufnum));
-  }, [isPlaying, playerBufnum, currentBufnum]);
-  console.log('playButtonActive', playButtonActive)
-  */
-
   return (
     <WaveTableContainer key={table.getId()}>
       {/* <p>{table.getId()}</p> */}

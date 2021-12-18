@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
-import * as WavDecoder from 'wav-decoder';
+import WavDecoder, { AudioData } from 'wav-decoder';
 import TableList from '../view/model/TableList';
 import * as Utils from './Utils';
 import SCSynth from './SCSynth';
@@ -68,12 +68,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       }).then((audioData) => {
         return scSynth.allocReadBuffer(result.filePaths[0])
           .then((msg) => {
-            e.reply('loadWaveTableByDialogSucseed', { bufnum: msg.value, filePath: result.filePaths[0], audioData });
+            e.reply('loadWaveTableByDialogSucseed', { bufnum: msg.value, filePath: result.filePaths[0], data: Utils.reduceAudioData(audioData.channelData[0]) });
           if (isDev) { console.log('loaded audio data:', audioData) }
-        })
-
-        
-        
+          })
       }).catch((err: any) => {
         e.reply('loadWaveTableByDialogFailed', err);
       })
@@ -94,9 +91,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     }).then((audioData) => {
       return scSynth.allocReadBuffer(filePath)
         .then((msg) => {
-          e.reply('loadWaveTableSucseed', { bufnum: msg.value, data: audioData });
-          if (isDev) { console.log('loaded audio data:', audioData) }
-        })
+          e.reply('loadWaveTableSucseed', { bufnum: msg.value, filePath: filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
+          if (isDev) { console.log('loaded audio data:', Utils.reduceAudioData(audioData.channelData[0])); }
+        });
     }).catch((err: any) => {
       e.reply('loadWaveTableFailed', err);
     })
