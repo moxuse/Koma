@@ -12,7 +12,7 @@ type ServerOptions = {
   numBuffers?: string;
   blockSize?: string;
   device?: string;
-}
+};
 
 export default class SCSynth {
   public mode: SCSynthMode;
@@ -33,7 +33,7 @@ export default class SCSynth {
     this.listennersRemote = [];
     this.listennersInternal = [];
     this.options = options;
-  }
+  };
 
   /**
    * getter for gloabal Ids
@@ -64,7 +64,7 @@ export default class SCSynth {
     } else { 
       return false;
     };
-  }
+  };
 
   public async checkRemoteHealth() {
     return new Promise(async (resolve, reject) => {
@@ -86,8 +86,8 @@ export default class SCSynth {
         });
       };
       this.sendMsg(['/sync']);
-    })
-  }
+    });
+  };
 
   private async tryBoot() {
     return new Promise(async (resolve, reject) => {
@@ -96,12 +96,12 @@ export default class SCSynth {
         this.mode = 'internal';
         await this.initInternalListeners();
         resolve(1);
-      })
+      });
     }).catch((error: Error) => {
       this.mode = 'remote';
       throw error;
-    })
-  }
+    });
+  };
 
   private initRemoteListeners() {
     this.socket.on('message', (data: Buffer) => {
@@ -109,13 +109,13 @@ export default class SCSynth {
       this.listennersRemote.forEach(({ name, event }) => {
         if (msg.address === name) {
           event(msg.args);
-        }
+        };
       });
     });
     this.socket.on('error', (err) => {
       console.log(`client err: \n${err.stack}`);
     });
-  }
+  };
 
   private async initInternalListeners() {
     return this.server.receive.subscribe((msg: string[]) => {
@@ -123,26 +123,26 @@ export default class SCSynth {
         if (msg[0] === name) {
           msg.shift();
           event(msg);
-        }
+        };
       });
     });
-  }
+  };
 
   async quit () {
     if (this.mode === 'internal') {
       return this.server.quit();
-    }
+    };
     this.socket.close();
-  }
+  };
 
   public subscribe(address: string, callback: SCSynthEvent): number {
     if (this.mode === 'internal') {
       return this.subscribeInternal(address, callback);
     } else if (this.mode === 'remote') {
       return this.subscribeRemote(address, callback);
-    }
+    };
     return -1;
-  }
+  };
 
   private subscribeRemote(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
@@ -150,9 +150,9 @@ export default class SCSynth {
       id: id,
       name: address,
       event: callback
-    })
+    });
     return id;
-  }
+  };
 
   private subscribeInternal(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
@@ -160,20 +160,20 @@ export default class SCSynth {
       id: id,
       name: address,
       event: callback
-    })
+    });
     return id;
-  }
+  };
 
   public unsubscribe(id: number): void {
     // console.log('UNSUBSCRIED1:', this.listennersRemote);
     this.listennersRemote = this.listennersRemote.filter(l => {
       return l.id !== id;
-    })
+    });
     this.listennersInternal = this.listennersInternal.filter(l => {
       return l.id !== id;
-    })
+    });
     // console.log('UNSUBSCRIED2:', this.listennersRemote);
-  }
+  };
 
   public sendMsg(arg: any) {
     if (this.mode === 'internal') {
@@ -186,66 +186,66 @@ export default class SCSynth {
         message = new OSC.Message([address], ...arg);        
       } else {        
         message = new OSC.Message(address, []);
-      }
+      };
       const binary = message.pack();
       this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
-    }
-  }
+    };
+  };
 
   async allocReadBuffer(file: string) {
-    return new Promise<{ value: osc.OscType | undefined, error: Error | undefined }>((resolve, reject) => { 
+    return new Promise<{ value: osc.OscType | undefined, error: Error | undefined }>((resolve, reject) => {
       const failId = this.subscribe('/fail', (msg) => {
         this.unsubscribe(failId);
         this.unsubscribe(doneId);
-        reject({value: undefined, id: new Error('/fail')});
-      })
+        reject({ value: undefined, id: new Error('/fail') });
+      });
       const doneId = this.subscribe('/done', (msg) => {
         this.unsubscribe(failId);
         this.unsubscribe(doneId);
-        if (msg && msg[0] == '/b_allocRead') {          
+        if (msg && msg[0] == '/b_allocRead') {
           resolve({ value: msg[1], error: undefined });
         } else {
-          reject({value: undefined, error: new Error('failed at /done msg')});
-        }
-      })
+          reject({ value: undefined, error: new Error('failed at /done msg') });
+        };
+      });
       this.sendMsg(['/b_allocRead', this.nextBufnum(), file]);
-    })
-  }
+    });
+  };
 
   async loadSynthDefFromFile(name: string, file: string) {
-    return new Promise <{ id: number, error: Error | undefined }>((resolve, reject) => {
+    return new Promise<{ id: number, error: Error | undefined }>((resolve, reject) => {
       const doneId = this.subscribe('/done', (msg) => {
         this.unsubscribe(doneId);
-        if (msg && msg[0] == '/d_recv') {          
+        if (msg && msg[0] == '/d_recv') {
           resolve({ id: doneId, error: undefined });
         } else {
           reject({ id: doneId, error: new Error('maybe /fail') });
-        }
-      })
+        };
+      });
       if (this.mode === 'internal') {
         this.server?.loadSynthDef(name, file).catch((e: Error) => {
-          reject({ id: doneId, error: e});
+          reject({ id: doneId, error: e });
         });
       } else {
-        reject({ id: doneId, error: new Error('server not booted at internal.')});
-      }
-    })
-  }
+        reject({ id: doneId, error: new Error('server not booted at internal.') });
+      };
+    });
+  };
 
   playBuffer(bufnum: number) {    
     this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0, 'bufnum', bufnum]);
-  }
+  };
 
   freeBuffer(bufnum: number) {
     this.sendMsg(['/b_free', bufnum]);
-  }
+  };
 
   async writeBufferAsWav(bufNum: number, filePath: string) {
     this.sendMsg(['/b_write', bufNum, filePath, 'wav', 'int24']);
-  }
+  };
 
   sliceBuffer() {
     
-  }
+  };
 
-}
+};

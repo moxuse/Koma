@@ -4,7 +4,7 @@ export type PlayerRequestPayload = {
   isPlaying: boolean,
   bufnum: number,
   error: Error | undefined
-}
+};
 
 export const playerRequest = (
   payload: PlayerRequestPayload
@@ -31,12 +31,12 @@ export type PlayerAction = (
   | ReturnType<typeof playerRequest>
   | ReturnType<typeof playerSuccess>
   | ReturnType<typeof playerFailure>
-)
+);
 
 const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');
   window.api.removeAllListeners('playerFailure');
-}
+};
 
 export const player = (bufnum: number) => {
   return (dispatch: Dispatch<PlayerAction>) => {
@@ -51,7 +51,7 @@ export const player = (bufnum: number) => {
         bufnum: bufnum,
         error: undefined,
       }));
-      removeEvents();      
+      removeEvents();
     });
     window.api.on!('playerFailure', (_, arg: Error) => {
       dispatch(playerFailure({
@@ -62,5 +62,5 @@ export const player = (bufnum: number) => {
       removeEvents();
     });
     window.api.playerRequest(bufnum);
-  }
-}
+  };
+};

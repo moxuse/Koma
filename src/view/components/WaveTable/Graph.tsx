@@ -14,16 +14,16 @@ const GraphConatainer = styled.div`
 `;
 
 const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
-  const [context,setContext] = useState<CanvasRenderingContext2D | null>()
+  const [context, setContext] = useState<CanvasRenderingContext2D | null>()
   const [buffer, setBuffer] = useState<Float32Array>();
   const graphRef = useRef<HTMLCanvasElement>(null);
-  useEffect(()=>{
+  useEffect(() => {
     if (graphRef.current) {
       setBuffer(bufferData);
       const canvasContext = graphRef.current.getContext("2d");
       setContext(canvasContext);
-    }
-  },[])
+    };
+  }, []);
   useEffect(() => {
     if (buffer && context) {
       context.fillStyle = 'white';
@@ -35,13 +35,13 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
         pixcelParSample,
         val * height * 0.5
       ));
-    }
-  }, [bufferData, context])
+    };
+  }, [bufferData, context]);
   return (
     <GraphConatainer>
       <canvas width={width} height={height} ref={graphRef}></canvas>
     </GraphConatainer>
-  )
-}
+  );
+};
 
 export default Graph;

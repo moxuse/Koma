@@ -19,7 +19,7 @@ export const readFile = (filepath: string): Promise<Buffer> => {
     fs.readFile(filepath, (err, buffer) => {
       if (err) {
         return reject(err);
-      }
+      };
       return resolve(buffer);
     });
   });

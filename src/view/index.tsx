@@ -19,13 +19,13 @@ const App = (): JSX.Element => {
     <DragAreaStyle>
       <Provider store={store}>
         <PersistGate loading={<div>Loading..</div>} persistor={persistor}>
-          <AppContainer className = "App">
+          <AppContainer className="App">
             <WaveTables></WaveTables>
           </AppContainer>
         </PersistGate>
-        </Provider>
+      </Provider>
     </DragAreaStyle >
-  )
+  );
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));

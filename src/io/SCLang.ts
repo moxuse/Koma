@@ -16,9 +16,9 @@ export default class SCLang {
         resolve(lang)
       }).catch((err: Error) => {
         reject(err);
-      })
+      });
     });
-  }
+  };
 
   async loadSynthDefs() {
     await this.lang.interpret(
@@ -33,5 +33,5 @@ export default class SCLang {
       `~q = "${recorderStnthDefFilePath}".loadPaths;
       ~[0].store;`
     );
-  }
-}
+  };
+};

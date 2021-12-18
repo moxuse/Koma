@@ -6,33 +6,33 @@ import { BlobOptions } from 'buffer';
 
 export interface LoadSettingRequest {
   type: 'LOAD_SETTING_REQUEST', payload: { isFetching: true }
-}
+};
 
 export type LoadSettingPayload = {
   isFetching: boolean,
   mode: string,
   error: Error | undefined
-}
+};
 
 export type BootedPayload = {
   booted: boolean,
   mode: string,
-}
+};
 
 export interface BootedActioon { 
   type: 'BOOTED';
   payload: BootedPayload;
-}
+};
 
 export interface LoadSettingSuccess {
   type: 'LOAD_SETTING_SUCCESS';
   payload: LoadSettingPayload;
-}
+};
 
 export interface LoadSettingFailure {
   type: 'LOAD_SETTING_FAILURE',
   payload: LoadSettingPayload
-}
+};
 
 export type LoadSettingAction = BootedActioon | LoadSettingRequest | LoadSettingSuccess | LoadSettingFailure;
 
@@ -68,7 +68,7 @@ export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
 const removeEvents = () => {
   window.api.removeAllListeners('loadSettingSucseed');
   window.api.removeAllListeners('loadSettingFailed');
-}
+};
 
 export const booted = () => {
   return (dispatch: Dispatch<LoadSettingAction>) => {
@@ -77,14 +77,14 @@ export const booted = () => {
       console.log('dispatched...booted?')
       dispatch(bootedRequets({ mode: arg.mode }));
     });
-  }
-}
+  };
+};
 
 export const loadSetting = () => {
   return async (dispatch: Dispatch<LoadSettingAction>) => {
     dispatch(loadSettingRequest({
       isFetching: true,
-    }))
+    }));
     window.api.on!('loadSettingSucseed', (_, arg: {}) => {
       dispatch(loadSettingSuccess({
         isFetching: false,
@@ -99,5 +99,5 @@ export const loadSetting = () => {
       removeEvents();
     });
     window.api.loadSetting();
-  }
-}
+  };
+};

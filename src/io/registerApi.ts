@@ -31,10 +31,10 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    */
   ipcMain.on('loadSetting', async (e) => {
     if (isDev) { console.log('loadSetting!! in api'); }
-    await scSynth.checkRemoteHealth().then(isHealthy => { 
-      if (isHealthy) { 
+    await scSynth.checkRemoteHealth().then(isHealthy => {
+      if (isHealthy) {
         window.webContents.postMessage('booted', { mode: scSynth.mode });
-      } else {}      
+      } else { }
     });
 
     e.reply('loadSettingSucseed');
@@ -45,7 +45,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     //   e.reply('loadSettingFailed', err);
     // })
     // e.reply('loadSettingFailed', new Error('not implimented yet.'));
-  })
+  });
   // window.api.loadStore();
 
   /**
@@ -66,13 +66,19 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       Utils.readFile(result.filePaths[0]).then((buffer: Buffer) => {
         return WavDecoder.decode(buffer, {});
       }).then((audioData) => {
-        e.reply('loadWaveTableByDialogSucseed', { filePath: result.filePaths[0], audioData });
-        if (isDev) { console.log(audioData); }
+        return scSynth.allocReadBuffer(result.filePaths[0])
+          .then((msg) => {
+            e.reply('loadWaveTableByDialogSucseed', { bufnum: msg.value, filePath: result.filePaths[0], audioData });
+          if (isDev) { console.log('loaded audio data:', audioData) }
+        })
+
+        
+        
       }).catch((err: any) => {
         e.reply('loadWaveTableByDialogFailed', err);
       })
     })
-  })
+  });
   // window.api.openFileDialog();
 
   /**
@@ -89,12 +95,12 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       return scSynth.allocReadBuffer(filePath)
         .then((msg) => {
           e.reply('loadWaveTableSucseed', { bufnum: msg.value, data: audioData });
-          if (isDev) { console.log('loaded audio data:',audioData) }
+          if (isDev) { console.log('loaded audio data:', audioData) }
         })
     }).catch((err: any) => {
       e.reply('loadWaveTableFailed', err);
     })
-  })
+  });
   // window.api.loadWaveTable(filePath);
 
   /**
@@ -112,23 +118,22 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       e.reply('playerFailure', err);
     }
     e.reply('playerSuccess', bufnum);
-  })
+  });
   // window.api.playerSuccess(bufnum);
 
   /**
-   * 
    * allocBufferRequest
    * allocBufferSucseed
    * allocBufferFailed
    */
   ipcMain.on('allocBufferRequest', (e, bufnum, filePath) => {
-    if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath) }    
+    if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath) }
     scSynth.allocReadBuffer(filePath).then((msg) => {
-      e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath});
+      e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath });
     }).catch((err: any) => {
       e.reply('allocBufferFailed', err);
     });
-  })
+  });
   // window.api.allocBuffer(bufnum);
 
   /**
@@ -145,5 +150,5 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     await scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
   } else {
     await scLang.loadSynthDefs();
-  }
-}
+  };
+};

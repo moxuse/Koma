@@ -26,7 +26,7 @@ const DropSection = ({
       e.preventDefault();
     } else {
       return false;
-    }
+    };
   }, []);
   const onDragReave = useCallback((_) => {
     setDragging(false);  }, []);
@@ -36,25 +36,25 @@ const DropSection = ({
       e.preventDefault();
     } else {
       return false;
-    }
+    };
     const files = e.dataTransfer?.files;
     if (files && files.length >= 1) {
       handleDrop(files[0].path);  
-    }
+    };
     setDragging(false);    
   }, []);
-  useEffect(() => {    
+  useEffect(() => {
     if (booted) {
       ref.current!.addEventListener('drop', onDrop, false)
       ref.current!.addEventListener("dragover", onDragOver, false);
       ref.current!.addEventListener("dragleave", onDragReave, false);
-    }
+    };
     return () => {
       ref.current!.removeEventListener('drop', onDrop, false);
       ref.current!.removeEventListener('dragover', onDragOver, false);
-      ref.current!.removeEventListener("dragleave" , onDragReave, false);
-    }
-  }, [booted])
+      ref.current!.removeEventListener("dragleave", onDragReave, false);
+    };
+  }, [booted]);
   
   return (
     <>
@@ -78,13 +78,13 @@ function mapStateToProps({
   return {
     isFetching,
     error
-  }
-}
+  };
+};
 
 function mapDispatchToProps(dispatch: any ) {
   return {
     handleDrop: (filePath: string) => dispatch(loadWaveTables(filePath))
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DropSection)
+export default connect(mapStateToProps, mapDispatchToProps)(DropSection);

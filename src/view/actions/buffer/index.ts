@@ -6,7 +6,7 @@ export type AllocReadBufferRequestPayload = {
   filePath: string | undefined,
   bufnum: number | undefined,
   error: Error | undefined
-}
+};
 
 export const allocReadBufferRequest = (
   payload: AllocReadBufferRequestPayload
@@ -38,7 +38,7 @@ export type AllocReadBufferAction = (
 const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');
   window.api.removeAllListeners('playerFailure');
-}
+};
 
 export const allocReadBuffer = (bufnum: number, sample: Sample) => {
   return (dispatch: Dispatch<AllocReadBufferAction | any>) => {
@@ -47,7 +47,7 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
       bufnum: bufnum,
       error: undefined,
     }));
-    window.api.on!('allocBufferSucseed', (_, ard: { bufnum: number,filePath: string }) => {
+    window.api.on!('allocBufferSucseed', (_, ard: { bufnum: number, filePath: string }) => {
       dispatch(allocReadBufferSucceed({
         filePath: sample.getFilePath(),
         bufnum: bufnum,
@@ -66,5 +66,5 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
       removeEvents();
     });
     window.api.allocBufferRequest(bufnum, sample.getFilePath()!);
-  }
-}
+  };
+};

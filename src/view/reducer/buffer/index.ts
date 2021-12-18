@@ -4,7 +4,7 @@ const allocReadBufferInitPayload: AllocReadBufferRequestPayload = {
   filePath: undefined,
   bufnum: undefined,
   error: undefined,
-}
+};
 
 export const allocReadBuffer = (
   state = allocReadBufferInitPayload,
@@ -16,20 +16,20 @@ export const allocReadBuffer = (
         filePath: action.payload.filePath,
         bufnum: action.payload.bufnum,
         error: state.error
-      }
+      };
     case 'ALLOC_READ_BUFFER_SUCCEED':
       return {
         filePath: action.payload.filePath,
         bufnum: action.payload.bufnum,
         error: state.error
-      }
+      };
     case 'ALLOC_READ_BUFFER_FAILED':
       return {
         filePath: state.filePath,
         bufnum: state.bufnum,
         error: action.payload.error
-      }
+      };
     default:
       return state;
-  }
-}
+  };
+};

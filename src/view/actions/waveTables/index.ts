@@ -10,7 +10,7 @@ export type LoadWaveTableRequestPayload = {
   table: Table | undefined,
   sample: Sample | undefined,
   error: Error | undefined
-}
+};
 /**
  * Action Creator
  */
@@ -37,17 +37,17 @@ export const loadWaveTableFailure = (
 
 export const deleteWaveTableRequest = (
   payload: LoadWaveTableRequestPayload
-) => ({ 
+) => ({
   type: 'DELETE_WAVE_TABLE_REQUEST',
   payload
-})
+});
 
 export const updateWaveTableRequest = (
   payload: LoadWaveTableRequestPayload
-) => ({ 
+) => ({
   type: 'UPDATE_WAVE_TABLE_REQUEST',
   payload
-})
+});
 
 export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableRequest>
@@ -55,12 +55,12 @@ export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableFailure>
   | ReturnType<typeof deleteWaveTableRequest>
   | ReturnType<typeof updateWaveTableRequest>
-)
+);
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableSucseed');
   window.api.removeAllListeners('loadWaveTableFailed');
-}
+};
 
 export const loadWaveTables = (filePath: string) => (
   dispatch: Dispatch<LoadWaveTableAction>
@@ -103,7 +103,7 @@ export const loadWaveTables = (filePath: string) => (
     removeEvents();
   });
   window.api.loadWaveTable(filePath);
-}
+};
 
 export const deleteWaveTable = (table: Table, sample: Sample) => (
   dispatch: Dispatch<LoadWaveTableAction>
@@ -114,17 +114,17 @@ export const deleteWaveTable = (table: Table, sample: Sample) => (
     table: table,
     sample: sample,
     error: undefined
-  }))
-}
+  }));
+};
 
 export const updateWaveTable = (sample: Sample) => (
   dispatch: Dispatch<LoadWaveTableAction>
-) => { 
+) => {
   dispatch(updateWaveTableRequest({
     isFetching: false,
     filePath: sample.getFilePath() || '',
     table: undefined,
     sample: sample,
     error: undefined
-  }))
-}
+  }));
+};

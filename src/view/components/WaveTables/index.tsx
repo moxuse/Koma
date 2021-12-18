@@ -44,19 +44,19 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
 
   const onClickePlusButton = useCallback(() => {
     handlePlusButton();
-  }, [])
+  }, []);
 
   const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
     return TableList.getAllocatedSampleById(tables, table.getSample()!);
-  }, [isFetching, tables])
+  }, [isFetching, tables]);
 
   const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
     return tables.getBufferDataForSampleId(table.getSample());
-  }
+  };
   
   const getSample = (tables: TableList, table: Table) => {
     return TableList.getSampleById(tables, table.getSample()!)
-  }
+  };
 
   const getTables = () => {
     return (
@@ -68,9 +68,9 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
           isAllocated={isAllocated(tables, table)}
           booted={booted}
           key={table.id} />
-        )
+        );
       }) : <p>{`loading...`}</p>
-    )
+    );
   };
   
   return (
@@ -92,15 +92,15 @@ function mapStateToProps(
     booted: loadSetting.booted,
     isFetching: waveTables.isFetching,
     tables: waveTables.tables,
-  }
-}
+  };
+};
 
 function mapDispatchToProps(dispatch: any) {
   return {
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaveTables)
+export default connect(mapStateToProps, mapDispatchToProps)(WaveTables);

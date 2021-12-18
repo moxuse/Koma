@@ -39,12 +39,12 @@ export type LoadWaveTableByDialogAction = (
   | ReturnType<typeof loadWaveTableByDialogRequest>
   | ReturnType<typeof loadWaveTableByDialogSuccess>
   | ReturnType<typeof loadWaveTableByDialogFailure>
-)
+);
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableByDialogSucseed');
   window.api.removeAllListeners('loadWaveTableByDialogFailed');
-}
+};
 
 export const loadWaveTableByDialog = () => {
   return (dispatch: Dispatch<LoadWaveTableByDialogAction>) => {
@@ -54,14 +54,14 @@ export const loadWaveTableByDialog = () => {
       filePath: '',
       sample: undefined,
       error: undefined
-    }))
-    window.api.on!('loadWaveTableByDialogSucseed', (_, { filePath, audioData }) => {
-    const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: audioData.channelData[0] });
+    }));
+    window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, audioData }) => {
+      const sampleId = getNewId();
+      const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: audioData.channelData[0] });
       const t = new Table({
         id: getNewId(),
         name: ommitFileName(filePath),
-        bufnum: 600,
+        bufnum: bufnum,
         sample: sampleId,
         slice: undefined
       });
@@ -87,5 +87,5 @@ export const loadWaveTableByDialog = () => {
       removeEvents();
     });
     window.api.loadWaveTableByDialog();
-  }
-}
+  };
+};

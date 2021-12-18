@@ -78,26 +78,27 @@ const WaveTable = ({
         <Graph bufferData={bufferData} />
         : <div>{`drag`}</div>
       }
-      { isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
+      {isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
     </WaveTableContainer>
-  )
+  );
 };
 
 function mapStateToProps(
   { player } : any
-) {  return {
+) {
+  return {
     isPlaying: player.isPlaying,
     playerBufnum: player.bufnum,
     error: player.error
-  }
-}
+  };
+};
 
 function mapDispatchToProps(dispatch: any) {
   return {
     handlePlayer: (bufnum: number) => dispatch(player(bufnum)),
     deleteHandler: (table: Table, sample: Sample) => dispatch(deleteWaveTable(table, sample)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample))
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaveTable)
+export default connect(mapStateToProps, mapDispatchToProps)(WaveTable);

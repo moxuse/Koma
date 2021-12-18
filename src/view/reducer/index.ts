@@ -97,4 +97,4 @@ export const configReducer = () => {
   
   let persistor = persistStore(store);
   return { store, persistor };
-}
+};

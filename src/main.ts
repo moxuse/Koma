@@ -11,11 +11,11 @@ const isDev = process.env.NODE_ENV === 'development';
 const reactDevToolsPath = path.join(
   os.homedir(),
   '/Library/Application\ Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.21.0_0'
-)
+);
 const reduxDevToolsPath = path.join(
   os.homedir(),
   '/Library/Application\ Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.2_0'
-)
+);
 
 const execPath =
   process.platform === 'win32'
@@ -29,7 +29,7 @@ if (isDev) {
     forceHardReset: true,
     hardResetMethod: 'exit',
   });
-}
+};
 
 // make BrowserWindow
 const createWindow = () => {
@@ -45,7 +45,7 @@ const createWindow = () => {
 
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
-  }
+  };
   
   registerApi(mainWindow, isDev);
 
@@ -58,10 +58,10 @@ app.whenReady().then(async () => {
   if (isDev) {
     // await session.defaultSession.loadExtension(reactDevToolsPath);
     // await session.defaultSession.loadExtension(reduxDevToolsPath);
-  }
+  };
 });
 
-// fsExtra.emptyDirSync(app.getPath('userData'));
+// fsExtra.emptyDirSync(app.getPath('userData'));s
 
 // when close window
 app.once('window-all-closed', () => app.quit());

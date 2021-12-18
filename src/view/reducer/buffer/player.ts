@@ -4,7 +4,7 @@ const playerInitialState: PlayerRequestPayload = {
   isPlaying: false,
   bufnum: 600,
   error: undefined,
-}
+};
 
 export const player = (state = playerInitialState, action: PlayerAction) => {
   switch (action.type) {
@@ -13,20 +13,20 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         isPlaying: true,
         bufnum: action.payload.bufnum,
         error: undefined
-      }
+      };
     case 'PLAYER_SUCCESS':
       return {
         isPlaying: action.payload.isPlaying,
         bufnum: action.payload.bufnum,
         error: undefined
-      }
+      };
     case 'PLAYER_FAILURE':
       return {
         isPlaying: action.payload.isPlaying,
         bufnum: action.payload.bufnum,
         error: action.payload.error
-      }
+      };
     default:
       return state;
-  }
-}
+  };
+};
