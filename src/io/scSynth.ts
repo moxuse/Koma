@@ -192,7 +192,7 @@ export default class SCSynth {
     };
   };
 
-  async allocReadBuffer(file: string) {
+  async allocReadBuffer(file: string, bufnum: number | null) {
     return new Promise<{ value: osc.OscType | undefined, error: Error | undefined }>((resolve, reject) => {
       const failId = this.subscribe('/fail', (msg) => {
         this.unsubscribe(failId);
@@ -208,7 +208,12 @@ export default class SCSynth {
           reject({ value: undefined, error: new Error('failed at /done msg') });
         };
       });
-      this.sendMsg(['/b_allocRead', this.nextBufnum(), file]);
+      if (bufnum === null) { 
+        bufnum = this.nextBufnum();
+      } else {
+        this.bufnum = bufnum + 1;
+      }
+      this.sendMsg(['/b_allocRead', bufnum, file]);
     });
   };
 

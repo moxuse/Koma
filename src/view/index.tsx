@@ -11,6 +11,9 @@ const DragAreaStyle = styled.div`
   -webkit-app-region: drag;
 `;
 
+// Access root stored data
+// alert( localStorage.getItem("persist:root"));
+
 const AppContainer = styled.div`
   margin-top: 40px;`;
 

@@ -79,7 +79,7 @@ const rootPersistConfig = {
   whitelist: ['waveTables'],
   storage: storage,
   transforms: [TransformTables],
-  throttle: 200,
+  throttle: 10,
   debug: true,
 };
 

@@ -18,6 +18,10 @@ export const DETAILED_RATE = 8;
 //     });
 //}
 
+// const amp2dB = (input: number) => {
+//   return 100 + (20.0 * Math.log10(input));
+// }
+
 export const reduceAudioData = (data: Float32Array): { omitted: Float32Array, detailed: Float32Array } => { 
   const omitted = data.filter((sample, i) => i % OMMITED_RATE === 0);
   const detailed = data.filter((sample, i) => i % DETAILED_RATE === 0);

@@ -74,11 +74,11 @@ export default class TableList extends Record(DefaultTableList) {
   };
 
   static appendTable(target: TableList, table: Table): TableList {
-    return target.set('tables', target.getTables().push(table)).set('samples', target.getSamples());
+    return new TableList().set('tables', target.getTables().push(table)).set('samples', target.getSamples());
   };
 
   static appendSample(target: TableList, sample: Sample): TableList {
-    return target.set('samples', target.getSamples().push(sample)).set('tables', target.getTables());
+    return new TableList().set('samples', target.getSamples().push(sample)).set('tables', target.getTables());
   };
 
   static deleteTable(target: TableList, targetId: string): TableList {
@@ -104,7 +104,7 @@ export default class TableList extends Record(DefaultTableList) {
     const matchedIndex = TableList.getSampleIndexById(target, sampleId);
     if (matchedIndex) {
       const newSamples = target.getSamples().update(matchedIndex, () => newSample);
-      return target.set('tables', target.getTables()).set('samples', newSamples);
+      return new TableList().set('tables', target.getTables()).set('samples', newSamples);
     };
     return target;
   };

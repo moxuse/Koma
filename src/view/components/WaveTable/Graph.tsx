@@ -26,7 +26,7 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
   }, []);
   useEffect(() => {
     if (buffer && context) {
-      context.fillStyle = 'white';
+      context.fillStyle = '#fff';
       const pixcelParSample = width / buffer.length;
       console.log(buffer.length, pixcelParSample);
       buffer?.forEach((val, i) => context.fillRect(

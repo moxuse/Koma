@@ -66,7 +66,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       Utils.readFile(result.filePaths[0]).then((buffer: Buffer) => {
         return WavDecoder.decode(buffer, {});
       }).then((audioData) => {
-        return scSynth.allocReadBuffer(result.filePaths[0])
+        return scSynth.allocReadBuffer(result.filePaths[0], null)
           .then((msg) => {
             e.reply('loadWaveTableByDialogSucseed', { bufnum: msg.value, filePath: result.filePaths[0], data: Utils.reduceAudioData(audioData.channelData[0]) });
           if (isDev) { console.log('loaded audio data:', audioData) }
@@ -89,7 +89,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     Utils.readFile(filePath).then((buffer: Buffer) => {
       return WavDecoder.decode(buffer, {});
     }).then((audioData) => {
-      return scSynth.allocReadBuffer(filePath)
+      return scSynth.allocReadBuffer(filePath, null)
         .then((msg) => {
           e.reply('loadWaveTableSucseed', { bufnum: msg.value, filePath: filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
           if (isDev) { console.log('loaded audio data:', Utils.reduceAudioData(audioData.channelData[0])); }
@@ -125,7 +125,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    */
   ipcMain.on('allocBufferRequest', (e, bufnum, filePath) => {
     if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath) }
-    scSynth.allocReadBuffer(filePath).then((msg) => {
+    scSynth.allocReadBuffer(filePath, bufnum).then((msg) => {
       e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath });
     }).catch((err: any) => {
       e.reply('allocBufferFailed', err);

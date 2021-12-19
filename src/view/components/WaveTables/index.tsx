@@ -23,9 +23,9 @@ const WaveTableList = styled.ul`
 
 const PlusButton = styled.button`
   color: white;
-  border: 1px solid #111;
+  border: 0px solid #111;
   background: #2C2C2C;
-  box-shadow: inset 1px 1px 1px #0C0C0C;
+  box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
 const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting, handlePlusButton }: {
@@ -63,12 +63,12 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
     return (
       (tables) ? tables.tables.map((table: Table) => {
         return (<WaveTable
+          key={table.getId()}
           table={table}
           sample={getSample(tables, table)!}
           bufferData={getBufferData(tables, table)}
           isAllocated={isAllocated(tables, table)}
-          booted={booted}
-          key={table.id} />
+          booted={booted} />
         );
       }) : <p>{`loading...`}</p>
     );

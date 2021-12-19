@@ -61,7 +61,7 @@ app.whenReady().then(async () => {
   };
 });
 
-fsExtra.emptyDirSync(app.getPath('userData'));
+// fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
 app.once('window-all-closed', () => app.quit());

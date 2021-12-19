@@ -24,9 +24,9 @@ const WaveTableContainer = styled.li`
 const StyledButton = styled.button`
   color: white;
   background-color: ${(props: { isPlaying: boolean }) => props.isPlaying ? 'white' : 'gray'};
-  border: 1px solid #111;
+  border: 0px solid #111;
   background: #2C2C2C;
-  box-shadow: inset 1px 1px 1px #0C0C0C;
+  box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
 const WaveTable = ({
@@ -44,16 +44,16 @@ const WaveTable = ({
   const deleTable = useCallback(() => { 
     deleteHandler(table, sample)
   }, [])
-  
+
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
-  }, [table])
+  },[table])
 
   useEffect(() => {
     if (booted && !isAllocated) { 
       allocBuffer(currentBufnum, sample);
     }
-  }, [booted, isAllocated])
+  }, [booted, isAllocated, currentBufnum])
 
   return (
     <WaveTableContainer key={table.getId()}>
@@ -62,7 +62,8 @@ const WaveTable = ({
         {`[ > ]`}
       </StyledButton>
       <p>{table.getName()}</p>
-      <p>{table.getBufnum()}</p>
+      <p>{table.getBufnum()}</p>    
+      <p>{sample.getFilePath()}</p>
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {`[ x ]`}
       </StyledButton>

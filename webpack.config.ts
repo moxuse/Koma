@@ -61,11 +61,11 @@ const config: Configuration = {
       inject: 'body',
       minify: false,
     }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     { from: "./store.json", to: "./" }
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        { from: "./media", to: "./" }
+      ],
+    }),
     new ProvidePlugin({
       process: 'process/browser',
       util: 'utils'
