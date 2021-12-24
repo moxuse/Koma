@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import Sample from '../../model/Sample';
-import { updateWaveTable, LoadWaveTableAction } from '../waveTables';
+import { updateWaveTableBySample, LoadWaveTableAction } from '../waveTables';
 
 export type AllocReadBufferRequestPayload = {
   filePath: string | undefined,
@@ -55,7 +55,7 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
       }));
       removeEvents();
       const newSample = new Sample(sample).set('allocated', true);
-      dispatch(updateWaveTable(newSample));
+      dispatch(updateWaveTableBySample(newSample));
     });
     window.api.on!('allocBufferFailed', (_, arg: Error) => {
       dispatch(allocReadBufferFailed({

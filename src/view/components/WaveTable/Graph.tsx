@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback} from 'react';
 import Table from '../../model/Table';
+import { Slice } from '../../model/Table';
 import styled from 'styled-components';
 
 const width = 150;
@@ -13,10 +14,15 @@ const GraphConatainer = styled.div`
   height: ${height}px;
 `;
 
-const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
+const Graph = ({ id, bufferData, slice }: { id: string, bufferData: Float32Array, slice: Slice | undefined }): JSX.Element => {
   const [context, setContext] = useState<CanvasRenderingContext2D | null>()
   const [buffer, setBuffer] = useState<Float32Array>();
   const graphRef = useRef<HTMLCanvasElement>(null);
+
+  const inRangeSlice = (x: number, slice: Slice) => {
+    return (slice.begin * width < x) && (slice.end * width > x);
+  }
+
   useEffect(() => {
     if (graphRef.current) {
       setBuffer(bufferData);
@@ -26,20 +32,27 @@ const Graph = ({ bufferData }: { bufferData: Float32Array }): JSX.Element => {
   }, []);
   useEffect(() => {
     if (buffer && context) {
-      context.fillStyle = '#fff';
+      context.clearRect(0, 0, width, height);
       const pixcelParSample = width / buffer.length;
-      console.log(buffer.length, pixcelParSample);
-      buffer?.forEach((val, i) => context.fillRect(
-        i * pixcelParSample,
-        height * 0.5,
-        pixcelParSample,
-        val * height * 0.5
-      ));
+      buffer?.forEach((val, i) => {
+        if (slice && inRangeSlice(i * pixcelParSample, slice)) {
+          context.fillStyle = '#0ff';
+        } else { 
+          context.fillStyle = '#fff';
+        }
+        context.fillRect(
+          i * pixcelParSample,
+          height * 0.5,
+          pixcelParSample,
+          val * height * 0.5
+        );
+      })
     };
-  }, [bufferData, context]);
+  }, [bufferData, context, slice]);
+
   return (
     <GraphConatainer>
-      <canvas width={width} height={height} ref={graphRef}></canvas>
+      <canvas id={id} width={width} height={height} ref={graphRef}></canvas>
     </GraphConatainer>
   );
 };

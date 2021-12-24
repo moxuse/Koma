@@ -42,10 +42,17 @@ export const deleteWaveTableRequest = (
   payload
 });
 
-export const updateWaveTableRequest = (
+export const updateWaveTableByTableRequest = (
   payload: LoadWaveTableRequestPayload
 ) => ({
-  type: 'UPDATE_WAVE_TABLE_REQUEST',
+  type: 'UPDATE_WAVE_TABLE_BY_TABLE_REQUEST',
+  payload
+});
+
+export const updateWaveTableBySampleRequest = (
+  payload: LoadWaveTableRequestPayload
+) => ({
+  type: 'UPDATE_WAVE_TABLE_BY_SAMPLE_REQUEST',
   payload
 });
 
@@ -54,7 +61,7 @@ export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableSuccess>
   | ReturnType<typeof loadWaveTableFailure>
   | ReturnType<typeof deleteWaveTableRequest>
-  | ReturnType<typeof updateWaveTableRequest>
+  | ReturnType<typeof updateWaveTableBySampleRequest>
 );
 
 const removeEvents = () => {
@@ -116,10 +123,22 @@ export const deleteWaveTable = (table: Table, sample: Sample) => (
   }));
 };
 
-export const updateWaveTable = (sample: Sample) => (
+export const updateWaveTableByTable = (table: Table) => (
   dispatch: Dispatch<LoadWaveTableAction>
 ) => {
-  dispatch(updateWaveTableRequest({
+  dispatch(updateWaveTableByTableRequest({
+    isFetching: false,
+    filePath: '',
+    table: table,
+    sample: undefined,
+    error: undefined
+  }));
+};
+
+export const updateWaveTableBySample = (sample: Sample) => (
+  dispatch: Dispatch<LoadWaveTableAction>
+) => {
+  dispatch(updateWaveTableBySampleRequest({
     isFetching: false,
     filePath: sample.getFilePath() || '',
     table: undefined,

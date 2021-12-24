@@ -74,7 +74,7 @@ export const booted = () => {
   return (dispatch: Dispatch<LoadSettingAction>) => {
     console.log('setting listen once')
     window.api.once('booted', (_, arg: { mode: string }) => {
-      console.log('dispatched...booted?')
+      // console.log('dispatched...booted?')
       dispatch(bootedRequets({ mode: arg.mode }));
     });
   };

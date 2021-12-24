@@ -1,7 +1,8 @@
 
 import React, { useCallback, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Table from '../../model/Table';
+import TableList from '../../model/TableList';
+import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Graph from './Graph';
 import styled from 'styled-components';
@@ -35,6 +36,7 @@ const WaveTable = ({
     table: Table, sample: Sample, bufferData: Float32Array | undefined, deleteHandler: any, allocBuffer: any, booted: boolean, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
+  const [slice , setSlice] = useState<Slice | undefined>(undefined);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
   
   const clickPlay = useCallback(() => {
@@ -47,7 +49,8 @@ const WaveTable = ({
 
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
-  },[table])
+    setSlice(table.getSlice());
+  }, [table])
 
   useEffect(() => {
     if (booted && !isAllocated) { 
@@ -55,7 +58,7 @@ const WaveTable = ({
     }
   }, [booted, isAllocated, currentBufnum])
 
-  return (
+  return (    
     <WaveTableContainer key={table.getId()}>
       {/* <p>{table.getId()}</p> */}
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
@@ -68,7 +71,7 @@ const WaveTable = ({
         {`[ x ]`}
       </StyledButton>
       {bufferData ?
-        <Graph bufferData={bufferData} />
+        <Graph id={table.getId()} bufferData={bufferData} slice={table.getSlice()} />
         : <div>{`drag`}</div>
       }
       {isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
@@ -82,7 +85,7 @@ function mapStateToProps(
   return {
     isPlaying: player.isPlaying,
     playerBufnum: player.bufnum,
-    error: player.error
+    error: player.error,
   };
 };
 

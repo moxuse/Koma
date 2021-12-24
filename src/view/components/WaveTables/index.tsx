@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
+import TableEditor from '../TableEditor';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { loadSetting, booted } from '../../actions/setting';
@@ -59,9 +60,8 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
   };
 
   const getTables = () => {
-    
     return (
-      (tables) ? tables.tables.map((table: Table) => {
+      (tables) ? tables.getTables().map((table: Table) => {
         return (<WaveTable
           key={table.getId()}
           table={table}
@@ -73,14 +73,16 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
       }) : <p>{`loading...`}</p>
     );
   };
-  
+
   return (
     <WaveTableContainer>
       <DropSection booted={booted}>
-        <WaveTableList>        
-          {getTables()} 
-        </WaveTableList>
-        {booted ? (<PlusButton onClick={onClickePlusButton}>{'[ + ]'}</PlusButton>) : `synth server not booted`}
+        <TableEditor tables={tables}>
+          <WaveTableList>        
+            {getTables()} 
+          </WaveTableList>
+        </TableEditor>
+        {booted ? (<PlusButton onClick={onClickePlusButton}>{'[ + ]'}</PlusButton>) : `synth server not booted`}        
       </DropSection>
     </WaveTableContainer>
   );

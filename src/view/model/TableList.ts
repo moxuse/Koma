@@ -1,6 +1,7 @@
 import { List, Record } from "immutable";
 import Table from './Table';
 import Sample from './Sample';
+import { exists } from "fs";
 
 const t = new Table();
 
@@ -33,10 +34,12 @@ export default class TableList extends Record(DefaultTableList) {
     }).get(0);
   };
 
-  static getTableIndexById(target: TableList, id: string): number | null {
-    return target.getTables().forEach((table, i) => {
-      if (table.getId() === id) { return i }
+  static getTableIndexById(target: TableList, id: string): number {
+    let index = -1;
+    target.getTables().forEach((table, i) => {
+      if (table.getId() === id) { index =  i }
     });
+    return index;
   };
 
   static getSampleById(target: TableList, id: string): Sample | undefined {
@@ -45,14 +48,12 @@ export default class TableList extends Record(DefaultTableList) {
     }).get(0);
   };
 
-  /**
-   * 
-   * TODO test
-   */
-  static getSampleIndexById(target: TableList, id: string): number | null {
-    return target.getSamples().forEach((sample, i) => {
-      if (sample.getId() === id) { return i }
+  static getSampleIndexById(target: TableList, id: string): number {
+    let index = -1;
+    target.getSamples().forEach((sample, i) => {
+      if (sample.getId() === id) { index =  i }
     });
+    return index;
   };
   
   static getAllocatedSampleById(target: TableList, id: string): boolean {
@@ -93,16 +94,16 @@ export default class TableList extends Record(DefaultTableList) {
 
   static updateTable(target: TableList, tableId: string, newTable: Table): TableList {
     const matchedIndex = TableList.getTableIndexById(target, tableId);
-    if (matchedIndex) {
-      const newTables = target.getTables().update(matchedIndex, () => newTable);
-      return new TableList().set('tables', newTables).set('samples', target.getSamples());
+    if (matchedIndex >= 0) {
+      const newTables = target.getTables().update(matchedIndex, () => newTable );
+      return new TableList().set('samples', target.getSamples()).set('tables', newTables);
     };
     return target;
   };
 
   static updateSample(target: TableList, sampleId: string, newSample: Sample): TableList {
     const matchedIndex = TableList.getSampleIndexById(target, sampleId);
-    if (matchedIndex) {
+    if (matchedIndex  >= 0) {
       const newSamples = target.getSamples().update(matchedIndex, () => newSample);
       return new TableList().set('tables', target.getTables()).set('samples', newSamples);
     };

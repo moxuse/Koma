@@ -59,7 +59,13 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         tables: TableList.deleteTable(target, action.payload.table!.getId()),
         error: state.error
       };
-    case 'UPDATE_WAVE_TABLE_REQUEST':
+    case 'UPDATE_WAVE_TABLE_BY_TABLE_REQUEST':
+        return {
+          isFetching: false,
+          tables: TableList.updateTable(state.tables, action.payload.table!.getId(), action.payload.table!),
+          error: state.error
+        };
+    case 'UPDATE_WAVE_TABLE_BY_SAMPLE_REQUEST':
       return {
         isFetching: false,
         tables: TableList.updateSample(state.tables, action.payload.sample!.getId(), action.payload.sample!),
