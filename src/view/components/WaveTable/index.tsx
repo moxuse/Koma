@@ -66,7 +66,7 @@ const WaveTable = ({
       </StyledButton>
       <p>{table.getName()}</p>
       <p>{table.getBufnum()}</p>    
-      <p>{sample.getFilePath()}</p>
+      {/* <p>{sample.getFilePath()}</p> */}
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {`[ x ]`}
       </StyledButton>

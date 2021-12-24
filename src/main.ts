@@ -39,6 +39,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
+      backgroundThrottling: false,
       preload: path.resolve(__dirname, 'preload.js'),
     },
   });
@@ -50,7 +51,12 @@ const createWindow = () => {
   registerApi(mainWindow, isDev);
 
   // load app
-  mainWindow.loadFile('index.html');
+  let url = isDev ? 'index.html' : 'dist/index.html';
+  if (isDev) {
+    mainWindow.loadFile(url);
+  } else {
+    mainWindow.loadURL(url);
+  }
 };
 
 app.whenReady().then(async () => {

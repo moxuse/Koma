@@ -7,11 +7,14 @@ const width = 150;
 const height = 60;
 
 const GraphConatainer = styled.div`
+  background-color: clear;
   margin: 2px 0 2px 0;
   display: inline-table;
-  background-color: #1C1C1C;
   width: ${width}px;
   height: ${height}px;
+  canvas {
+    background-color: #222;
+  }
 `;
 
 const Graph = ({ id, bufferData, slice }: { id: string, bufferData: Float32Array, slice: Slice | undefined }): JSX.Element => {
@@ -32,8 +35,14 @@ const Graph = ({ id, bufferData, slice }: { id: string, bufferData: Float32Array
   }, []);
   useEffect(() => {
     if (buffer && context) {
-      context.clearRect(0, 0, width, height);
       const pixcelParSample = width / buffer.length;
+      context.clearRect(0, 0, width, height);
+      if (slice) { 
+        context.fillStyle = '#333';
+        context.fillRect(
+          slice.begin * width, 0, ((slice.end - slice.begin) * width), height
+        );
+      }      
       buffer?.forEach((val, i) => {
         if (slice && inRangeSlice(i * pixcelParSample, slice)) {
           context.fillStyle = '#0ff';

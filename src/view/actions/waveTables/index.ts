@@ -62,6 +62,7 @@ export type LoadWaveTableAction = (
   | ReturnType<typeof loadWaveTableFailure>
   | ReturnType<typeof deleteWaveTableRequest>
   | ReturnType<typeof updateWaveTableBySampleRequest>
+  | ReturnType<typeof updateWaveTableByTableRequest>
 );
 
 const removeEvents = () => {
