@@ -1,4 +1,4 @@
-import { ActionCreator, Dispatch, Action } from 'redux';
+import { Dispatch } from 'redux';
 import { LoadWaveTableRequestPayload } from './index';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';

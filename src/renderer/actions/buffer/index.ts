@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import Sample from '../../model/Sample';
-import { updateWaveTableBySample, LoadWaveTableAction } from '../waveTables';
+import { updateWaveTableBySample } from '../waveTables';
 
 export type AllocReadBufferRequestPayload = {
   filePath: string | undefined,

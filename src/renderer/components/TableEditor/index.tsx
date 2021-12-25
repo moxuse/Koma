@@ -1,8 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Table, { Slice } from '../../model/Table';
 import TableList from '../../model/TableList';
-import Graph from '../WaveTable/Graph';
-import { Dispatch, Action } from 'redux';
 import { connect } from 'react-redux';
 import { updateSlice } from '../../actions/buffer/slice';
 import styled from 'styled-components';

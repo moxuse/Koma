@@ -1,7 +1,7 @@
-import { ActionCreator, Dispatch, Action } from 'redux';
-import { List } from 'immutable';
-import TableList from '../model/TableList';
-import Table from '../model/Table';
+import { ActionCreator, Dispatch } from 'redux';
+// import { List } from 'immutable';
+// import TableList from '../model/TableList';
+// import Table from '../model/Table';
 
 export interface LoadSettingRequest {
   type: 'LOAD_SETTING_REQUEST', payload: { isFetching: true }

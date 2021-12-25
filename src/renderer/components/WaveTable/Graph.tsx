@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback} from 'react';
-import Table from '../../model/Table';
 import { Slice } from '../../model/Table';
 import styled from 'styled-components';
 

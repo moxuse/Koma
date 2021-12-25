@@ -1,8 +1,8 @@
 const sc = require('supercolliderjs');
 
-const audioInStnthDefFilePath = __dirname + '\/../../media/audioIn.scd';
-const playerStnthDefFilePath = __dirname + "./'\/../../../media/player.scd";
-const recorderStnthDefFilePath = __dirname + "./'\/../../../media/recorder.scd";
+const audioInStnthDefFilePath = __dirname + "./\/../../../media/audioIn.scd";
+const playerStnthDefFilePath = __dirname + "./\/../../../media/player.scd";
+const recorderStnthDefFilePath = __dirname + "./\/../../../media/recorder.scd";
 
 // export type SCLangEvent = (msg: string[] | osc.OscValues | undefined) => void;
 

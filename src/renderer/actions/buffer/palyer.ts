@@ -1,4 +1,4 @@
-import { ActionCreator, Dispatch, Action } from 'redux';
+import { Dispatch } from 'redux';
 
 export type PlayerRequestPayload = {
   isPlaying: boolean,

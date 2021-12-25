@@ -1,7 +1,5 @@
 import { Dispatch } from 'redux';
-import Sample from '../../model/Sample';
 import Table, { Slice } from '../../model/Table';
-import { List } from 'immutable';
 import { updateWaveTableByTable, LoadWaveTableAction } from '../waveTables';
 
 export type UpdateSlicePayload = {

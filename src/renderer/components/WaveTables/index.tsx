@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableEditor from '../TableEditor';

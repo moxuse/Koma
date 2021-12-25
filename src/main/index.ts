@@ -51,7 +51,7 @@ const createWindow = () => {
   registerApi(mainWindow, isDev);
 
   // load app
-  let url = isDev ? 'index.html' : './index.html';
+  let url = isDev ? '../index.html' : './index.html';
   if (isDev) {
     mainWindow.loadFile(url);
   } else {

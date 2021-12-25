@@ -3,7 +3,7 @@ import SCSynth from './SCSynth';
 
 const audioInStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/audioIn.scd";
 const recorderStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/recorder.scd";
-const sampleFilePath = __dirname + '\/../../media/sound/sample.wav';
+const sampleFilePath = __dirname + '\/../../../media/sound/sample.wav';
 
 const bufNum = 9000;
 

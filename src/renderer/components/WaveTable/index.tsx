@@ -1,7 +1,6 @@
 
 import React, { useCallback, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import TableList from '../../model/TableList';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Graph from './Graph';

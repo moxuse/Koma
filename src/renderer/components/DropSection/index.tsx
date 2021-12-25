@@ -1,8 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
-import Table from '../../model/Table';
-import { Dispatch, Action } from 'redux';
 import { connect } from 'react-redux';
-import { loadWaveTables, LoadWaveTableAction } from '../../actions/waveTables';
+import { loadWaveTables } from '../../actions/waveTables';
 
 import styled from 'styled-components';
 
