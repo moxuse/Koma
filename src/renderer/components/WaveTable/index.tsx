@@ -39,8 +39,8 @@ const WaveTable = ({
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
   
   const clickPlay = useCallback(() => {
-    handlePlayer(table.getBufnum());
-  }, []);
+    handlePlayer(currentBufnum, slice);
+  }, [currentBufnum, slice]);
 
   const deleTable = useCallback(() => { 
     deleteHandler(table, sample)
@@ -90,7 +90,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handlePlayer: (bufnum: number) => dispatch(player(bufnum)),
+    handlePlayer: (bufnum: number, slice: Slice) => dispatch(player(bufnum, slice)),
     deleteHandler: (table: Table, sample: Sample) => dispatch(deleteWaveTable(table, sample)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample))
   };

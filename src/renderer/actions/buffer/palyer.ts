@@ -1,8 +1,10 @@
 import { Dispatch } from 'redux';
+import Table from '../../model/Table';
 
 export type PlayerRequestPayload = {
   isPlaying: boolean,
   bufnum: number,
+  slice: { begin: number, end: number} |  undefined
   error: Error | undefined
 };
 
@@ -38,17 +40,19 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 };
 
-export const player = (bufnum: number) => {
+export const player = (bufnum: number, slice: ({ begin: number, end: number} |  undefined) ) => {
   return (dispatch: Dispatch<PlayerAction>) => {
     dispatch(playerRequest({
       isPlaying: true,
       bufnum: bufnum,
+      slice: slice,
       error: undefined,
     }));
     window.api.on!('playerSuccess', (_) => {
       dispatch(playerSuccess({
         isPlaying: false,
         bufnum: bufnum,
+        slice: slice,
         error: undefined,
       }));
       removeEvents();
@@ -57,10 +61,11 @@ export const player = (bufnum: number) => {
       dispatch(playerFailure({
         isPlaying: false,
         bufnum: bufnum,
+        slice: slice,
         error: arg,
       }));
       removeEvents();
     });
-    window.api.playerRequest(bufnum);
+    window.api.playerRequest(bufnum, slice);
   };
 };

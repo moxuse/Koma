@@ -13,7 +13,7 @@ declare global {
     { tables: Table } &
     { bufnum: number, data: { ommited: Float32Array, detailed: Float32Array} } &    
     { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array} } &
-    { bufnum: number } &
+    { bufnum: number, slice: ({ begin: number, end: number} | undefined) } &
     { tables: Table[] } &
     Error;
   
@@ -23,7 +23,7 @@ declare global {
     loadSetting: () => void,
     loadWaveTableByDialog: () => void,
     loadWaveTable: (filePath: string) => void,
-    playerRequest: (bufnum: number) => void,
+    playerRequest: (bufnum: number, slice: ({ begin: number, end: number} | undefined)) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
     on: (channel: string, callback: IpcEvent) => void;
     once: (channel: string, callback: IpcEvent) => void;

@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
-
+import Table from '../renderer/model/table';
 /**
  * register ipc event APIs
  **/ 
@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld(
     loadSetting: async () => ipcRenderer.send('loadSetting'),
     loadWaveTableByDialog: async () => ipcRenderer.send('loadWaveTableByDialog'),
     loadWaveTable: async (filePath: string) => ipcRenderer.send('loadWaveTable', filePath),
-    playerRequest: async (bufnum: number) => ipcRenderer.send('playerRequest', bufnum),
+    playerRequest: async (bufnum: number, slice: ({ begin: number, end: number} | undefined)) => ipcRenderer.send('playerRequest', bufnum, slice),
     allocBufferRequest: async (bufnum: number, filePath: string) => ipcRenderer.send('allocBufferRequest', bufnum, filePath),
 
     on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv)),

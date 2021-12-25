@@ -3,13 +3,16 @@ import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
+import Table from '../../renderer/model/Table';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 
-const playerStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/player.scd";
-const recorderStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/recorder.scd";
-const audioInStnthDefFilePath = __dirname + "./'\/../../../media/synthDef/audioIn.scd";
+const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
+const recorderSynthDefFilePath = __dirname + "\/../../synthDef/recorder.scd";
+const audioInSynthDefFilePath = __dirname + "\/../../synthDef/audioIn.scd";
+const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
 const optionNumBuffers = '12000';
+
 
 let scSynth: SCSynth;
 let scLang: SCLang;
@@ -106,10 +109,10 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'playerSuccess'
    * 'playerFailure'
    */
-  ipcMain.on('playerRequest', (e, bufnum) => {
-    if (isDev) { console.log('playerRequest', e, bufnum) }
+  ipcMain.on('playerRequest', (e, bufnum: number, slice: ({begin:number, end:number} | undefined)) => {
+    if (isDev) { console.log('play request:', bufnum, slice) }
     try {
-      scSynth.playBuffer(bufnum);
+      scSynth.playBuffer(bufnum, slice);
     } catch (err) {
       e.reply('playerFailure', err);
     }
@@ -141,9 +144,10 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   
   await scLang.boot();
   if (scSynth.mode === 'internal') {
-    await scSynth.loadSynthDefFromFile('player', playerStnthDefFilePath);
-    await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath);
-    await scSynth.loadSynthDefFromFile('audioIn', audioInStnthDefFilePath);
+    await scSynth.loadSynthDefFromFile('player', playerSynthDefFilePath);
+    await scSynth.loadSynthDefFromFile('bufRd', bufRdSynthDefFilePath);
+    await scSynth.loadSynthDefFromFile('recorder', recorderSynthDefFilePath);
+    await scSynth.loadSynthDefFromFile('audioIn', audioInSynthDefFilePath);
   } else {
     await scLang.loadSynthDefs();
   };

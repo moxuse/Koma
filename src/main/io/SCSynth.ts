@@ -61,7 +61,7 @@ export default class SCSynth {
     const foundRemote = await this.checkRemoteHealth();
     if (!foundRemote) {
       return this.tryBoot();
-    } else { 
+    } else {
       return false;
     };
   };
@@ -128,7 +128,7 @@ export default class SCSynth {
     });
   };
 
-  async quit () {
+  async quit() {
     if (this.mode === 'internal') {
       return this.server.quit();
     };
@@ -183,8 +183,8 @@ export default class SCSynth {
       arg.shift();
       let message;
       if (arg.length >= 1) {
-        message = new OSC.Message([address], ...arg);        
-      } else {        
+        message = new OSC.Message([address], ...arg);
+      } else {
         message = new OSC.Message(address, []);
       };
       const binary = message.pack();
@@ -208,7 +208,7 @@ export default class SCSynth {
           reject({ value: undefined, error: new Error('failed at /done msg') });
         };
       });
-      if (bufnum === null) { 
+      if (bufnum === null) {
         bufnum = this.nextBufnum();
       } else {
         this.bufnum = bufnum + 1;
@@ -237,8 +237,12 @@ export default class SCSynth {
     });
   };
 
-  playBuffer(bufnum: number) {    
-    this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0, 'bufnum', bufnum]);
+  playBuffer(bufnum: number | undefined, slice: ({ begin: number, end: number } | undefined)) {    
+    if (slice && slice.begin && slice.end) {
+      this.sendMsg(['/s_new', 'bufRd', this.nextNodeId(), 1, 0, 'bufnum', bufnum, 'begin', slice.begin, 'end', slice.end]);
+    } else { 
+      this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0, 'bufnum', bufnum]);
+    }
   };
 
   freeBuffer(bufnum: number) {

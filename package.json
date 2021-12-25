@@ -4,7 +4,6 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "predev": "rimraf dist",
     "dev": "run-p dev:*",
     "dev:electron": "wait-on ./dist/main/index.js && cross-env NODE_ENV=\"development\" electron dist/main",
     "dev:tsc": "tsc -w -p tsconfig.main.json",

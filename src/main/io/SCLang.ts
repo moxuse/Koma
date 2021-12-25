@@ -1,8 +1,10 @@
 const sc = require('supercolliderjs');
 
-const audioInStnthDefFilePath = __dirname + "./\/../../../media/audioIn.scd";
-const playerStnthDefFilePath = __dirname + "./\/../../../media/player.scd";
-const recorderStnthDefFilePath = __dirname + "./\/../../../media/recorder.scd";
+const audioInSynthDefFilePath = __dirname + "\/../../synthDef/audioIn.scd";
+const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
+const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
+const recorderSynthDefFilePath = __dirname + "\/../../synthDef/recorder.scd";
+
 
 // export type SCLangEvent = (msg: string[] | osc.OscValues | undefined) => void;
 
@@ -22,15 +24,19 @@ export default class SCLang {
 
   async loadSynthDefs() {
     await this.lang.interpret(
-      `~q = "${audioInStnthDefFilePath}".loadPaths;
+      `~q = "${audioInSynthDefFilePath}".loadPaths;
       ~q[0].store;`
     );
     await this.lang.interpret(
-      `~q = "${playerStnthDefFilePath}".loadPaths;
+      `~q = "${playerSynthDefFilePath}".loadPaths;
+      ~[0].store;`
+    );
+    await this.lang.interpret(
+      `~q = "${bufRdSynthDefFilePath}".loadPaths;
       ~[0].store;`
     );
     return await this.lang.interpret(
-      `~q = "${recorderStnthDefFilePath}".loadPaths;
+      `~q = "${recorderSynthDefFilePath}".loadPaths;
       ~[0].store;`
     );
   };
