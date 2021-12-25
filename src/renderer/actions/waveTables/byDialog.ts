@@ -25,14 +25,14 @@ export const loadWaveTableByDialogSuccess = (
   payload: LoadWaveTableRequestPayload
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS',
-  payload 
+  payload
 });
 
 export const loadWaveTableByDialogFailure = (
   payload: LoadWaveTableRequestPayload
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_FAILURE',
-  payload 
+  payload
 });
 
 export type LoadWaveTableByDialogAction = (

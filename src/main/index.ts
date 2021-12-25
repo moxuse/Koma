@@ -19,12 +19,12 @@ const reduxDevToolsPath = path.join(
 
 const execPath =
   process.platform === 'win32'
-    ? '../node_modules/electron/dist/electron.exe'
-    : '../node_modules/.bin/electron';
+    ? '../../node_modules/electron/dist/electron.exe'
+    : '../../node_modules/.bin/electron';
 
 // hot reload elecron
 if (isDev) {
-  require('electron-reload')(__dirname + 'dist', {
+  require('electron-reload')(__dirname + 'index.js', {
     electron: path.resolve(__dirname, execPath),
     forceHardReset: true,
     hardResetMethod: 'exit',
@@ -51,7 +51,7 @@ const createWindow = () => {
   registerApi(mainWindow, isDev);
 
   // load app
-  let url = isDev ? 'index.html' : 'dist/index.html';
+  let url = isDev ? 'index.html' : './index.html';
   if (isDev) {
     mainWindow.loadFile(url);
   } else {
@@ -67,7 +67,7 @@ app.whenReady().then(async () => {
   };
 });
 
-fsExtra.emptyDirSync(app.getPath('userData'));
+// fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
 app.once('window-all-closed', () => app.quit());

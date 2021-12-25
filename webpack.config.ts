@@ -28,7 +28,7 @@ const config: Configuration = {
     } 
   },
   entry: {
-    app: './src/view/index.tsx',
+    app: './src/renderer/index.tsx',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -55,7 +55,7 @@ const config: Configuration = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/view/index.html',
+      template: './src/renderer/index.html',
       filename: 'index.html',
       scriptLoading: 'module',
       inject: 'body',

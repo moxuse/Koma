@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { Provider } from 'react-redux';
 import WaveTables from './components/WaveTables';
-import { configReducer } from '../view/reducer';
+import { configReducer } from '../renderer/reducer';
 const { store, persistor } = configReducer();
 
 const DragAreaStyle = styled.div`

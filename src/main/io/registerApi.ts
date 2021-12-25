@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import WavDecoder, { AudioData } from 'wav-decoder';
-import TableList from '../view/model/TableList';
+import TableList from '../../renderer/model/TableList';
 import * as Utils from './Utils';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';

@@ -1,7 +1,7 @@
 import { IpcMainEvent } from 'electron';
 import { AudioData } from 'wav-decoder';
-import Table from '../view/model/Table';
-import TableList from '../view/model/TableList';
+import Table from '../renderer/model/Table';
+import TableList from '../renderer/model/TableList';
 
 declare global {
   interface Window {

@@ -6,22 +6,27 @@
   "scripts": {
     "predev": "rimraf dist",
     "dev": "run-p dev:*",
-    "dev:electron": "wait-on ./dist/main.js && cross-env NODE_ENV=\"development\" electron dist/main",
+    "dev:electron": "wait-on ./dist/main/index.js && cross-env NODE_ENV=\"development\" electron dist/main",
     "dev:tsc": "tsc -w -p tsconfig.main.json",
     "dev:webpack": "webpack --watch",
     "test": "jest",
     "app:dir": "electron-builder --dir",
-    "app:dist": "electron-builder"
+    "build:osx": "rimraf dist && webpack --mode=production && electron-builder --mac --x64"
   },
   "author": "moxus",
   "license": "MIT",
   "build": {
+    "asar": true,
     "extends": null,
     "extraMetadata": {
-      "main": "dist/main.js"
+      "main": "dist/main/index.js"
     },
     "files": [
-      "dist/**/*"
+      "dist/index.html",
+      "dist/app.js",
+      "dist/synthDef/*",
+      "dist/sound/*",
+      "dist/font/*"
     ],
     "appId": "org.moxus.msplr",
     "mac": {
