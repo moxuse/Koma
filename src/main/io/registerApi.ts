@@ -152,3 +152,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     await scLang.loadSynthDefs();
   };
 };
+
+export function quitSC() { 
+  scLang.quit();
+  scSynth.quit();
+}

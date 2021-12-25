@@ -22,6 +22,10 @@ export default class SCLang {
     });
   };
 
+  async quit() {
+    this.lang.quit();
+  }
+
   async loadSynthDefs() {
     await this.lang.interpret(
       `~q = "${audioInSynthDefFilePath}".loadPaths;

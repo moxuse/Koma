@@ -1,7 +1,7 @@
 import path from 'path';
 import { BrowserWindow, app, ipcMain, session } from 'electron';
 import loadDevtool from 'electron-load-devtool';
-import registerApi from './io/registerApi';
+import registerApi, { quitSC } from './io/registerApi';
 const fsExtra = require('fs-extra');
 const os = require('os');
 
@@ -70,4 +70,7 @@ app.whenReady().then(async () => {
 // fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
-app.once('window-all-closed', () => app.quit());
+app.once('window-all-closed', () => {
+  quitSC();
+  app.quit()
+});
