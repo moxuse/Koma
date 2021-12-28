@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
@@ -72,10 +72,16 @@ const WaveTable = ({
   }, [table])
 
   useEffect(() => {
-    if (booted && !isAllocated) { 
+    if (booted && !isAllocated) {
       allocBuffer(currentBufnum, sample);
     }
-  }, [booted, isAllocated, currentBufnum])
+  }, [booted, isAllocated, currentBufnum]);
+
+  const composeGraph = useMemo(() => {
+    return (
+      <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} />
+    )
+  }, [table, bufferData]);
 
   return (    
     <WaveTableContainer key={table.getId()}>
@@ -90,7 +96,7 @@ const WaveTable = ({
         {`[ x ]`}
       </StyledButton>
       {bufferData ?
-        <Graph id={table.getId()} bufferData={bufferData} slice={table.getSlice()} />
+        composeGraph
         : <div>{`drag`}</div>
       }
       {isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
