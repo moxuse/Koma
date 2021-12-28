@@ -22,11 +22,11 @@ export const DETAILED_RATE = 8;
 //   return 100 + (20.0 * Math.log10(input));
 // }
 
-export const reduceAudioData = (data: Float32Array): { omitted: Float32Array, detailed: Float32Array } => { 
+export const reduceAudioData = (data: Float32Array): { omitted: Float32Array, detailed: Float32Array } => {
   const omitted = data.filter((sample, i) => i % OMMITED_RATE === 0);
   const detailed = data.filter((sample, i) => i % DETAILED_RATE === 0);
   return { omitted, detailed }
-}
+};
 
 export const readFile = (filepath: string): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
@@ -39,3 +39,14 @@ export const readFile = (filepath: string): Promise<Buffer> => {
   });
 };
 
+export const restoreData = (filepath: string): Promise<Object> => { 
+  return new Promise((resolve, reject) => {
+    try {
+      const file = fs.readFileSync(filepath, 'utf8');
+      const tables = JSON.parse(file);
+      resolve(tables);
+    } catch (err) {
+      reject(err);
+    }    
+  })
+}

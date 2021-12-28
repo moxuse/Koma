@@ -15,6 +15,35 @@ import TableList from '../model/TableList';
 import Table, { Slice } from '../model/Table';
 import Sample from '../model/Sample';
 
+export const outboundsTransform = (outboundState: any, key): any => {
+  // console.log('outboundState', outboundState)
+  let newTableList = new TableList();
+  outboundState.waveTables.tables.forEach((t: Table) => {
+    let table = new Table();
+    table = table.set('id', t.id);
+    table = table.set('name', t.name);
+    table = table.set('sample', t.sample);
+    table = table.set('bufnum', t.bufnum);
+    table = table.set('slice', { begin: t.slice?.begin, end: t.slice?.end } as Slice);
+    newTableList = TableList.appendTable(newTableList, table);
+  })
+  outboundState.waveTables.samples.forEach((s: Sample) => {
+    let sample = new Sample();
+    sample = sample.set('id', s.id);
+    sample = sample.set('allocated', false);
+    sample = sample.set('buffer', Object.values(s.buffer));
+    sample = sample.set('filePath', s.filePath);
+    newTableList = TableList.appendSample(newTableList, sample);
+  })
+  
+  const retunVal = {
+    ...outboundState,
+    tables: newTableList,
+  };
+  
+  return retunVal
+};
+
 const TransformTables = createTransform(
   (inboundState: any, key): any => {
     const returnVal = {
@@ -41,34 +70,7 @@ const TransformTables = createTransform(
     }
     return returnVal;
   },
-  (outboundState: any, key): any => {
-    // console.log('outboundState', outboundState)
-    let newTableList = new TableList();
-    outboundState.waveTables.tables.forEach((t: Table) => {
-      let table = new Table();
-      table = table.set('id', t.id);
-      table = table.set('name', t.name);  
-      table = table.set('sample', t.sample);
-      table = table.set('bufnum', t.bufnum);
-      table = table.set('slice', { begin: t.slice?.begin, end: t.slice?.end } as Slice);
-      newTableList = TableList.appendTable(newTableList, table);
-    })
-    outboundState.waveTables.samples.forEach((s: Sample) => {
-      let sample = new Sample();
-      sample = sample.set('id', s.id);
-      sample = sample.set('allocated', false);
-      sample = sample.set('buffer', Object.values(s.buffer));
-      sample = sample.set('filePath', s.filePath);
-      newTableList = TableList.appendSample(newTableList, sample);
-    })
-    
-    const retunVal = {
-      ...outboundState,
-      tables: newTableList,
-    };
-    
-    return retunVal
-  }, {
+  outboundsTransform, {
     whitelist: ['waveTables', 'tables']
   }
 );

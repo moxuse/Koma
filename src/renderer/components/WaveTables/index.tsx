@@ -7,6 +7,7 @@ import Table from '../../model/Table';
 import { loadSetting, booted } from '../../actions/setting';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
+import { openStore } from '../../actions/waveTables/openStore';
 
 import styled from 'styled-components';
 
@@ -22,19 +23,20 @@ const WaveTableList = styled.ul`
   padding: 0px;
 `;
 
-const PlusButton = styled.button`
+const Button = styled.button`
   color: white;
   border: 0px solid #111;
   background: #2C2C2C;
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
-const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting, handlePlusButton }: {
+const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting, handleOpenButton, handlePlusButton }: {
   booted: boolean,
   isFetching: boolean,
   tables: TableList,
   onceLiestenBooted: any,
   loadSetting: any,
+  handleOpenButton: any,
   handlePlusButton: any
 }): JSX.Element => {
     // const [isAllocated, setIsAllocated] = useState<boolean>(false);
@@ -42,6 +44,9 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
     onceLiestenBooted();
     loadSetting();
   }, []);
+
+  const onClickeOpenButton = useCallback(() => handleOpenButton(), []);
+  const onClickeSaveButton = useCallback(() => window.api.saveStore(), []);
 
   const onClickePlusButton = useCallback(() => {
     handlePlusButton();
@@ -76,13 +81,18 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
 
   return (
     <WaveTableContainer>
+      {booted ? (<>
+        <Button onClick={onClickeSaveButton}>{`[ _ ]`}</Button>
+        <Button onClick={onClickeOpenButton}>{`[ ^ ]`}</Button>
+        </>
+      ) : <></>}
       <DropSection booted={booted}>
         <TableEditor tables={tables}>
           <WaveTableList>        
             {getTables()} 
           </WaveTableList>
         </TableEditor>
-        {booted ? (<PlusButton onClick={onClickePlusButton}>{'[ + ]'}</PlusButton>) : `synth server not booted`}        
+        {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : `synth server not booted`}        
       </DropSection>
     </WaveTableContainer>
   );
@@ -100,6 +110,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
+    handleOpenButton: () => dispatch(openStore()),
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),

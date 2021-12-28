@@ -6,6 +6,7 @@ import * as Utils from './Utils';
 import Table from '../../renderer/model/Table';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
+import fs from 'fs';
 
 const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
 const recorderSynthDefFilePath = __dirname + "\/../../synthDef/recorder.scd";
@@ -109,7 +110,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'playerSuccess'
    * 'playerFailure'
    */
-  ipcMain.on('playerRequest', (e, bufnum: number, slice: ({begin:number, end:number} | undefined)) => {
+  ipcMain.on('playerRequest', (e, bufnum: number, slice: ({begin: number, end: number} | undefined)) => {
     if (isDev) { console.log('play request:', bufnum, slice) }
     try {
       scSynth.playBuffer(bufnum, slice);
@@ -136,6 +137,44 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   // window.api.allocBuffer(bufnum);
 
   /**
+   * save store as file
+   */
+  ipcMain.on('saveStore', (e) => {    
+    window.webContents
+    .executeJavaScript('localStorage.getItem("persist:root");', true)
+    .then(data => {
+      dialog.showSaveDialog({
+        filters: [{ name: "WaveTable", extensions: ["msplr"] }]
+      }).then((result) => {
+        if (result.filePath) {
+          const finalJson = data.replace(/\\"/g, '"').replace(/"{/g, '{').replace(/}"/g, '}');
+          fs.writeFile(result.filePath, finalJson, {}, err => {
+            e.reply('saveStoreFailed', err);
+          });
+        }
+      }).catch((err) => {
+        e.reply('saveStoreFailed', err);
+      });
+    });
+  });
+  /**
+   * open store as file
+   */
+  ipcMain.on('openStore', (e) => {
+    dialog.showOpenDialog(window, {
+      properties: ["openFile", 'openDirectory'],
+      filters: [{ name: "Msplr", extensions: ["msplr"] }]
+    }).then((result) => {
+      if (result.canceled) { e.reply('openStoreCanceled') }
+      Utils.restoreData(result.filePaths[0]).then((restoerData: any) => {
+        e.reply('openStoreSucseed', { restoerData });
+      }).catch((err: any) => {
+        e.reply('openStoreFailed', err);
+      })
+    })
+  });
+  
+  /**
    * after set apis then boot server and lang.
    */
   await scSynth.boot().then((e) => {
@@ -153,7 +192,6 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   };
 };
 
-export function quitSC() { 
-  scLang.quit();
-  scSynth.quit();
+export async function quitSC() { 
+  return Promise.all([scLang.quit(), scSynth.quit()]);
 }

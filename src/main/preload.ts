@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld(
     loadWaveTable: async (filePath: string) => ipcRenderer.send('loadWaveTable', filePath),
     playerRequest: async (bufnum: number, slice: ({ begin: number, end: number} | undefined)) => ipcRenderer.send('playerRequest', bufnum, slice),
     allocBufferRequest: async (bufnum: number, filePath: string) => ipcRenderer.send('allocBufferRequest', bufnum, filePath),
+    saveStore: async () => ipcRenderer.send('saveStore'), 
+    openStore: async () => ipcRenderer.send('openStore'), 
 
     on: (channel: string, callback: any) => ipcRenderer.on(channel, (event, argv) => callback(event, argv)),
     once: (channel: string, callback: any) => ipcRenderer.once(channel, (event, argv) => callback(event, argv)),

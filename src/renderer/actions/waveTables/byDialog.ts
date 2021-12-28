@@ -4,13 +4,6 @@ import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import { getNewId, ommitFileName } from '../helper';
 
-export type ItemPayload = {
-  isFetching: boolean;
-  table: Table | undefined;
-  sample: Sample | undefined;
-  error: Error | undefined;
-};
-
 /**
  * Action Creator
  */

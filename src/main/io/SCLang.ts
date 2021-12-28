@@ -23,8 +23,8 @@ export default class SCLang {
   };
 
   async quit() {
-    this.lang.quit();
-  }
+    return this.lang.quit();
+  };
 
   async loadSynthDefs() {
     await this.lang.interpret(

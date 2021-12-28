@@ -33,7 +33,11 @@ export interface LoadSettingFailure {
   payload: LoadSettingPayload
 };
 
-export type LoadSettingAction = BootedActioon | LoadSettingRequest | LoadSettingSuccess | LoadSettingFailure;
+export type LoadSettingAction =
+  BootedActioon
+  | LoadSettingRequest
+  | LoadSettingSuccess
+  | LoadSettingFailure;
 
 /**
  * Action Creator

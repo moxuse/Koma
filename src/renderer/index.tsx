@@ -5,14 +5,19 @@ import { PersistGate } from 'redux-persist/es/integration/react';
 import { Provider } from 'react-redux';
 import WaveTables from './components/WaveTables';
 import { configReducer } from '../renderer/reducer';
+import { restore } from './actions/waveTables/openStore';
 const { store, persistor } = configReducer();
 
 const DragAreaStyle = styled.div`
   -webkit-app-region: drag;
 `;
 
-// Access root stored data
-// alert( localStorage.getItem("persist:root"));
+window.api.on!('openStoreSucseed', (_, { restoerData }) => {
+  if (restoerData) {
+    persistor.purge();
+    store.dispatch(restore(restoerData));
+  }
+});
 
 const AppContainer = styled.div`
   margin-top: 40px;`;

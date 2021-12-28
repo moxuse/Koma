@@ -70,7 +70,7 @@ app.whenReady().then(async () => {
 // fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
-app.once('window-all-closed', () => {
-  quitSC();
+app.once('window-all-closed', async () => {
+  await quitSC();
   app.quit()
 });

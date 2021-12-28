@@ -30,9 +30,29 @@ const StyledButton = styled.button`
 `;
 
 const WaveTable = ({
-  table, sample, bufferData, handlePlayer, deleteHandler, allocBuffer, booted, isAllocated, isPlaying, playerBufnum, error
+  table,
+  sample,
+  bufferData,
+  handlePlayer,
+  deleteHandler,
+  allocBuffer,
+  booted,
+  isAllocated,
+  isPlaying,
+  playerBufnum,
+  error
   }:{
-    table: Table, sample: Sample, bufferData: Float32Array | undefined, deleteHandler: any, allocBuffer: any, booted: boolean, handlePlayer: any, isPlaying: boolean, isAllocated: boolean, playerBufnum: number, error: Error
+    table: Table,
+    sample: Sample,
+    bufferData: Float32Array | undefined,
+    deleteHandler: any,
+    allocBuffer: any,
+    booted: boolean,
+    handlePlayer: any,
+    isPlaying: boolean,
+    isAllocated: boolean,
+    playerBufnum: number,
+    error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [slice , setSlice] = useState<Slice | undefined>(undefined);

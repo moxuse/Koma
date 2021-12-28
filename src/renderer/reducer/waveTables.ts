@@ -1,10 +1,11 @@
 import * as ReduxPersistConstants from 'redux-persist/lib/constants';
 import { LoadWaveTableByDialogAction } from "../actions/waveTables/byDialog";
 import { LoadWaveTableAction } from "../actions/waveTables";
+import { OpenStoreAction } from "../actions/waveTables/openStore";
 
 import TableList from "../model/TableList";
 
-type ActionType = LoadWaveTableAction | LoadWaveTableByDialogAction
+type ActionType = LoadWaveTableAction & LoadWaveTableByDialogAction & OpenStoreAction
 
 const tablesInitialState = {
   isFetching: false,
@@ -70,6 +71,24 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         isFetching: false,
         tables: TableList.updateSample(state.tables, action.payload.sample!.getId(), action.payload.sample!),
         error: state.error
+      };
+    case 'OPEN_STORE_REQUEST':
+      return {
+        isFetching: action.payload.isFetching,
+        tables: state.tables,
+        error: action.payload.error
+      };
+    case 'OPEN_STORE_SUCCESS':
+      return {
+        isFetching: action.payload.isFetching,
+        tables: action.payload.tables,
+        error: action.payload.error
+      };
+    case 'OPEN_STORE_FAILURE':
+      return {
+        isFetching: state.isFetching,
+        tables: state.tables,
+        error: action.payload.error
       };
     case ReduxPersistConstants.PERSIST:
       console.log('on PERSIST', state, action);
