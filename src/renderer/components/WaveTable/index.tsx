@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Graph from './Graph';
+import Knob from '../Tools/Knob';
 import styled from 'styled-components';
 import { allocReadBuffer } from '../../actions/buffer';
 import { player } from '../../actions/buffer/palyer';
-import { deleteWaveTable } from '../../actions/waveTables';;
+import { deleteWaveTable } from '../../actions/waveTables';
 
 const WaveTableContainer = styled.li`
   color: white;
@@ -90,7 +91,8 @@ const WaveTable = ({
         {`[ > ]`}
       </StyledButton>
       <p>{table.getName()}</p>
-      <p>{table.getBufnum()}</p>    
+      <p>{table.getBufnum()}</p>
+      <Knob label="pitch" value={0.05}></Knob>
       {/* <p>{sample.getFilePath()}</p> */}
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {`[ x ]`}
