@@ -1,7 +1,7 @@
-import md5 from 'md5';
+const Buffer = require('buffer').Buffer;
 
-export function getNewId() {
-  return md5('' + Math.random(), { asString: true });
+export function getNewId(): string {
+  return Buffer.from('' + Math.random(), 'utf-8').toString('base64');
 };
 
 export function ommitFileName(pathName: string) {
