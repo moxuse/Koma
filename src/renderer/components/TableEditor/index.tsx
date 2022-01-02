@@ -10,7 +10,7 @@ const TableEditorErea = styled.div`
 `;
 
 const TableEditor = ({ children, tables, handleUpdate }: {
-  children: any, tables: TableList, handleUpdate: any
+  children: JSX.Element, tables: TableList, handleUpdate: any
 }) => {
   const tableList = useRef<HTMLDivElement>(null);
   const [editting, setEditting] = useState<boolean>(false);
@@ -34,8 +34,7 @@ const TableEditor = ({ children, tables, handleUpdate }: {
     const onMousedown = (e: MouseEvent) => {
       setEditting(true);
       const target = e.target as HTMLElement;
-      const taregt: HTMLElement = e.target as HTMLElement;
-      const rect = taregt?.getBoundingClientRect();
+      const rect = target?.getBoundingClientRect();
       const x_ = e.clientX - rect.left;
       const y_ = e.clientY - rect.top;
       setFrom(normalize(x_, rect.width));
@@ -49,8 +48,8 @@ const TableEditor = ({ children, tables, handleUpdate }: {
   useEffect(() => {
     const onMousemove = (e: MouseEvent) => {
       if (editting) {
-        const taregt: HTMLElement = e.target as HTMLElement;
-        const rect = taregt?.getBoundingClientRect();
+        const target: HTMLElement = e.target as HTMLElement;
+        const rect = target?.getBoundingClientRect();
         const x_ = e.clientX - rect.left;
         const y_ = e.clientY - rect.top;        
         if (id) {
@@ -75,7 +74,7 @@ const TableEditor = ({ children, tables, handleUpdate }: {
       setEditting(false);
       setId(undefined);
       const target = e.target as HTMLElement;
-      console.log('mouseup', target.id);
+      // console.log('mouseup', target.id);
     };        
      tableList.current?.addEventListener("mouseup", onMouseup, false);
      return () => {              

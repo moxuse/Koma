@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { LoadWaveTableRequestPayload } from './index';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
+import Effect from '../../model/Effect';
 import { getNewId, ommitFileName } from '../helper';
 
 /**
@@ -46,6 +47,7 @@ export const loadWaveTableByDialog = () => {
       table: undefined,
       filePath: '',
       sample: undefined,
+      effect: undefined,
       error: undefined
     }));
     window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, data }) => {
@@ -56,12 +58,16 @@ export const loadWaveTableByDialog = () => {
         name: ommitFileName(filePath),
         bufnum: bufnum,
         sample: sampleId,
+        effect: sampleId,
         slice: undefined
       });
+      let e = new Effect();
+      e = e.set('id', sampleId);
       dispatch(loadWaveTableByDialogSuccess({
         isFetching: false,
         filePath: '',
         table: t,
+        effect: e,
         sample: s,
         error: undefined
       }));
@@ -74,6 +80,7 @@ export const loadWaveTableByDialog = () => {
           filePath: '',
           table: undefined,
           sample: undefined,
+          effect: undefined,
           error: arg
         }
       ));

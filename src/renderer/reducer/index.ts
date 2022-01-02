@@ -14,6 +14,7 @@ import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table, { Slice } from '../model/Table';
 import Sample from '../model/Sample';
+import Effect from '../model/Effect';
 
 export const outboundsTransform = (outboundState: any, key): any => {
   // console.log('outboundState', outboundState)
@@ -23,6 +24,7 @@ export const outboundsTransform = (outboundState: any, key): any => {
     table = table.set('id', t.id);
     table = table.set('name', t.name);
     table = table.set('sample', t.sample);
+    table = table.set('effect', t.effect);
     table = table.set('bufnum', t.bufnum);
     table = table.set('slice', { begin: t.slice?.begin, end: t.slice?.end } as Slice);
     newTableList = TableList.appendTable(newTableList, table);
@@ -34,6 +36,16 @@ export const outboundsTransform = (outboundState: any, key): any => {
     sample = sample.set('buffer', Object.values(s.buffer));
     sample = sample.set('filePath', s.filePath);
     newTableList = TableList.appendSample(newTableList, sample);
+  })
+  outboundState.waveTables.effects.forEach((e: Effect) => {
+    let effect = new Effect();
+    effect = effect.set('id', e.id);
+    effect = effect.set('pan', e.pan);
+    effect = effect.set('rate', e.rate);
+    effect = effect.set('gain', e.gain);
+    effect = effect.set('type', e.type);
+    effect = effect.set('points', Object.values(e.points));
+    newTableList = TableList.appendEffect(newTableList, effect);
   })
   
   const retunVal = {
@@ -55,6 +67,7 @@ const TransformTables = createTransform(
             name: t['name'],
             bufnum: t['bufnum'],
             sample: t['sample'],
+            effect: t['effect'],
             slice: { begin: t['slice']?.begin, end: t['slice']?.end }
           }
         }) : [],
@@ -64,6 +77,16 @@ const TransformTables = createTransform(
             allocated: false,
             filePath: s['filePath'],
             buffer: s['buffer']
+          }
+        }) : [],
+        effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {  
+          return {
+            id: e['id'],
+            pan: e['pan'],
+            rate: e['rate'],
+            gain: e['gain'],
+            type: e['type'],
+            points: e['points'],
           }
         }) : []
       }

@@ -1,4 +1,5 @@
 import { Record } from 'immutable';
+import Effect from './Effect';
 
 export type Slice = {
   begin: number;
@@ -11,6 +12,7 @@ export type TableType = {
   bufnum: number | undefined;
   sample: string | undefined;
   slice: Slice | undefined;
+  effect: string | undefined;
 };
 
 const DefaultTable: TableType = {
@@ -19,6 +21,7 @@ const DefaultTable: TableType = {
   bufnum: 600,
   sample: undefined,
   slice: undefined,
+  effect: undefined,
 };
 
 export default class Table extends Record(DefaultTable) {
@@ -37,11 +40,20 @@ export default class Table extends Record(DefaultTable) {
   getSlice() {
     return this.get('slice');
   };
+  getEffect() {
+    return this.get('effect');
+  }
 
-  private updateSlice(slice: Slice) {
-    this.set('slice', slice);
-  };
-  static updateSlice(target: Table, newSlice: Slice) {
-    return target.updateSlice(newSlice);
-  };
+  // private updateSlice(slice: Slice) {
+  //   this.set('slice', slice);
+  // };
+  // private updateEffect(effect: string) {
+  //   this.set('effect', effect);
+  // };
+  // static updateSlice(target: Table, newSlice: Slice) {
+  //   return target.updateSlice(newSlice);
+  // };
+  // static updateEffect(target: Table, effect: Effect) { 
+  //   return target.updateEffect(effect);
+  // }
 };

@@ -22,7 +22,8 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         error: state.error
       };
     case 'LOAD_WAVE_TABLE_SUCCESS':
-      const newTableList = TableList.appendSample(state.tables, action.payload.sample!);
+      let newTableList = TableList.appendSample(state.tables, action.payload.sample!);
+      newTableList = TableList.appendEffect(newTableList, action.payload.effect!);
       return {
         isFetching: action.payload.isFetching,
         tables: TableList.appendTable(newTableList, action.payload.table!),
@@ -41,7 +42,8 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         error: state.error
       };
     case 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS':
-      const newTable = TableList.appendTable(state.tables, action.payload.table!);
+      let newTable = TableList.appendTable(state.tables, action.payload.table!);
+      newTable = TableList.appendEffect(newTable, action.payload.effect!);
       return {
         isFetching: action.payload.isFetching,
         tables: TableList.appendSample(newTable, action.payload.sample!),
@@ -55,6 +57,7 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
       };
     case 'DELETE_WAVE_TABLE_REQUEST':
       let target = TableList.deleteSample(state.tables, action.payload.sample!.getId());
+      target = TableList.deleteEffect(target, action.payload.effect!.getId());
       return {
         isFetching: false,
         tables: TableList.deleteTable(target, action.payload.table!.getId()),
@@ -70,6 +73,12 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
       return {
         isFetching: false,
         tables: TableList.updateSample(state.tables, action.payload.sample!.getId(), action.payload.sample!),
+        error: state.error
+      };
+    case 'UPDATE_WAVE_TABLE_BY_EFFECT_REQUEST':
+      return {
+        isFetching: false,
+        tables: TableList.updateEffect(state.tables, action.payload.effect!.getId(), action.payload.effect!),
         error: state.error
       };
     case 'OPEN_STORE_REQUEST':

@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableEditor from '../TableEditor';
+import ToolsEditor from '../Tools/Editor';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { loadSetting, booted } from '../../actions/setting';
@@ -64,6 +65,10 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
     return TableList.getSampleById(tables, table.getSample()!)
   };
 
+  const getEffect = (tables: TableList, table: Table) => {  
+    return TableList.getEffectById(tables, table.getEffect()!)
+  };
+
   const getTables = () => {
     return (
       (tables) ? tables.getTables().map((table: Table) => {
@@ -71,6 +76,7 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
           key={table.getId()}
           table={table}
           sample={getSample(tables, table)!}
+          effect={getEffect(tables, table)!}
           bufferData={getBufferData(tables, table)}
           isAllocated={isAllocated(tables, table)}
           booted={booted} />
@@ -88,9 +94,11 @@ const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting
       ) : <></>}
       <DropSection booted={booted}>
         <TableEditor tables={tables}>
-          <WaveTableList>        
-            {getTables()} 
-          </WaveTableList>
+          <ToolsEditor tables={tables}>
+            <WaveTableList>        
+              {getTables()} 
+            </WaveTableList>
+          </ToolsEditor>
         </TableEditor>
         {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : `synth server not booted`}        
       </DropSection>

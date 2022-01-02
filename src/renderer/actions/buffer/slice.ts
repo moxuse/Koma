@@ -24,6 +24,7 @@ export const updateSlice = (table: Table, slice: Slice) => {
         name: table.getName(),
         bufnum: table.getBufnum(),
         sample: table.getSample(),
+        effect: table.getEffect(),
         slice: slice
       });
       dispatch(updateWaveTableByTable(newTable));    

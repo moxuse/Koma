@@ -3,22 +3,26 @@ import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
+import Effect from '../../model/Effect';
 import Graph from './Graph';
-import Knob from '../Tools/Knob';
+import Tools from '../Tools';
 import styled from 'styled-components';
 import { allocReadBuffer } from '../../actions/buffer';
 import { player } from '../../actions/buffer/palyer';
 import { deleteWaveTable } from '../../actions/waveTables';
 
 const WaveTableContainer = styled.li`
+  user-select: none;
+  display: flex;
+  flex-direction: row;
   color: white;
   -webkit-app-region: none;
   margin: 4px 0px 4px 0px;
   width: 100%;
   p {
+    width: 40px;
     display: inline-block;
     margin: 4px;
-    width: 30%;
   }
 `;
 
@@ -33,6 +37,7 @@ const StyledButton = styled.button`
 const WaveTable = ({
   table,
   sample,
+  effect,
   bufferData,
   handlePlayer,
   deleteHandler,
@@ -45,6 +50,7 @@ const WaveTable = ({
   }:{
     table: Table,
     sample: Sample,
+    effect: Effect,
     bufferData: Float32Array | undefined,
     deleteHandler: any,
     allocBuffer: any,
@@ -64,7 +70,7 @@ const WaveTable = ({
   }, [currentBufnum, slice]);
 
   const deleTable = useCallback(() => { 
-    deleteHandler(table, sample)
+    deleteHandler(table, sample, effect)
   }, [])
 
   useEffect(() => {
@@ -91,16 +97,15 @@ const WaveTable = ({
         {`[ > ]`}
       </StyledButton>
       <p>{table.getName()}</p>
-      <p>{table.getBufnum()}</p>
-      <Knob label="pitch" value={0.05}></Knob>
       {/* <p>{sample.getFilePath()}</p> */}
-      <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
-        {`[ x ]`}
-      </StyledButton>
       {bufferData ?
         composeGraph
         : <div>{`drag`}</div>
       }
+      <Tools table={table} effect={effect}></Tools>
+      <StyledButton isPlaying={playButtonActive} onClick={deleTable}>      
+        {`[ x ]`}
+      </StyledButton>
       {isAllocated ? (<></>) : (<p>{`not allocated yet..`}</p>)}
     </WaveTableContainer>
   );
@@ -119,7 +124,7 @@ function mapStateToProps(
 function mapDispatchToProps(dispatch: any) {
   return {
     handlePlayer: (bufnum: number, slice: Slice) => dispatch(player(bufnum, slice)),
-    deleteHandler: (table: Table, sample: Sample) => dispatch(deleteWaveTable(table, sample)),
+    deleteHandler: (table: Table, sample: Sample, effect: Effect) => dispatch(deleteWaveTable(table, sample, effect)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample))
   };
 };
