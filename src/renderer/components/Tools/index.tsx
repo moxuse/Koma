@@ -26,7 +26,7 @@ export const PanSpec: Spec = {
 };
 export const GainSpec: Spec = {
   type: 'exp',
-  default: 1,
+  default: 0,
   min: 0,
   max: 8
 };

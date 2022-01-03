@@ -4,6 +4,7 @@ import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
 import Table from '../../renderer/model/Table';
+import Effect from '../../renderer/model/Effect';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 import fs from 'fs';
@@ -110,10 +111,15 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'playerSuccess'
    * 'playerFailure'
    */
-  ipcMain.on('playerRequest', (e, bufnum: number, slice: ({begin: number, end: number} | undefined)) => {
-    if (isDev) { console.log('play request:', bufnum, slice) }
+  ipcMain.on('playerRequest', (
+    e,
+    bufnum: number,
+    slice: ({ begin: number, end: number } | undefined),
+    effect: { rate: number, pan: number, gain: number }
+    ) => {
+    if (isDev) { console.log('play request:', bufnum, slice, effect) }
     try {
-      scSynth.playBuffer(bufnum, slice);
+      scSynth.playBuffer(bufnum, slice, effect);
     } catch (err) {
       e.reply('playerFailure', err);
     }

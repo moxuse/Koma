@@ -18,7 +18,7 @@ export type EffectData = {
   points: Array<GrainPint>
 };
 
-const DefaultEffect: EffectData = {
+export const DefaultEffect: EffectData = {
   id: '0',
   pan: 0,
   rate: 1,

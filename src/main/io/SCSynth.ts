@@ -1,4 +1,5 @@
 const sc = require('supercolliderjs');
+import Effect from '../../renderer/model/Effect';
 import * as dgram from 'dgram';
 import * as OSC from 'osc-js';
 import * as osc from '@supercollider/osc';
@@ -237,11 +238,23 @@ export default class SCSynth {
     });
   };
 
-  playBuffer(bufnum: number | undefined, slice: ({ begin: number, end: number } | undefined)) {    
+  playBuffer(bufnum: number | undefined, slice: ({ begin: number, end: number } | undefined), effect: { rate: number, pan: number, gain: number }) {    
     if (slice && slice.begin && slice.end) {
-      this.sendMsg(['/s_new', 'bufRd', this.nextNodeId(), 1, 0, 'bufnum', bufnum, 'begin', slice.begin, 'end', slice.end]);
+      this.sendMsg(['/s_new', 'bufRd', this.nextNodeId(), 1, 0,
+        'bufnum', bufnum,
+        'begin', slice.begin,
+        'end', slice.end,
+        'rate', effect.rate,
+        'pan', effect.pan,
+        'gain', effect.gain
+      ]);
     } else { 
-      this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0, 'bufnum', bufnum]);
+      this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0,
+        'bufnum', bufnum,
+        'rate', effect.rate,
+        'pan', effect.pan,
+        'gain', effect.gain
+      ]);
     }
   };
 

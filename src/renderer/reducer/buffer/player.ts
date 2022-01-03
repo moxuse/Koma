@@ -1,9 +1,11 @@
 import { PlayerRequestPayload, PlayerAction } from "../../actions/buffer/palyer";
+import Effect from "../../model/Effect";
 
 const playerInitialState: PlayerRequestPayload = {
   isPlaying: false,
   bufnum: 600,
   slice: undefined,
+  effect: new Effect(),
   error: undefined,
 };
 
@@ -14,6 +16,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         isPlaying: true,
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
+        effect: action.payload.effect,
         error: undefined
       };
     case 'PLAYER_SUCCESS':
@@ -21,6 +24,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         isPlaying: action.payload.isPlaying,
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
+        effect: action.payload.effect,
         error: undefined
       };
     case 'PLAYER_FAILURE':
@@ -28,6 +32,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         isPlaying: action.payload.isPlaying,
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
+        effect: action.payload.effect,
         error: action.payload.error
       };
     default:

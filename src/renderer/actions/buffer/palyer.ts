@@ -1,10 +1,11 @@
 import { Dispatch } from 'redux';
-import Table from '../../model/Table';
+import Effect from '../../model/Effect';
 
 export type PlayerRequestPayload = {
   isPlaying: boolean,
   bufnum: number,
-  slice: { begin: number, end: number} |  undefined
+  slice: { begin: number, end: number } | undefined
+  effect: Effect,
   error: Error | undefined
 };
 
@@ -40,12 +41,13 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 };
 
-export const player = (bufnum: number, slice: ({ begin: number, end: number} |  undefined) ) => {
+export const player = (bufnum: number, slice: ({ begin: number, end: number} |  undefined), effect: Effect ) => {
   return (dispatch: Dispatch<PlayerAction>) => {
     dispatch(playerRequest({
       isPlaying: true,
       bufnum: bufnum,
       slice: slice,
+      effect: effect,
       error: undefined,
     }));
     window.api.on!('playerSuccess', (_) => {
@@ -53,6 +55,7 @@ export const player = (bufnum: number, slice: ({ begin: number, end: number} |  
         isPlaying: false,
         bufnum: bufnum,
         slice: slice,
+        effect: effect,
         error: undefined,
       }));
       removeEvents();
@@ -62,10 +65,15 @@ export const player = (bufnum: number, slice: ({ begin: number, end: number} |  
         isPlaying: false,
         bufnum: bufnum,
         slice: slice,
+        effect: effect,
         error: arg,
       }));
       removeEvents();
     });
-    window.api.playerRequest(bufnum, slice);
+    window.api.playerRequest(bufnum, slice, {
+      rate: effect.getRate(),
+      pan: effect.getPan(),
+      gain: effect.getGain()
+    });
   };
 };
