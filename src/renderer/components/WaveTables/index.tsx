@@ -31,7 +31,15 @@ const Button = styled.button`
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
-const WaveTables = ({ booted, isFetching, tables, onceLiestenBooted, loadSetting, handleOpenButton, handlePlusButton }: {
+const WaveTables = ({
+  booted,
+  isFetching,
+  tables,
+  onceLiestenBooted,
+  loadSetting,
+  handleOpenButton,
+  handlePlusButton
+}: {
   booted: boolean,
   isFetching: boolean,
   tables: TableList,

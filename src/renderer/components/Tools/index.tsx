@@ -6,6 +6,30 @@ import { connect } from 'react-redux';
 import { updateSlice } from '../../actions/buffer/slice';
 import styled from 'styled-components';
 
+export type Spec = {
+  type: 'linear' | 'exp'; 
+  default: number;
+  min: number;
+  max: number;
+}
+export const RateSpec: Spec = {
+  type: 'linear',
+  default: 1,
+  min: -3,
+  max: 3
+};
+export const PanSpec: Spec = {
+  type: 'linear',
+  default: 0,
+  min: -1,
+  max: 1
+};
+export const GainSpec: Spec = {
+  type: 'exp',
+  default: 1,
+  min: 0,
+  max: 8
+};
 
 const ToolsList = styled.ul`
 `;
@@ -18,9 +42,20 @@ const Tools = ({ table, effect }: {
   return (
     <>
       <ToolsList key={'tools-' + table.getId()}>
-        <Knob id={table.getEffect() +  '-rate'} label="rate" value={effect.getRate()}></Knob>
-        <Knob id={table.getEffect() +  '-pan'} label="pan" value={effect.getPan()}></Knob>
-        <Knob id={table.getEffect() +  '-gain'} label="gain" value={effect.getGain()}></Knob>
+        <Knob id={table.getEffect() + '-rate'}
+          label="rate" value={effect.getRate()}
+          spec={RateSpec}
+        />
+        <Knob id={table.getEffect() + '-pan'}
+          label="pan"
+          value={effect.getPan()}
+          spec={PanSpec}
+        />
+        <Knob id={table.getEffect() + '-gain'}
+          label="gain"
+          value={effect.getGain()}
+          spec={GainSpec}
+        />
       </ToolsList>
     </>
   )

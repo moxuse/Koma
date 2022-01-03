@@ -5,6 +5,7 @@ import Table, { Slice } from '../../model/Table';
 import Effect from '../../model/Effect';
 import { EffectKeys } from '../../model/Effect';
 import TableList from '../../model/TableList';
+import { Spec, PanSpec, RateSpec, GainSpec } from '.';
 import { connect } from 'react-redux';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
@@ -12,6 +13,35 @@ import styled from 'styled-components';
 
 const ToolsErea = styled.div`
 `;
+
+const calcSpac = (val: number, add: number, key: string): number => {
+  const clip = (value: number,  add: number, spec: Spec): number => {    
+    switch (spec.type) { 
+      case 'linear':
+        value = value + add;
+        break;
+      case 'exp':
+        value = value + (add * value + add);
+        break;
+    }
+    if (value < spec.min) { value = spec.min };
+    if (value > spec.max) { value = spec.max };
+    return value;
+  }
+  let val_ = val;
+  switch (key) {
+    case 'rate':
+      val_ = clip(val_, add, RateSpec);
+      break;
+    case 'pan':
+      val_ = clip(val_, add, PanSpec);
+      break;
+    case 'gain':
+      val_ = clip(val_, add, GainSpec);
+      break;
+  }
+  return val_;
+}
 
 const ToolsEditor = ({ children, tables, handleUpdate }: {
   children: JSX.Element, tables: TableList, handleUpdate: any
@@ -47,9 +77,9 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
         setEditting(false);
       }
     };
-    toolsEl.current?.addEventListener("mousedown", onMousedown, false);
+    window.addEventListener("mousedown", onMousedown, false);
     return () => { 
-      toolsEl.current?.removeEventListener("mousedown", onMousedown, false);
+      window.removeEventListener("mousedown", onMousedown, false);
     }
   }, [tables, id, type, editting]);
   useEffect(() => {
@@ -61,16 +91,15 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
         if (eff && key) {
           val = eff.get(key);
           if (typeof val === 'number') {
-            val += e.movementY  * -0.002;
-            const neweffect = eff.set(key, val);
+            const neweffect = eff.set(key, calcSpac(val, e.movementY * -0.025, key));
             handleUpdate(tables, neweffect);
           }
         }        
       }
     };
-    toolsEl.current?.addEventListener("mousemove", onMousemove, false);
+    window.addEventListener("mousemove", onMousemove, false);
     return () => { 
-      toolsEl.current?.removeEventListener("mousemove", onMousemove, false);
+      window.removeEventListener("mousemove", onMousemove, false);
     }
   }, [tables, id, type, editting]);
   useEffect(() => {
@@ -79,24 +108,23 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
       setId(undefined);
       setType(undefined);
     };        
-    toolsEl.current?.addEventListener("mouseup", onMouseup, false);
+    window.addEventListener("mouseup", onMouseup, false);
      return () => {              
-      toolsEl.current?.removeEventListener("mouseup", onMouseup, false);      
+      window.removeEventListener("mouseup", onMouseup, false);      
      }
   }, [tables, id, type, editting]);
 
-  useEffect(() => {
-    const onMouseout = (e: MouseEvent) => {
-      setEditting(false);
-      setId(undefined);
-      setType(undefined);
-    };        
-    toolsEl.current?.addEventListener("mouseout", onMouseout, false);
-     return () => {              
-      toolsEl.current?.removeEventListener("mouseout", onMouseout, false);      
-     }
-  }, [tables, id, type, editting]);
-
+  // useEffect(() => {
+  //   const onMouseout = (e: MouseEvent) => {
+  //     setEditting(false);
+  //     setId(undefined);
+  //     setType(undefined);
+  //   };        
+  //   window.addEventListener("mouseout", onMouseout, false);
+  //    return () => {              
+  //     window.removeEventListener("mouseout", onMouseout, false);      
+  //    }
+  // }, [tables, id, type, editting]);
   return (
     <ToolsErea ref={toolsEl}>
       {children}

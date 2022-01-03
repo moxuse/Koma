@@ -20,7 +20,9 @@ window.api.on!('openStoreSucseed', (_, { restoerData }) => {
 });
 
 const AppContainer = styled.div`
-  margin-top: 40px;`;
+  min-width: 450px;
+  margin-top: 40px;
+`;
 
 const App = (): JSX.Element => {
   return (

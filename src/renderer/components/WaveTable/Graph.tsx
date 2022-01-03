@@ -16,7 +16,9 @@ const GraphConatainer = styled.div`
   }
 `;
 
-const Graph = ({ id, bufferData, slice }: { id: string, bufferData: Float32Array, slice: Slice | undefined }): JSX.Element => {
+const Graph = ({ id, bufferData, slice }: {
+  id: string, bufferData: Float32Array, slice: Slice | undefined
+}): JSX.Element => {
   const [context, setContext] = useState<CanvasRenderingContext2D | null>()
   const [buffer, setBuffer] = useState<Float32Array>();
   const graphRef = useRef<HTMLCanvasElement>(null);
