@@ -240,10 +240,16 @@ export default class SCSynth {
 
   playBuffer(bufnum: number | undefined, slice: ({ begin: number, end: number } | undefined), effect: { rate: number, pan: number, gain: number }) {    
     if (slice && slice.begin && slice.end) {
+      let begin = slice.begin;
+      let end = slice.end;
+      if (effect.rate < 0) { 
+        end = slice.begin;
+        begin = slice.end;
+      }
       this.sendMsg(['/s_new', 'bufRd', this.nextNodeId(), 1, 0,
         'bufnum', bufnum,
-        'begin', slice.begin,
-        'end', slice.end,
+        'begin', begin,
+        'end', end,
         'rate', effect.rate,
         'pan', effect.pan,
         'gain', effect.gain

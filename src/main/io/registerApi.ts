@@ -24,7 +24,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   console.log('register events for the api');
   
   scSynth = new SCSynth({
-    numBuffers: optionNumBuffers
+    numBuffers: optionNumBuffers,
+    // device: 'Soundflower (2ch)'
   });
   scLang = new SCLang();
   /**
