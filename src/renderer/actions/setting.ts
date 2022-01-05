@@ -47,19 +47,19 @@ export const bootedRequets: ActionCreator<LoadSettingAction> = (
 ): LoadSettingAction => ({
   type: 'BOOTED',
   payload
-});
+} as const);
 
 export const loadSettingRequest: ActionCreator<LoadSettingAction> = (): LoadSettingAction => ({
   type: 'LOAD_SETTING_REQUEST',
   payload: { isFetching: true }
-});
+} as const);
 
 export const loadSettingSuccess: ActionCreator<LoadSettingAction> = (
   payload: LoadSettingPayload
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_SUCCESS',
   payload: payload
-});
+} as const);
 
 export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
   payload: LoadSettingPayload

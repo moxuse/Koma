@@ -16,7 +16,25 @@ import Table, { Slice } from '../model/Table';
 import Sample from '../model/Sample';
 import Effect from '../model/Effect';
 
-export const outboundsTransform = (outboundState: any, key): any => {
+const float32ArrayToBase64 = (f32: Float32Array) => {
+  var uint8 = new Uint8Array(f32.buffer);
+  return btoa(uint8.reduce(function(data, byte) {
+      return data + String.fromCharCode(byte);
+  }, ''));
+}
+
+const base64ToFloat32Array = (base64: string) => {
+  var binary = atob(base64),
+      len = binary.length,
+      bytes = new Uint8Array(len),
+      i;
+  for(i = 0; i < len; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+  }
+  return new Float32Array(bytes.buffer);
+}
+
+export const outboundsTransform = (outboundState: any,  key: any): any => {
   // console.log('outboundState', outboundState)
   let newTableList = new TableList();
   outboundState.waveTables.tables.forEach((t: Table) => {
@@ -33,7 +51,7 @@ export const outboundsTransform = (outboundState: any, key): any => {
     let sample = new Sample();
     sample = sample.set('id', s.id);
     sample = sample.set('allocated', false);
-    sample = sample.set('buffer', Object.values(s.buffer));
+    sample = sample.set('buffer', base64ToFloat32Array(s.buffer));
     sample = sample.set('filePath', s.filePath);
     newTableList = TableList.appendSample(newTableList, sample);
   })
@@ -60,6 +78,7 @@ const TransformTables = createTransform(
   (inboundState: any, key): any => {
     const returnVal = {
       ...inboundState,
+      tables: '__TABLES__',
       waveTables: {
         tables: inboundState.tables ? inboundState.tables.getTables().toJS().map((t: Table) => { 
           return {
@@ -76,7 +95,7 @@ const TransformTables = createTransform(
             id: s['id'],
             allocated: false,
             filePath: s['filePath'],
-            buffer: s['buffer']
+            buffer: float32ArrayToBase64(s['buffer']!)
           }
         }) : [],
         effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {  
