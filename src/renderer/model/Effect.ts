@@ -2,7 +2,7 @@ import { Record } from 'immutable';
 
 export type EffectType = 'normal' | 'grain';
 
-export type GrainPint = {
+export type GrainPoint = {
   x: number;
   y: number;
 }
@@ -15,7 +15,7 @@ export type EffectData = {
   rate: number;
   gain: number;
   type: EffectType;
-  points: Array<GrainPint>
+  points: Array<GrainPoint>
 };
 
 export const DefaultEffect: EffectData = {

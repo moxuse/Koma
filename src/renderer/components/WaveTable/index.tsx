@@ -5,6 +5,7 @@ import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
 import Graph from './Graph';
+import GrainEditor from './GrainEditor';
 import Tools from '../Tools';
 import styled from 'styled-components';
 import { allocReadBuffer } from '../../actions/buffer';
@@ -99,10 +100,13 @@ const WaveTable = ({
       </StyledButton>
       <p>{table.getName()}</p>
       {/* <p>{sample.getFilePath()}</p> */}
-      {bufferData ?
-        composeGraph
-        : <div>{`drag`}</div>
-      }
+      <div>
+        <GrainEditor id={table.getId()}></GrainEditor>
+        {bufferData ?
+          composeGraph
+          : <div>{`drag`}</div>
+        }
+      </div>
       <Tools table={table} effect={effect}></Tools>
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>      
         {`[ x ]`}

@@ -42,6 +42,8 @@ const createWindow = () => {
       backgroundThrottling: false,
       preload: path.resolve(__dirname, 'preload.js'),
     },
+    width: 450,
+    height: 800
   });
 
   if (isDev) {

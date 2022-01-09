@@ -6,7 +6,7 @@ const width = 150;
 const height = 60;
 
 const GraphConatainer = styled.div`
-  background-color: clear;
+  z-index: 1;
   margin: 2px 0 2px 0;
   display: inline-table;
   width: ${width}px;
