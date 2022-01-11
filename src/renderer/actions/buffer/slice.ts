@@ -21,6 +21,7 @@ export const updateSlice = (table: Table, slice: Slice) => {
     if (table !== undefined && slice) {
       const newTable = new Table({
         id: table.getId(),
+        mode:  table.getMode(),
         name: table.getName(),
         bufnum: table.getBufnum(),
         sample: table.getSample(),

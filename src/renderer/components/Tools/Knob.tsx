@@ -36,6 +36,8 @@ const Knob: FC<KnobProps> = (props): JSX.Element => {
     const base = (spec.max - spec.min) / 280.0;
     if (spec.type === 'exp') {
       return value / base - 140;
+    } else if (spec.min >= 0) { 
+      return value / base - 140;
     }
     return value / base;
   };

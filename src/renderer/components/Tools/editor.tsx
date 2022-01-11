@@ -5,7 +5,7 @@ import Table, { Slice } from '../../model/Table';
 import Effect from '../../model/Effect';
 import { EffectKeys } from '../../model/Effect';
 import TableList from '../../model/TableList';
-import { Spec, PanSpec, RateSpec, GainSpec } from '.';
+import { Spec, PanSpec, RateSpec, GainSpec, DurSpec, TrigSpec } from '.';
 import { connect } from 'react-redux';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
@@ -38,6 +38,12 @@ const calcSpac = (val: number, add: number, key: string): number => {
       break;
     case 'gain':
       val_ = clip(val_, add, GainSpec);
+      break;
+    case 'duration':
+      val_ = clip(val_, add, DurSpec);
+      break;
+    case 'trig':
+      val_ = clip(val_, add, TrigSpec);
       break;
   }
   return val_;

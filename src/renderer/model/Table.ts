@@ -1,6 +1,8 @@
 import { Record } from 'immutable';
 import Effect from './Effect';
 
+export type TableMode = 'normal' | 'grain';
+
 export type Slice = {
   begin: number;
   end: number;
@@ -8,6 +10,7 @@ export type Slice = {
 
 export type TableType = {
   id: string;
+  mode: TableMode,
   name: string | undefined;
   bufnum: number | undefined;
   sample: string | undefined;
@@ -17,6 +20,7 @@ export type TableType = {
 
 const DefaultTable: TableType = {
   id: 'id',
+  mode: 'normal',
   name: 'default',
   bufnum: 600,
   sample: undefined,
@@ -28,6 +32,9 @@ export default class Table extends Record(DefaultTable) {
   getId() {
     return this.get('id');
   };
+  getMode() { 
+    return this.get('mode');
+  }
   getName() {
     return this.get('name');
   };

@@ -1,7 +1,5 @@
 import { Record } from 'immutable';
 
-export type EffectType = 'normal' | 'grain';
-
 export type GrainPoint = {
   x: number;
   y: number;
@@ -14,8 +12,9 @@ export type EffectData = {
   pan: number;
   rate: number;
   gain: number;
-  type: EffectType;
   points: Array<GrainPoint>
+  duration: number;
+  trig: number;
 };
 
 export const DefaultEffect: EffectData = {
@@ -23,7 +22,8 @@ export const DefaultEffect: EffectData = {
   pan: 0,
   rate: 1,
   gain: 1,
-  type: 'normal',
+  duration: 0.1,
+  trig: 4,
   points: []
 };
 
@@ -40,9 +40,12 @@ export default class Effect extends Record(DefaultEffect) {
   getGain() {
     return this.get('gain');
   };
-  getType() {
-    return this.get('type');
+  getDuration() {
+    return this.get('duration');
   };
+  getTrig() { 
+    return this.get('trig');
+  }
   getPoints() {
     return this.get('points');
   };

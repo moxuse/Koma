@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { GrainPoint } from '../../model/Effect';
+import { connect } from 'react-redux';
+import { ToolsContext } from '../Tools/Context';
+import Effect, { GrainPoint } from '../../model/Effect';
+import Table from '../../model/Table';
+import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
 import throttle from 'lodash.throttle';
 
@@ -7,24 +11,24 @@ const width = 150;
 const height = 60;
 
 const GraphConatainer = styled.div`
-  // visibility: hidden;
+  visibility: ${(props: { isShown: boolean }) => (props.isShown) ? 'visible' : 'hidden'};
   position: absolute;
   z-index: 2;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0.0);
   margin: 2px 0 2px 0;
   display: inline-table;
   width: ${width}px;
   height: ${height}px;
   canvas {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0.3);
   }
 `;
 
-const GrainEditor = ({ id }: { id: string }): JSX.Element => {
-  const [points, setPoints] = useState<Array<GrainPoint>>([]);
+const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Effect, handleUpdate: any }): JSX.Element => {
+  const { resolution } = React.useContext(ToolsContext);
+  const [points_, setPoints] = useState<Array<GrainPoint>>([]);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>()
   const [editting, setEditting] = useState<boolean>(false);
-  const [delay, setDelay] = useState<number>(100);
   const graphRef = useRef<HTMLCanvasElement>(null);
   const graphContainer = useRef<HTMLDivElement>(null);
 
@@ -33,47 +37,52 @@ const GrainEditor = ({ id }: { id: string }): JSX.Element => {
     setEditting(prev => true);      
   };
   const onMouseUp =() => {
-    
     setEditting(prev => false);
+    const newEff = effect.set('points', points_);
+    handleUpdate(table, newEff);
   };
   const onMouseOut = () => {
-    setEditting(false);
+    setEditting(prev => false);
+    const newEff = effect.set('points', points_);
+    handleUpdate(table, newEff);
   }; 
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (editting) {
       setPoints(prev => [...prev, { x: e.offsetX, y: e.offsetY }]);
     }
-  }, [editting, points]);
+  }, [editting, points_]);
 
-  useEffect(() => {  
+  useEffect(() => {
+    setPoints(effect.getPoints());
+  },[effect])
+
+  useEffect(() => {
     if (graphRef.current) {
       const canvasContext = graphRef.current.getContext("2d");
       setContext(canvasContext);
     };
-    
+    const throttleFn = throttle(onMouseMove, resolution);
     graphContainer.current?.addEventListener('mousedown', onMouseDown, false);
     graphContainer.current?.addEventListener('mouseup', onMouseUp, false);
     graphContainer.current?.addEventListener('mouseout', onMouseOut, false);
-    graphContainer.current?.addEventListener('mousemove', throttle(onMouseMove, delay), false);
-    
+    graphContainer.current?.addEventListener('mousemove', throttleFn, false);    
     return () => {
       graphContainer.current?.removeEventListener('mousedown', onMouseDown, false);
       graphContainer.current?.removeEventListener('mouseup', onMouseUp, false);
       graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
-      graphContainer.current?.removeEventListener('mousemove',  onMouseMove, false);
+      graphContainer.current?.removeEventListener('mousemove',  throttleFn, false);
     };
-  }, [graphRef, graphContainer, editting, delay]);
+  }, [graphRef, graphContainer, editting, resolution]);
 
   useEffect(() => {
-    if (context && editting && points) {
+    if (context && editting && points_) {
       let prevPoint = { x: 0, y: 0 };
-      if (points.length === 0) {
+      if (points_.length === 0) {
         context.clearRect(0, 0, width, height);
       }
-      context.strokeStyle = '#fff';
+      context.strokeStyle = '#f80';
       context.beginPath();
-      points?.forEach((point, i) => {
-        
+      points_?.forEach((point, i) => {
         if (i > 0) {
           context.moveTo(prevPoint.x, prevPoint.y);
           context.lineTo(point.x, point.y);
@@ -83,13 +92,24 @@ const GrainEditor = ({ id }: { id: string }): JSX.Element => {
       });
       context.stroke();
     };
-  }, [context, graphRef, graphContainer, points, editting]);
+  }, [context, graphRef, graphContainer, editting, points_]);
 
   return (
-    <GraphConatainer ref={graphContainer}>
+    <GraphConatainer isShown={table.getMode() === 'grain'} ref={graphContainer}>
       <canvas width={width} height={height} ref={graphRef}></canvas>
     </GraphConatainer>
   );
 };
 
-export default GrainEditor;
+function mapStateToProps({}) {
+  return {};
+};
+
+function mapDispatchToProps(dispatch: any) {
+  return {
+    handleUpdate: (table: Table, effect: Effect) => dispatch(updateWaveTableByEffect(table, effect))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GrainEditor);
+

@@ -20,7 +20,7 @@ window.api.on!('openStoreSucseed', (_, { restoerData }) => {
 });
 
 const AppContainer = styled.div`
-  min-width: 450px;
+  min-width: 500px;
   margin-top: 40px;
 `;
 

@@ -40,6 +40,7 @@ export const outboundsTransform = (outboundState: any,  key: any): any => {
   outboundState.waveTables.tables.forEach((t: Table) => {
     let table = new Table();
     table = table.set('id', t.id);
+    table = table.set('mode', t.mode);
     table = table.set('name', t.name);
     table = table.set('sample', t.sample);
     table = table.set('effect', t.effect);
@@ -61,8 +62,9 @@ export const outboundsTransform = (outboundState: any,  key: any): any => {
     effect = effect.set('pan', e.pan);
     effect = effect.set('rate', e.rate);
     effect = effect.set('gain', e.gain);
-    effect = effect.set('type', e.type);
+    effect = effect.set('duration', e.duration);
     effect = effect.set('points', Object.values(e.points));
+    effect = effect.set('trig', e.trig);
     newTableList = TableList.appendEffect(newTableList, effect);
   })
   
@@ -83,6 +85,7 @@ const TransformTables = createTransform(
         tables: inboundState.tables ? inboundState.tables.getTables().toJS().map((t: Table) => { 
           return {
             id: t['id'],
+            mode: t['mode'],
             name: t['name'],
             bufnum: t['bufnum'],
             sample: t['sample'],
@@ -98,14 +101,15 @@ const TransformTables = createTransform(
             buffer: float32ArrayToBase64(s['buffer']!)
           }
         }) : [],
-        effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {  
+        effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {
           return {
             id: e['id'],
             pan: e['pan'],
             rate: e['rate'],
             gain: e['gain'],
-            type: e['type'],
             points: e['points'],
+            duration: e['duration'],
+            trig: e['trig']
           }
         }) : []
       }

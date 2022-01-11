@@ -96,6 +96,7 @@ export const loadWaveTables = (filePath: string) => (
     const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
     const t = new Table({
       id: getNewId(),
+      mode: 'normal',
       name: ommitFileName(filePath),
       bufnum: bufnum,
       sample: sampleId,
