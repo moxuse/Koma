@@ -50,3 +50,9 @@ export const restoreData = (filepath: string): Promise<Object> => {
     }    
   })
 }
+
+export const int8ArrayToBuffer = (arr: Int8Array): Buffer => { 
+  return ArrayBuffer.isView(arr)
+    ? Buffer.from(arr.buffer, arr.byteOffset, arr.byteLength)
+    : Buffer.from(arr)
+}

@@ -7,8 +7,10 @@ import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
 import throttle from 'lodash.throttle';
 
-const width = 150;
-const height = 60;
+export const GrainEditorSize = {
+  width: 150,
+  height: 60
+}
 
 const GraphConatainer = styled.div`
   visibility: ${(props: { isShown: boolean }) => (props.isShown) ? 'visible' : 'hidden'};
@@ -17,8 +19,8 @@ const GraphConatainer = styled.div`
   background-color: rgba(0,0,0,0.0);
   margin: 2px 0 2px 0;
   display: inline-table;
-  width: ${width}px;
-  height: ${height}px;
+  width: ${GrainEditorSize.width}px;
+  height: ${GrainEditorSize.height}px;
   canvas {
     background-color: rgba(0,0,0,0.3);
   }
@@ -32,53 +34,18 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
   const graphRef = useRef<HTMLCanvasElement>(null);
   const graphContainer = useRef<HTMLDivElement>(null);
 
-  const onMouseDown = () => {
-    setPoints((prev) => [])
-    setEditting(prev => true);      
-  };
-  const onMouseUp =() => {
-    setEditting(prev => false);
-    const newEff = effect.set('points', points_);
-    handleUpdate(table, newEff);
-  };
-  const onMouseOut = () => {
-    setEditting(prev => false);
-    const newEff = effect.set('points', points_);
-    handleUpdate(table, newEff);
-  }; 
-  const onMouseMove = useCallback((e: MouseEvent) => {
-    if (editting) {
-      setPoints(prev => [...prev, { x: e.offsetX, y: e.offsetY }]);
+  useEffect(() => {
+    if (points_.length === 0) {
+      setPoints(effect.getPoints());
+      console.log('initioal Points', points_.length)
     }
-  }, [editting, points_]);
+  }, [effect]);
 
   useEffect(() => {
-    setPoints(effect.getPoints());
-  },[effect])
-
-  useEffect(() => {
-    if (graphRef.current) {
-      const canvasContext = graphRef.current.getContext("2d");
-      setContext(canvasContext);
-    };
-    const throttleFn = throttle(onMouseMove, resolution);
-    graphContainer.current?.addEventListener('mousedown', onMouseDown, false);
-    graphContainer.current?.addEventListener('mouseup', onMouseUp, false);
-    graphContainer.current?.addEventListener('mouseout', onMouseOut, false);
-    graphContainer.current?.addEventListener('mousemove', throttleFn, false);    
-    return () => {
-      graphContainer.current?.removeEventListener('mousedown', onMouseDown, false);
-      graphContainer.current?.removeEventListener('mouseup', onMouseUp, false);
-      graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
-      graphContainer.current?.removeEventListener('mousemove',  throttleFn, false);
-    };
-  }, [graphRef, graphContainer, editting, resolution]);
-
-  useEffect(() => {
-    if (context && editting && points_) {
+    if (context && points_) {
       let prevPoint = { x: 0, y: 0 };
       if (points_.length === 0) {
-        context.clearRect(0, 0, width, height);
+        context.clearRect(0, 0, GrainEditorSize.width, GrainEditorSize.height);
       }
       context.strokeStyle = '#f80';
       context.beginPath();
@@ -94,9 +61,47 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
     };
   }, [context, graphRef, graphContainer, editting, points_]);
 
+  const onMouseDown = () => {
+    setPoints((prev) => [])
+    setEditting(prev => true);      
+  };
+  const onMouseUp = useCallback(() => {
+    setEditting(prev => false);
+    const newEff = effect.set('points', points_);
+    handleUpdate(table, newEff);
+  }, [table, effect, points_]);
+  const onMouseOut = useCallback(() => {    
+    setEditting(prev => false);
+    const newEff = effect.set('points', points_);
+    handleUpdate(table, newEff);    
+  }, [table, effect, points_]); 
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    if (editting) {
+      setPoints(prev => [...prev, { x: e.offsetX, y: e.offsetY }]);
+    }
+  }, [editting]);
+  
+  useEffect(() => { 
+    if (graphRef.current) {
+      const canvasContext = graphRef.current.getContext("2d");
+      setContext(canvasContext);
+    };
+    const throttleFn = throttle(onMouseMove, resolution);
+    graphContainer.current?.addEventListener('mousedown', onMouseDown, false);
+    graphContainer.current?.addEventListener('mouseup', onMouseUp, false);
+    graphContainer.current?.addEventListener('mouseout', onMouseOut, false);
+    graphContainer.current?.addEventListener('mousemove', throttleFn, false);    
+    return () => {
+      graphContainer.current?.removeEventListener('mousedown', onMouseDown, false);
+      graphContainer.current?.removeEventListener('mouseup', onMouseUp, false);
+      graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
+      graphContainer.current?.removeEventListener('mousemove',  throttleFn, false);
+    };
+  }, [effect, table, graphRef, graphContainer, editting, resolution]);
+
   return (
     <GraphConatainer isShown={table.getMode() === 'grain'} ref={graphContainer}>
-      <canvas width={width} height={height} ref={graphRef}></canvas>
+      <canvas width={GrainEditorSize.width} height={GrainEditorSize.height} ref={graphRef}></canvas>
     </GraphConatainer>
   );
 };
@@ -112,4 +117,3 @@ function mapDispatchToProps(dispatch: any) {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GrainEditor);
-

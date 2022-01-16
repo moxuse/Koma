@@ -1,7 +1,7 @@
 
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
-import Table, { Slice } from '../../model/Table';
+import Table, { TableMode, Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
 import { ToolsContextProvider } from '../Tools/Context/';
@@ -88,8 +88,8 @@ const WaveTable = ({
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
   
   const clickPlay = useCallback(() => {
-    handlePlayer(currentBufnum, slice, effect);
-  }, [currentBufnum, slice, effect]);
+    handlePlayer(table.getMode(), currentBufnum, slice, effect);
+  }, [currentBufnum, slice, effect, table]);
 
   const deleTable = useCallback(() => {
     deleteHandler(table, sample, effect)
@@ -166,7 +166,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handlePlayer: (bufnum: number, slice: Slice, effect: Effect) => dispatch(player(bufnum, slice, effect)),
+    handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
     deleteHandler: (table: Table, sample: Sample, effect: Effect) => dispatch(deleteWaveTable(table, sample, effect)),
     handleUpdateTable: (table: Table) => dispatch(updateWaveTableByTable(table)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample))

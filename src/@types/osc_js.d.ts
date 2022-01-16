@@ -49,6 +49,10 @@ declare module 'osc-js' {
 
             add(item: any): void;
 
+            args: any[];
+
+            types: string;
+
         }
 
         class Packet {

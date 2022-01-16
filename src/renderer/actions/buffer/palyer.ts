@@ -1,5 +1,7 @@
 import { Dispatch } from 'redux';
-import Effect from '../../model/Effect';
+import Effect, { GrainPoint } from '../../model/Effect';
+import { TableMode } from '../../model/Table';
+import { GrainEditorSize } from '../../components/Tools/GrainEditor';
 
 export type PlayerRequestPayload = {
   isPlaying: boolean,
@@ -41,8 +43,13 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 };
 
-export const player = (bufnum: number, slice: ({ begin: number, end: number} |  undefined), effect: Effect ) => {
+const normalizeInt8Points = (points: GrainPoint[]): GrainPoint[] => { 
+  return points.map(p => { return { x: Math.floor(p.x / GrainEditorSize.width * 256) - 128, y: Math.floor(p.y / GrainEditorSize.height * 256) - 128 } });
+}
+
+export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number, end: number} |  undefined), effect: Effect ) => {
   return (dispatch: Dispatch<PlayerAction>) => {
+    // console.log(effect.getPoints().length)
     dispatch(playerRequest({
       isPlaying: true,
       bufnum: bufnum,
@@ -70,10 +77,26 @@ export const player = (bufnum: number, slice: ({ begin: number, end: number} |  
       }));
       removeEvents();
     });
-    window.api.playerRequest(bufnum, slice, {
-      rate: effect.getRate(),
-      pan: effect.getPan(),
-      gain: effect.getGain()
-    });
+    switch (mode) {
+      case 'normal':
+        window.api.playerRequest(bufnum, slice, {
+          rate: effect.getRate(),
+          pan: effect.getPan(),
+          gain: effect.getGain()
+        });
+        break;
+      case 'grain':
+        window.api.grainPlayerRequest(bufnum, slice, {
+          rate: effect.getRate(),
+          pan: effect.getPan(),
+          gain: effect.getGain(),
+          points: normalizeInt8Points(effect.getPoints()),
+          duration: effect.getDuration(),
+          trig: effect.getTrig()
+        });
+        break;
+      default:
+        break;
+    }
   };
 };

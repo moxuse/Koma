@@ -1,6 +1,6 @@
 import { IpcMainEvent } from 'electron';
 import { AudioData } from 'wav-decoder';
-import Table from '../renderer/model/Table';
+import Table, { TableMode } from '../renderer/model/Table';
 import Effect from '../renderer/model/Effect';
 import TableList from '../renderer/model/TableList';
 
@@ -30,6 +30,10 @@ declare global {
     playerRequest: (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
       effect: { rate: number, pan: number, gain: number }
+    ) => void,
+    grainPlayerRequest: (bufnum: number,
+      slice: ({ begin: number, end: number } | undefined),
+      effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
     ) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
     saveStore: () => void,

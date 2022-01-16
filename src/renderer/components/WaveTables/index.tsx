@@ -73,7 +73,7 @@ const WaveTables = ({
     return TableList.getSampleById(tables, table.getSample()!)
   };
 
-  const getEffect = (tables: TableList, table: Table) => {  
+  const getEffect = (tables: TableList, table: Table) => {
     return TableList.getEffectById(tables, table.getEffect()!)
   };
 

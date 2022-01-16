@@ -1,12 +1,15 @@
 const sc = require('supercolliderjs');
 import Effect from '../../renderer/model/Effect';
 import * as dgram from 'dgram';
-import * as OSC from 'osc-js';
+import * as OSC from '../../../../osc-js/lib/osc.js';
 import * as osc from '@supercollider/osc';
+import { int8ArrayToBuffer } from './Utils';
 
 export type SCSynthMode = 'internal' | 'remote';
 
 export type SCSynthEvent = (msg: string[] | osc.OscValues | undefined) => void;
+
+export type OSCMessageArg = Array<string | number | Buffer>
 
 type ServerOptions = {
   sampleRate?: string;
@@ -176,11 +179,15 @@ export default class SCSynth {
     // console.log('UNSUBSCRIED2:', this.listennersRemote);
   };
 
-  public sendMsg(arg: any) {
+
+  public sendMsg(arg: OSCMessageArg) {
     if (this.mode === 'internal') {
       this.server.send.msg(arg);
     } else if (this.mode === 'remote') {
-      const address = arg[0].split('/')[1];
+      let address; 
+      if (typeof arg[0] == 'string') {
+        address = arg[0].split('/')[1];
+      };
       arg.shift();
       let message;
       if (arg.length >= 1) {
@@ -191,6 +198,34 @@ export default class SCSynth {
       const binary = message.pack();
       this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
     };
+  };
+
+  public sendMsgWithPositions(arg: OSCMessageArg, positions: number[] ) {
+    // if (this.mode === 'internal') {
+    //   this.server.send.msg(arg);
+    // } else if (this.mode === 'remote') {
+      let address; 
+      if (typeof arg[0] == 'string') {
+        address = arg[0].split('/')[1];
+      };
+      arg.shift();
+      let message: OSC.Message;
+      if (arg.length >= 1) {
+        message = new OSC.Message([address], ...arg);
+      } else {
+        message = new OSC.Message(address, []);
+      };
+
+      message.types += '[';
+      positions.forEach(p => {
+        message.args.push(p);
+        message.types += 'i';
+      });
+      message.types += ']';
+
+      const binary = message.pack();
+      this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
+    // };
   };
 
   async allocReadBuffer(file: string, bufnum: number | null) {
@@ -238,7 +273,10 @@ export default class SCSynth {
     });
   };
 
-  playBuffer(bufnum: number | undefined, slice: ({ begin: number, end: number } | undefined), effect: { rate: number, pan: number, gain: number }) {    
+  playBuffer(bufnum: number,
+    slice: ({ begin: number, end: number } | undefined),
+    effect: { rate: number, pan: number, gain: number }
+  ) {    
     if (slice && slice.begin && slice.end) {
       let begin = slice.begin;
       let end = slice.end;
@@ -262,6 +300,32 @@ export default class SCSynth {
         'gain', effect.gain
       ]);
     }
+  };
+
+  playGrain(bufnum: number,
+    slice: ({ begin: number, end: number } | undefined),
+    effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
+  ) {
+    let begin_, end_;
+    if (!slice) { 
+      begin_ = 0; end_ = 1.0;
+    } else {
+      begin_ = slice.begin;
+      end_ = slice.end;
+    }
+    let msgPack = ['/s_new', 'grainPlayer', this.nextNodeId(), 1, 0,
+      'bufnum', bufnum,
+      'begin', begin_,
+      'end', end_,
+      'rate', effect.rate,
+      'pan', effect.pan,
+      'gain', effect.gain,
+      'trig', effect.trig,
+      'duration', effect.duration
+      ]
+    msgPack.push('positions');
+    const arr: number[] = effect.points.map(p => { return p.x });
+    this.sendMsgWithPositions(msgPack, arr);
   };
 
   freeBuffer(bufnum: number) {

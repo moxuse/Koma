@@ -102,6 +102,7 @@ const TransformTables = createTransform(
           }
         }) : [],
         effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {
+          // console.log('inbound points', e['points'])
           return {
             id: e['id'],
             pan: e['pan'],

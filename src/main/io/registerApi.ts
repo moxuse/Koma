@@ -3,13 +3,14 @@ import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
-import Table from '../../renderer/model/Table';
+import Table, { TableMode } from '../../renderer/model/Table';
 import Effect from '../../renderer/model/Effect';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 import fs from 'fs';
 
 const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
+const grainPlayerSynthDefFilePath = __dirname + "\/../../synthDef/grainPlayer.scd";
 const recorderSynthDefFilePath = __dirname + "\/../../synthDef/recorder.scd";
 const audioInSynthDefFilePath = __dirname + "\/../../synthDef/audioIn.scd";
 const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
@@ -129,6 +130,29 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   // window.api.playerSuccess(bufnum);
 
   /**
+   * Playback buffer
+   * returns
+   * 'playerRequest'
+   * 'playerSuccess'
+   * 'playerFailure'
+   */
+   ipcMain.on('grainPlayerRequest', (
+    e,
+    bufnum: number,
+    slice: ({ begin: number, end: number } | undefined),
+    effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
+    ) => {
+    if (isDev) { console.log('grain play request:', effect.points.length, bufnum, slice, effect) }
+     try {
+      scSynth.playGrain(bufnum, slice, effect);
+    } catch (err) {
+      e.reply('playerFailure', err);
+    }
+    e.reply('playerSuccess', bufnum);
+  });
+  // window.api.playerSuccess(bufnum);
+
+  /**
    * allocBufferRequest
    * allocBufferSucseed
    * allocBufferFailed
@@ -191,6 +215,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   await scLang.boot();
   if (scSynth.mode === 'internal') {
     await scSynth.loadSynthDefFromFile('player', playerSynthDefFilePath);
+    await scSynth.loadSynthDefFromFile('grainPlayer', grainPlayerSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('bufRd', bufRdSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('recorder', recorderSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('audioIn', audioInSynthDefFilePath);
