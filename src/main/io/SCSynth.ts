@@ -200,7 +200,7 @@ export default class SCSynth {
     };
   };
 
-  public sendMsgWithPositions(arg: OSCMessageArg, positions: number[] ) {
+  public sendMsgWithPoints(arg: OSCMessageArg, positions: number[], rates: number[] ) {
     // if (this.mode === 'internal') {
     //   this.server.send.msg(arg);
     // } else if (this.mode === 'remote') {
@@ -216,13 +216,31 @@ export default class SCSynth {
         message = new OSC.Message(address, []);
       };
 
-      message.types += '[';
-      positions.forEach(p => {
-        message.args.push(p);
-        message.types += 'i';
-      });
-      message.types += ']';
-
+      message.args.push('positions');
+      message.types += 's';
+            
+    message.types += '[';
+    message.args.push(0);  
+    positions.forEach((p, i) => {      
+        message.args.push(p);      
+      message.types += 'i'; 
+    });
+    message.types += ']';
+    message.args.push(0);
+    
+    message.args.push('rates');
+      message.types += 's';
+      
+    message.types += '[';
+    message.args.push(0);
+    rates.forEach((p, i) => {
+        message.args.push(p);  
+      message.types += 'i';
+    });
+    message.types += ']';
+    message.args.push(0);
+    
+      // console.log(message.types,message.args, message.types.length, message.args.length);
       const binary = message.pack();
       this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
     // };
@@ -323,9 +341,10 @@ export default class SCSynth {
       'trig', effect.trig,
       'duration', effect.duration
       ]
-    msgPack.push('positions');
-    const arr: number[] = effect.points.map(p => { return p.x });
-    this.sendMsgWithPositions(msgPack, arr);
+    
+    const positions: number[] = effect.points.map(p => { return p.x });
+    const rates: number[] = effect.points.map(p => { return p.y });
+    this.sendMsgWithPoints(msgPack, positions, rates);
   };
 
   freeBuffer(bufnum: number) {
