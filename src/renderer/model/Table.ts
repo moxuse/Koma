@@ -1,5 +1,4 @@
 import { Record } from 'immutable';
-import Effect from './Effect';
 
 export type TableMode = 'normal' | 'grain';
 

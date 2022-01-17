@@ -1,10 +1,8 @@
 import { Dispatch } from 'redux';
-// import { AudioData } from 'wav-decoder';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
 import { getNewId, ommitFileName } from '../helper';
-import exp from 'constants';
 
 export type LoadWaveTableRequestPayload = {
   isFetching: boolean,

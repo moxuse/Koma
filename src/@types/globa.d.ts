@@ -1,8 +1,5 @@
 import { IpcMainEvent } from 'electron';
-import { AudioData } from 'wav-decoder';
-import Table, { TableMode } from '../renderer/model/Table';
-import Effect from '../renderer/model/Effect';
-import TableList from '../renderer/model/TableList';
+import Table from '../renderer/model/Table';
 
 declare global {
   interface Window {

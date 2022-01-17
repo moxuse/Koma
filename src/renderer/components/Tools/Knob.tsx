@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React from 'react';
 import { Spec } from './index';
 import styled from 'styled-components';
 
@@ -27,7 +27,7 @@ const RotateGroup = styled.g`
   transform: rotate(${(props: { rotate: number   }) => props.rotate}deg);
 `;
 
-const Knob: FC<KnobProps> = (props): JSX.Element => {
+const Knob: React.FC<KnobProps> = (props): JSX.Element => {
   const numberRound = (value: number, base: number): number => {
     return Math.round(value * base) / base;
   };

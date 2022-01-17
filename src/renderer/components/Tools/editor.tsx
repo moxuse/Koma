@@ -1,7 +1,6 @@
 
-import React, { useEffect, useCallback, useRef, useState } from 'react';
-import Knob from '../Tools/Knob';
-import Table, { Slice } from '../../model/Table';
+import React, { useEffect, useRef, useState } from 'react';
+import Table from '../../model/Table';
 import Effect from '../../model/Effect';
 import { EffectKeys } from '../../model/Effect';
 import TableList from '../../model/TableList';

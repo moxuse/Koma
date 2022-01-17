@@ -1,5 +1,5 @@
 import path from 'path';
-import { BrowserWindow, app, ipcMain, session } from 'electron';
+import { BrowserWindow, app } from 'electron';
 import loadDevtool from 'electron-load-devtool';
 import registerApi, { quitSC } from './io/registerApi';
 const fsExtra = require('fs-extra');

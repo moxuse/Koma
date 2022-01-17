@@ -1,6 +1,5 @@
 import { Dispatch } from 'redux';
 import TableList from '../../model/TableList';
-import { getNewId, ommitFileName } from '../helper';
 import { outboundsTransform } from "../../../renderer/reducer";
 
 export type OpenStorePayload = {

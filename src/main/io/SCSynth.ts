@@ -1,9 +1,7 @@
 const sc = require('supercolliderjs');
-import Effect from '../../renderer/model/Effect';
 import * as dgram from 'dgram';
-import * as OSC from '../../../../osc-js/lib/osc.js';
+import * as OSC from 'osc-js';
 import * as osc from '@supercollider/osc';
-import { int8ArrayToBuffer } from './Utils';
 
 export type SCSynthMode = 'internal' | 'remote';
 
@@ -72,7 +70,7 @@ export default class SCSynth {
 
   public async checkRemoteHealth() {
     return new Promise(async (resolve, reject) => {
-      const timeout = setTimeout(() => resolve(false), 1000);
+      const timeout = setTimeout(() => resolve(false), 9000);
       let syncedId = this.subscribeRemote('/synced', async (msg) => {
         this.unsubscribe(syncedId);
         if (msg && msg[0] === 0) {
@@ -343,7 +341,7 @@ export default class SCSynth {
       ]
     
     const positions: number[] = effect.points.map(p => { return p.x });
-    const rates: number[] = effect.points.map(p => { return p.y });
+    const rates: number[] = effect.points.map(p => { return p.y * -1 });
     this.sendMsgWithPoints(msgPack, positions, rates);
   };
 

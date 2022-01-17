@@ -2,9 +2,6 @@ import { List, Record } from "immutable";
 import Table from './Table';
 import Sample from './Sample';
 import Effect from './Effect';
-import { exists } from "fs";
-
-const t = new Table();
 
 const DefaultTableList = {
   tables: List<Table>(),

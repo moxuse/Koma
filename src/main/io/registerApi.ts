@@ -3,8 +3,6 @@ import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
-import Table, { TableMode } from '../../renderer/model/Table';
-import Effect from '../../renderer/model/Effect';
 import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 import fs from 'fs';
@@ -26,7 +24,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   
   scSynth = new SCSynth({
     numBuffers: optionNumBuffers,
-    // device: 'Soundflower (2ch)'
+    device: 'Soundflower (2ch)'
   });
   scLang = new SCLang();
   /**

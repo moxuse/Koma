@@ -1,26 +1,7 @@
 import fs from "fs";
-// import { AudioData } from 'wav-decoder';
 
 export const OMMITED_RATE = 24;
 export const DETAILED_RATE = 8;
-// import TableList from "../view/model/TableList";
-// const settings = require(__dirname + '\/../store.json');
-
-// type StoreData = TableList;
-
-// export const loadSetting = (): Promise<StoreData> => {
-//   return new Promise((resolve, reject) => {
-//     // let json = __dirname + '\/../store.json'; //fs.readFileSync(settingsPath, 'utf8');
-//     if (settings) {
-//       return resolve(settings);    
-//     }    
-//     return reject('couldn\'t load store.json...');
-//     });
-//}
-
-// const amp2dB = (input: number) => {
-//   return 100 + (20.0 * Math.log10(input));
-// }
 
 export const reduceAudioData = (data: Float32Array): { omitted: Float32Array, detailed: Float32Array } => {
   const omitted = data.filter((sample, i) => i % OMMITED_RATE === 0);

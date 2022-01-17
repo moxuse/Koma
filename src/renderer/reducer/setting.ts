@@ -1,5 +1,4 @@
 import { LoadSettingAction, LoadSettingPayload, BootedPayload } from "../actions/setting";
-// import TableList from "../model/TableList";
 
 const settingInitialState: LoadSettingPayload & BootedPayload = {
   booted: false,

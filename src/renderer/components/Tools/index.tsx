@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback, useRef, useState } from 'react';
+import React from 'react';
 import Knob from '../Tools/Knob';
 import Selector from './Selector';
-import Table, { Slice } from '../../model/Table';
+import Table from '../../model/Table';
 import Effect from '../../model/Effect';
 import { connect } from 'react-redux';
-import { updateSlice } from '../../actions/buffer/slice';
 import styled from 'styled-components';
 
 export type Spec = {

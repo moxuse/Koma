@@ -1,7 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistReducer, createTransform } from 'redux-persist';
-// import immutableTransform from "redux-persist-transform-immutable";
-import { Record } from 'immutable'; 
 import storage from 'redux-persist/lib/storage'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
@@ -10,7 +8,6 @@ import { loadSetting } from './setting';
 import { waveTables } from './waveTables'
 import { allocReadBuffer } from './buffer'
 import { player } from './buffer/player';
-import { List } from 'immutable';
 import TableList from '../model/TableList';
 import Table, { Slice } from '../model/Table';
 import Sample from '../model/Sample';

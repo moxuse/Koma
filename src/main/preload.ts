@@ -1,5 +1,4 @@
 const { contextBridge, ipcRenderer } = require('electron');
-import Effect from '../renderer/model/Effect';
 /**
  * register ipc event APIs
  **/ 

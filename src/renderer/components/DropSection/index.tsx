@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { loadWaveTables } from '../../actions/waveTables';
-
 import styled from 'styled-components';
 
 const DropSectionContainer = styled.div`

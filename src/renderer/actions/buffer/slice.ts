@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import Table, { Slice } from '../../model/Table';
-import { updateWaveTableByTable, LoadWaveTableAction } from '../waveTables';
+import { updateWaveTableByTable } from '../waveTables';
 
 export type UpdateSlicePayload = {
   id: string | undefined,

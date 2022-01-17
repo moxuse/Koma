@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Table, { Slice } from '../../model/Table';
 import TableList from '../../model/TableList';
 import { connect } from 'react-redux';
