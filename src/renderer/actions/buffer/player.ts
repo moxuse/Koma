@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
-import Effect, { GrainPoint } from '../../model/Effect';
-import { TableMode } from '../../model/Table';
-import { GrainEditorSize } from '../../components/Tools/GrainEditor';
+import Effect from '../../model/Effect';
+import { normalizeInt8Points } from '../helper';
 
 export type PlayerRequestPayload = {
   isPlaying: boolean,
@@ -42,10 +41,6 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');
   window.api.removeAllListeners('playerFailure');
 };
-
-const normalizeInt8Points = (points: GrainPoint[]): GrainPoint[] => { 
-  return points.map(p => { return { x: Math.floor(p.x / GrainEditorSize.width * 256) - 128, y: Math.floor(p.y / GrainEditorSize.height * 256) - 128 } });
-}
 
 export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number, end: number} |  undefined), effect: Effect ) => {
   return (dispatch: Dispatch<PlayerAction>) => {

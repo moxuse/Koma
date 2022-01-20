@@ -1,16 +1,16 @@
 
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
-import Table, { TableMode, Slice } from '../../model/Table';
+import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
 import { ToolsContextProvider } from '../Tools/Context/';
 import Graph from './Graph';
 import GrainEditor from '../Tools/GrainEditor';
 import Tools from '../Tools';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { allocReadBuffer } from '../../actions/buffer';
-import { player } from '../../actions/buffer/palyer';
+import { player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
 
 const WaveTableContainer = styled.li`
@@ -26,10 +26,15 @@ const WaveTableContainer = styled.li`
     height: 40%;
     display: inline-block;
     margin: 4px;
+    max-height: 14px;
+    overflow: hidden;
+    display: inline-flex;
+    flex-direction: column;
   }
 `;
 
 const WaveTableHeader = styled.div`
+  max-width: 90px;
   p {
     word-wrap: break-word;
   }
@@ -37,6 +42,21 @@ const WaveTableHeader = styled.div`
     height: 30%;
     decolation: none;
   }
+`;
+
+const WaveTableChannel = styled.p`
+  
+  font-size: 16px;
+  color: #fff;
+
+  ${(props: { triggered: boolean }) => props.triggered && css`
+    animation: ${fadeOut} .125s ease-in-out;
+  `}
+`;
+
+const WaveTableName = styled.p`
+font-size: 13px;
+  color: #888;
 `;
 
 const WaveTableModeSelector = styled.li`
@@ -54,7 +74,17 @@ const StyledButton = styled.button`
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
+const fadeOut = keyframes`
+  from {
+    background-color: #f80;
+  }
+  to {
+    background-color: #2C2C2C;
+  }
+`;
+
 const WaveTable = ({
+  channel,
   table,
   sample,
   effect,
@@ -67,8 +97,10 @@ const WaveTable = ({
   isAllocated,
   isPlaying,
   playerBufnum,
+  onMDIDRecieveAtChannel,
   error
-  }:{
+}: {
+    channel: number,
     table: Table,
     sample: Sample,
     effect: Effect,
@@ -81,11 +113,23 @@ const WaveTable = ({
     isPlaying: boolean,
     isAllocated: boolean,
     playerBufnum: number,
+    onMDIDRecieveAtChannel: number | undefined,
     error: Error
   }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
-  const [slice , setSlice] = useState<Slice | undefined>(undefined);
+  const [slice, setSlice] = useState<Slice | undefined>(undefined);
+  const [triggered , setTriggered] = useState<boolean>(false);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    const b = onMDIDRecieveAtChannel === channel;
+    if (b) {
+      setTriggered(b);
+    }
+    setTimeout(() => {
+      setTriggered(false);
+    }, 250);
+  }, [channel, onMDIDRecieveAtChannel]);
   
   const clickPlay = useCallback(() => {
     handlePlayer(table.getMode(), currentBufnum, slice, effect);
@@ -129,7 +173,8 @@ const WaveTable = ({
         {`[ > ]`}
       </StyledButton>
       <WaveTableHeader>
-        <p>{table.getName()}</p>
+        <WaveTableChannel triggered={triggered}>{channel + `ch`}</WaveTableChannel>
+        <WaveTableName>{table.getName()}</WaveTableName>        
         <ul>
           <WaveTableModeSelector onClick={setModeNormal} selected={table.getMode() === 'normal'}>[N]</WaveTableModeSelector>
           <WaveTableModeSelector onClick={setModeGrain} selected={table.getMode() === 'grain'}>[G]</WaveTableModeSelector>
@@ -155,12 +200,13 @@ const WaveTable = ({
 };
 
 function mapStateToProps(
-  { player } : any
+  { player, midiAssign } : any
 ) {
   return {
     isPlaying: player.isPlaying,
     playerBufnum: player.bufnum,
     error: player.error,
+    onMDIDRecieveAtChannel: midiAssign.channel
   };
 };
 

@@ -37,7 +37,6 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
   useEffect(() => {
     if (points_.length === 0) {
       setPoints(effect.getPoints());
-      console.log('initioal Points', points_.length)
     }
   }, [effect]);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableEditor from '../TableEditor';
@@ -6,9 +6,12 @@ import ToolsEditor from '../Tools/Editor';
 import TableList from '../../model/TableList';
 import Table from '../../model/Table';
 import { loadSetting, booted } from '../../actions/setting';
+import { midiAssign } from '../../actions/midi';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
 import { openStore } from '../../actions/waveTables/openStore';
+import { normalizeInt8Points } from '../../actions/helper';
+import throttle from 'lodash.throttle';
 
 import styled from 'styled-components';
 
@@ -38,7 +41,8 @@ const WaveTables = ({
   onceLiestenBooted,
   loadSetting,
   handleOpenButton,
-  handlePlusButton
+  handlePlusButton,
+  handleAssignMIDI
 }: {
   booted: boolean,
   isFetching: boolean,
@@ -46,13 +50,41 @@ const WaveTables = ({
   onceLiestenBooted: any,
   loadSetting: any,
   handleOpenButton: any,
-  handlePlusButton: any
-}): JSX.Element => {
-    // const [isAllocated, setIsAllocated] = useState<boolean>(false);
+  handlePlusButton: any,
+  handleAssignMIDI: any
+  }): JSX.Element => {
+  let throttled = useCallback(throttle((t: TableList) => assignMIDI(t), 1000, { leading: false, trailing: true }), [tables]);
+  
+  const assignMIDI = (t: TableList) => {
+    const tables_ = t.getTables().toJS() as Array<Table>;
+      const arg_ = tables_.map((table: Table) => {
+        const e = TableList.getEffectById(tables, table.effect!);
+        // console.log(table.bufnum, e!.getRate());
+        return {
+          mode: table.mode,
+          bufnum: table.bufnum,
+          rate: e!.getRate(),
+          pan: e!.getPan(),
+          gain: e!.getGain(),
+          slice: table.slice,
+          trig: e?.getTrig(),
+          duration: e?.getDuration(),
+          points: e?.getPoints() ? normalizeInt8Points(e.getPoints()) : undefined
+        }
+      });
+    handleAssignMIDI(arg_);
+  };
+
   useEffect(() => {
     onceLiestenBooted();
     loadSetting();
   }, []);
+
+  useEffect(() => {
+    if (!isFetching) {
+      throttled(tables);
+    }
+  }, [tables, isFetching]);
 
   const onClickeOpenButton = useCallback(() => handleOpenButton(), []);
   const onClickeSaveButton = useCallback(() => window.api.saveStore(), []);
@@ -78,9 +110,13 @@ const WaveTables = ({
   };
 
   const getTables = () => {
+    let i = 0;
     return (
       (tables) ? tables.getTables().map((table: Table) => {
+        const channel = i;
+        i++;
         return (<WaveTable
+          channel={channel}
           key={table.getId()}
           table={table}
           sample={getSample(tables, table)!}
@@ -130,6 +166,7 @@ function mapDispatchToProps(dispatch: any) {
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),
+    handleAssignMIDI: (arg: MIDIAsssignArg) => dispatch(midiAssign(arg))
   };
 };
 

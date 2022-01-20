@@ -13,7 +13,6 @@ describe('void test', () => {
   });
 });
 
-
 /*
 describe('scStnth Class check internal server boot', () => {
   it('try boot and set internal mode', async () => {
@@ -28,7 +27,6 @@ describe('scStnth Class check internal server boot', () => {
     })
   });
 });
-
 
 describe('scSytnth Class check remote server boot and sync', () => {
   it('try boot and set remote mode', async () => {
@@ -75,7 +73,6 @@ describe('scSytnth server buffer allocation', () => {
     });
   });
 });
-
 
 describe('scSytnth server load synthDef', () => {
   it('on Remote', async () => {

@@ -1,7 +1,5 @@
 import { Record } from 'immutable';
 
-export type TableMode = 'normal' | 'grain';
-
 export type Slice = {
   begin: number;
   end: number;

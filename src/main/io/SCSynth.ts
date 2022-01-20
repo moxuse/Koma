@@ -202,25 +202,25 @@ export default class SCSynth {
     // if (this.mode === 'internal') {
     //   this.server.send.msg(arg);
     // } else if (this.mode === 'remote') {
-      let address; 
-      if (typeof arg[0] == 'string') {
-        address = arg[0].split('/')[1];
-      };
-      arg.shift();
-      let message: OSC.Message;
-      if (arg.length >= 1) {
-        message = new OSC.Message([address], ...arg);
-      } else {
-        message = new OSC.Message(address, []);
-      };
+    let address; 
+    if (typeof arg[0] == 'string') {
+      address = arg[0].split('/')[1];
+    };
+    arg.shift();
+    let message: OSC.Message;
+    if (arg.length >= 1) {
+      message = new OSC.Message([address], ...arg);
+    } else {
+      message = new OSC.Message(address, []);
+    };
 
-      message.args.push('positions');
-      message.types += 's';
+    message.args.push('positions');
+    message.types += 's';
             
     message.types += '[';
     message.args.push(0);  
     positions.forEach((p, i) => {      
-        message.args.push(p);      
+      message.args.push(p);      
       message.types += 'i'; 
     });
     message.types += ']';
@@ -232,15 +232,15 @@ export default class SCSynth {
     message.types += '[';
     message.args.push(0);
     rates.forEach((p, i) => {
-        message.args.push(p);  
+      message.args.push(p);  
       message.types += 'i';
     });
     message.types += ']';
     message.args.push(0);
     
-      // console.log(message.types,message.args, message.types.length, message.args.length);
-      const binary = message.pack();
-      this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
+    // console.log(message.types,message.args, message.types.length, message.args.length);
+    const binary = message.pack();
+    this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
     // };
   };
 
@@ -296,10 +296,10 @@ export default class SCSynth {
     if (slice && slice.begin && slice.end) {
       let begin = slice.begin;
       let end = slice.end;
-      if (effect.rate < 0) { 
-        end = slice.begin;
-        begin = slice.end;
-      }
+      // if (effect.rate < 0) { 
+      //   end = slice.begin;
+      //   begin = slice.end;
+      // }
       this.sendMsg(['/s_new', 'bufRd', this.nextNodeId(), 1, 0,
         'bufnum', bufnum,
         'begin', begin,
@@ -352,9 +352,4 @@ export default class SCSynth {
   async writeBufferAsWav(bufNum: number, filePath: string) {
     this.sendMsg(['/b_write', bufNum, filePath, 'wav', 'int24']);
   };
-
-  sliceBuffer() {
-    
-  };
-
 };

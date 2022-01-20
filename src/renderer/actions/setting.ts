@@ -63,7 +63,7 @@ export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_FAILURE',
   payload: payload
-});
+} as const);
 
 const removeEvents = () => {
   window.api.removeAllListeners('loadSettingSucseed');

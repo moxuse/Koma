@@ -1,4 +1,4 @@
-import { PlayerRequestPayload, PlayerAction } from "../../actions/buffer/palyer";
+import { PlayerRequestPayload, PlayerAction } from "../../actions/buffer/player";
 import Effect from "../../model/Effect";
 
 const playerInitialState: PlayerRequestPayload = {

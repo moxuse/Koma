@@ -14,7 +14,6 @@ const audioInSynthDefFilePath = __dirname + "\/../../synthDef/audioIn.scd";
 const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
 const optionNumBuffers = '12000';
 
-
 let scSynth: SCSynth;
 let scLang: SCLang;
 
@@ -24,7 +23,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   
   scSynth = new SCSynth({
     numBuffers: optionNumBuffers,
-    device: 'Soundflower (2ch)'
+    // device: 'Soundflower (2ch)'
   });
   scLang = new SCLang();
   /**
@@ -202,10 +201,25 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       })
     })
   });
-  
+  /**
+   * assign MIDI api
+   */
+  ipcMain.on('midiAssignRequest', (e, data) => {
+    scLang.assignMidi(0, data) // args: channelOffset, data
+      .then((msg) => {
+        e.reply('midiAssignSucseed', {});
+        if (isDev) { console.log('Assign MIDI:', data) }
+      }).catch((err: any) => {
+        e.reply('midiAssignFailed', err);
+      });
+  });
   /**
    * after set apis then boot server and lang.
    */
+   scSynth.subscribe('/midi', async (msg) => { 
+     const channel = parseInt(msg![0] as string);
+     window.webContents.send("onMIDIRecieve", { channel });
+  })
   await scSynth.boot().then((e) => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });
   });
@@ -220,6 +234,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   } else {
     await scLang.loadSynthDefs();
   };
+  await scLang.connectMIDI();
 };
 
 export async function quitSC() { 
