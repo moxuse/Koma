@@ -34,10 +34,10 @@ const Selector = () => {
   return (<SelctorList>
       <SelctorLabel>res</SelctorLabel>
       <SelctorEl onChange={onChange} name="resolution-selector">
+        <option value="25">0.025</option>
         <option value="50">0.05</option>
         <option value="100">0.1</option>
         <option value="250">0.25</option>
-        <option value="500">0.5</option>
       </SelctorEl>
   </SelctorList>)
 }

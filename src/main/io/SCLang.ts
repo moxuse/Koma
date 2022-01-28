@@ -57,7 +57,7 @@ export default class SCLang {
     let funcDef: string = '';
     data.forEach((d, i) => {
       const positions: number[] = d.points.map(p => { return p.x });
-      const rates: number[] = d.points.map(p => { return p.y * -1 });
+      const rates: number[] = d.points.map(p => { return p.y - 127 });
       if ('normal' === d.mode && d.slice.begin && d.slice.end) {
         funcDef += `MIDIdef.noteOn("msmplr-${i}", {arg ...args;
         var amp, rate;
@@ -69,8 +69,9 @@ export default class SCLang {
       } else if ('grain' === d.mode && d.points.length >= 1) {
         funcDef += `MIDIdef.noteOn("msmplr-${i}", {arg ...args;
         var amp, rate;
+        rate = ${d.rate} * (args[1] - 60).midiratio;
         amp = args[0] * 0.0078125;
-        s.sendMsg("/s_new", "grainPlayer", s.nextNodeID, 0, 1, "bufnum", ${d.bufnum}, "pan", ${d.pan}, "gain", ${d.gain}, "amp", amp, "trig", ${d.trig}, "duration", ${d.duration}, "positions", $[, ${positions}, $], "rates", $[, ${rates}, $], "dummy", 0);
+        s.sendMsg("/s_new", "grainPlayer", s.nextNodeID, 0, 1, "bufnum", ${d.bufnum}, "rate", rate, "pan", ${d.pan}, "gain", ${d.gain}, "amp", amp, "trig", ${d.trig}, "duration", ${d.duration}, "positions", $[, ${positions}, $], "rates", $[, ${rates}, $], "dummy", 0);
         NetAddr("localhost", 8000).sendMsg("/midi", ${i +  channelOffset});
         }, nil, ${i + channelOffset});`
       } else { 

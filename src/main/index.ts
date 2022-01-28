@@ -7,16 +7,6 @@ const os = require('os');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-// debugger load
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application\ Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.21.0_0'
-);
-const reduxDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application\ Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.2_0'
-);
-
 const execPath =
   process.platform === 'win32'
     ? '../../node_modules/electron/dist/electron.exe'
@@ -35,7 +25,7 @@ if (isDev) {
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     frame: false, // frameless
-    backgroundColor: '#2c2c2c',
+    backgroundColor: '#000',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -46,27 +36,19 @@ const createWindow = () => {
     height: 800
   });
 
-  if (isDev) {
+  // if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
-  };
+  // };
   
   registerApi(mainWindow, isDev);
 
   // load app
-  let url = isDev ? '../index.html' : './index.html';
-  if (isDev) {
-    mainWindow.loadFile(url);
-  } else {
-    mainWindow.loadURL(url);
-  }
+  let url = isDev ? '../index.html' : './dist/index.html';
+  mainWindow.loadFile(url);
 };
 
 app.whenReady().then(async () => {
   createWindow();
-  if (isDev) {
-    // await session.defaultSession.loadExtension(reactDevToolsPath);
-    // await session.defaultSession.loadExtension(reduxDevToolsPath);
-  };
 });
 
 // fsExtra.emptyDirSync(app.getPath('userData'));

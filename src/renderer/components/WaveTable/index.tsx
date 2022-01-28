@@ -70,7 +70,7 @@ const StyledButton = styled.button`
   color: white; 
   background-color: ${(props: { isPlaying: boolean }) => props.isPlaying ? 'white' : 'gray'};
   border: 0px solid #111;
-  background: #2C2C2C;
+  background: #000;
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
@@ -79,7 +79,7 @@ const fadeOut = keyframes`
     background-color: #f80;
   }
   to {
-    background-color: #2C2C2C;
+    background-color: #000;
   }
 `;
 
@@ -173,7 +173,7 @@ const WaveTable = ({
         {`[ > ]`}
       </StyledButton>
       <WaveTableHeader>
-        <WaveTableChannel triggered={triggered}>{channel + `ch`}</WaveTableChannel>
+        <WaveTableChannel triggered={triggered}>{`ch`+channel}</WaveTableChannel>
         <WaveTableName>{table.getName()}</WaveTableName>        
         <ul>
           <WaveTableModeSelector onClick={setModeNormal} selected={table.getMode() === 'normal'}>[N]</WaveTableModeSelector>

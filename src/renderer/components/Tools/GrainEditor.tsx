@@ -60,9 +60,11 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
     };
   }, [context, graphRef, graphContainer, editting, points_]);
 
-  const onMouseDown = () => {
-    setPoints((prev) => [])
-    setEditting(prev => true);      
+  const onMouseDown = (e: MouseEvent) => {
+    const firstPoint = { x: e.offsetX, y: e.offsetY };
+    setPoints((prev) => []);
+    setEditting(prev => true);
+    setPoints(prev => [...prev, firstPoint]);
   };
   const onMouseUp = useCallback(() => {
     setEditting(prev => false);

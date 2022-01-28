@@ -30,7 +30,7 @@ const WaveTableList = styled.ul`
 const Button = styled.button`
   color: white;
   border: 0px solid #111;
-  background: #2C2C2C;
+  background: #000;
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 

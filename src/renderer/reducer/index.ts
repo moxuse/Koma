@@ -140,8 +140,10 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer)
 
+const middleware = ENV === 'development' ? applyMiddleware(thunk, logger) : applyMiddleware(thunk);
+
 export const configReducer = () => {
-  let store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk, logger)));
+  let store = createStore(persistedReducer, composeWithDevTools(middleware));
   
   let persistor = persistStore(store);
   return { store, persistor };
