@@ -4,14 +4,17 @@ import DropSection from '../DropSection';
 import TableEditor from '../TableEditor';
 import ToolsEditor from '../Tools/Editor';
 import TableList from '../../model/TableList';
-import Table from '../../model/Table';
+import Table, { Slice } from '../../model/Table';
+import Effect from '../../model/Effect';
+import MIDIReceiver from '../../lib/midi';
 import { loadSetting, booted } from '../../actions/setting';
+import { player } from '../../actions/buffer/player';
 import { midiAssign } from '../../actions/midi';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
 import { openStore } from '../../actions/waveTables/openStore';
 import { normalizeInt8Points } from '../../actions/helper';
-import throttle from 'lodash.throttle';
+import { useDebouncedCallback } from 'use-debounce';
 
 import styled from 'styled-components';
 
@@ -34,6 +37,12 @@ const Button = styled.button`
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
+const midiratio = (input: number) => { 
+  return Math.pow(2., input * 0.083333333333);
+};
+
+const midi = new MIDIReceiver();
+
 const WaveTables = ({
   booted,
   isFetching,
@@ -42,7 +51,7 @@ const WaveTables = ({
   loadSetting,
   handleOpenButton,
   handlePlusButton,
-  handleAssignMIDI
+  handlePlayer
 }: {
   booted: boolean,
   isFetching: boolean,
@@ -51,28 +60,28 @@ const WaveTables = ({
   loadSetting: any,
   handleOpenButton: any,
   handlePlusButton: any,
-  handleAssignMIDI: any
+  handlePlayer: any
   }): JSX.Element => {
-  let throttled = useCallback(throttle((t: TableList) => assignMIDI(t), 1000, { leading: false, trailing: true }), [tables]);
-  
+
+  const debounced = useDebouncedCallback(
+    (t: TableList) => assignMIDI(t),
+    // delay in ms
+    1000
+  );
+
   const assignMIDI = (t: TableList) => {
     const tables_ = t.getTables().toJS() as Array<Table>;
-      const arg_ = tables_.map((table: Table) => {
-        const e = TableList.getEffectById(tables, table.effect!);
-        // console.log(table.bufnum, e!.getRate());
-        return {
-          mode: table.mode,
-          bufnum: table.bufnum,
-          rate: e!.getRate(),
-          pan: e!.getPan(),
-          gain: e!.getGain(),
-          slice: table.slice,
-          trig: e?.getTrig(),
-          duration: e?.getDuration(),
-          points: e?.getPoints() ? normalizeInt8Points(e.getPoints()) : undefined
-        }
+      midi.unscbscribeAll();
+      const arg_ = tables_.map((table: Table, i: number) => {
+        const eff = TableList.getEffectById(tables, table.effect!);      
+        midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
+          console.log('whould play synth', i, eff);
+          const midinote = e.data[1];
+          const amp = e.data[2];
+          const rate = midiratio(midinote) * eff!.getRate();
+          handlePlayer(table.mode, table.bufnum, table.slice, eff);
+        })
       });
-    handleAssignMIDI(arg_);
   };
 
   useEffect(() => {
@@ -82,7 +91,7 @@ const WaveTables = ({
 
   useEffect(() => {
     if (!isFetching) {
-      throttled(tables);
+      debounced(tables);
     }
   }, [tables, isFetching]);
 
@@ -164,9 +173,10 @@ function mapDispatchToProps(dispatch: any) {
   return {
     handleOpenButton: () => dispatch(openStore()),
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
+    handlePlayer:  (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),
-    handleAssignMIDI: (arg: MIDIAsssignArg) => dispatch(midiAssign(arg))
+    // handleAssignMIDI: (arg: MIDIAsssignArg) => dispatch(midiAssign(arg))
   };
 };
 

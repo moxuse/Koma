@@ -1,10 +1,11 @@
+import path from 'path';
 import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
 import SCSynth from './SCSynth';
-import SCLang from './SCLang';
+// import SCLang from './SCLang';
 import fs from 'fs';
 
 const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
@@ -15,7 +16,7 @@ const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
 const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
-let scLang: SCLang;
+// let scLang: SCLang;
 
 // API register
 export default async function registerApi(window: BrowserWindow, isDev: boolean): Promise<void> {
@@ -25,12 +26,11 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     numBuffers: optionNumBuffers,
     // device: 'Soundflower (2ch)'
   });
-  scLang = new SCLang();
+  // scLang = new SCLang();
   /**
    * Load Store file
    * returns
    * 'loadStoreSucseed'
-   * 'loadStoreFailed'
    */
   ipcMain.on('loadSetting', async (e) => {
     if (isDev) { console.log('loadSetting!! in api'); }
@@ -41,15 +41,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     });
 
     e.reply('loadSettingSucseed');
-    
-    // Utils.loadStore().then((tables: TableList) => {
-    //   e.reply('loadSettingSucseed', tables);
-    // }).catch((err: any) => {      
-    //   e.reply('loadSettingFailed', err);
-    // })
-    // e.reply('loadSettingFailed', new Error('not implimented yet.'));
   });
-  // window.api.loadStore();
 
   /**
    * Read Wav file from path
@@ -147,7 +139,6 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     }
     e.reply('playerSuccess', bufnum);
   });
-  // window.api.playerSuccess(bufnum);
 
   /**
    * allocBufferRequest
@@ -162,7 +153,6 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       e.reply('allocBufferFailed', err);
     });
   });
-  // window.api.allocBuffer(bufnum);
 
   /**
    * save store as file
@@ -205,18 +195,18 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * assign MIDI api
    */
   ipcMain.on('midiAssignRequest', (e, data) => {
-    scLang.assignMidi(0, data) // args: channelOffset, data
-      .then((msg) => {
-        e.reply('midiAssignSucseed', {});
-        if (isDev) { console.log('Assign MIDI:', data) }
-      }).catch((err: any) => {
-        e.reply('midiAssignFailed', err);
-      });
+    // scLang.assignMidi(0, data) // args: channelOffset, data
+    //   .then((msg) => {
+    //     e.reply('midiAssignSucseed', {});
+    //     if (isDev) { console.log('Assign MIDI:', data) }
+    //   }).catch((err: any) => {
+    //     e.reply('midiAssignFailed', err);
+    //   });
   });
   /**
    * after set apis then boot server and lang.
    */
-   scSynth.subscribe('/midi', async (msg) => { 
+  scSynth.subscribe('/midi', async (msg) => { 
      const channel = parseInt(msg![0] as string);
      window.webContents.send("onMIDIRecieve", { channel });
   })
@@ -224,7 +214,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     window.webContents.postMessage('booted', { mode: scSynth.mode });
   });
   
-  await scLang.boot();
+  // await scLang.boot().catch((err: Error) => {
+  //   console.log(err);
+  // });
   if (scSynth.mode === 'internal') {
     await scSynth.loadSynthDefFromFile('player', playerSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('grainPlayer', grainPlayerSynthDefFilePath);
@@ -232,11 +224,11 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     await scSynth.loadSynthDefFromFile('recorder', recorderSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('audioIn', audioInSynthDefFilePath);
   } else {
-    await scLang.loadSynthDefs();
+    // await scLang.loadSynthDefs();
   };
-  await scLang.connectMIDI();
+  // await scLang.connectMIDI();
 };
 
 export async function quitSC() { 
-  return Promise.all([scLang.quit(), scSynth.quit()]);
+  return Promise.all([scSynth.quit()]);
 }

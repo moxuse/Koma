@@ -3,7 +3,6 @@ import { BrowserWindow, app } from 'electron';
 import loadDevtool from 'electron-load-devtool';
 import registerApi, { quitSC } from './io/registerApi';
 const fsExtra = require('fs-extra');
-const os = require('os');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -33,12 +32,12 @@ const createWindow = () => {
       preload: path.resolve(__dirname, 'preload.js'),
     },
     width: 500,
-    height: 800
+    height: 450
   });
 
-  // if (isDev) {
+  if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
-  // };
+  };
   
   registerApi(mainWindow, isDev);
 
@@ -51,7 +50,7 @@ app.whenReady().then(async () => {
   createWindow();
 });
 
-// fsExtra.emptyDirSync(app.getPath('userData'));
+fsExtra.emptyDirSync(app.getPath('userData'));
 
 // when close window
 app.once('window-all-closed', async () => {

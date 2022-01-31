@@ -11,8 +11,9 @@ export default class SCLang {
   public lang: any;
   constructor() {}
   async boot() {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       sc.lang.boot().then((lang: any) => {
+        console.log('booted sclang..!');
         this.lang = lang;
         resolve(lang)
       }).catch((err: Error) => {

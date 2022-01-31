@@ -70,7 +70,7 @@ export default class SCSynth {
 
   public async checkRemoteHealth() {
     return new Promise(async (resolve, reject) => {
-      const timeout = setTimeout(() => resolve(false), 9000);
+      const timeout = setTimeout(() => resolve(false), 3000);
       let syncedId = this.subscribeRemote('/synced', async (msg) => {
         this.unsubscribe(syncedId);
         if (msg && msg[0] === 0) {

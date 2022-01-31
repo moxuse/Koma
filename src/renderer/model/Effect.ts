@@ -21,7 +21,7 @@ export const DefaultEffect: EffectData = {
   id: '0',
   pan: 0,
   rate: 1,
-  gain: 1,
+  gain: 0,
   duration: 0.1,
   trig: 4,
   points: []

@@ -16,7 +16,7 @@
   "license": "MIT",
   "build": {
     "productName": "msplr",
-    "asar": false,
+    "asar": true,
     "extends": null,
     "extraMetadata": {
       "main": "dist/main.js"
@@ -58,6 +58,7 @@
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
     "supercolliderjs": "^1.0.1",
+    "use-debounce": "^7.0.1",
     "util": "^0.12.4",
     "wav-decoder": "^1.3.0",
     "ws": "^8.4.0"
@@ -78,6 +79,7 @@
     "@types/redux-logger": "^3.0.9",
     "@types/redux-persist": "^4.3.1",
     "@types/styled-components": "^5.1.15",
+    "@types/webmidi": "^2.0.6",
     "copy-webpack-plugin": "^10.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",

@@ -1,10 +1,10 @@
 
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
-import { ToolsContextProvider } from '../Tools/Context/';
+import { ToolsContextProvider } from '../Tools/Context';
 import Graph from './Graph';
 import GrainEditor from '../Tools/GrainEditor';
 import Tools from '../Tools';
@@ -120,7 +120,6 @@ const WaveTable = ({
   const [slice, setSlice] = useState<Slice | undefined>(undefined);
   const [triggered , setTriggered] = useState<boolean>(false);
   const [playButtonActive, setPlayButtonActive] = useState<boolean>(false);
-
   useEffect(() => {
     const b = onMDIDRecieveAtChannel === channel;
     if (b) {
@@ -168,19 +167,17 @@ const WaveTable = ({
 
   return (    
     <WaveTableContainer key={table.getId()}>
-      {/* <p>{table.getId()}</p> */}
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
         {`[ > ]`}
       </StyledButton>
       <WaveTableHeader>
-        <WaveTableChannel triggered={triggered}>{`ch`+channel}</WaveTableChannel>
+        <WaveTableChannel triggered={triggered}>{`ch` + channel}</WaveTableChannel>
         <WaveTableName>{table.getName()}</WaveTableName>        
         <ul>
           <WaveTableModeSelector onClick={setModeNormal} selected={table.getMode() === 'normal'}>[N]</WaveTableModeSelector>
           <WaveTableModeSelector onClick={setModeGrain} selected={table.getMode() === 'grain'}>[G]</WaveTableModeSelector>
         </ul>
-      </WaveTableHeader>      
-      {/* <p>{sample.getFilePath()}</p> */}
+      </WaveTableHeader>
       <ToolsContextProvider>
         <div>
           {<GrainEditor table={table} effect={effect}></GrainEditor>}
