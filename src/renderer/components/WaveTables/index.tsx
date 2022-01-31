@@ -9,11 +9,10 @@ import Effect from '../../model/Effect';
 import MIDIReceiver from '../../lib/midi';
 import { loadSetting, booted } from '../../actions/setting';
 import { player } from '../../actions/buffer/player';
-import { midiAssign } from '../../actions/midi';
+import { midiOnRecieve } from '../../actions/midi';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
 import { openStore } from '../../actions/waveTables/openStore';
-import { normalizeInt8Points } from '../../actions/helper';
 import { useDebouncedCallback } from 'use-debounce';
 
 import styled from 'styled-components';
@@ -51,7 +50,8 @@ const WaveTables = ({
   loadSetting,
   handleOpenButton,
   handlePlusButton,
-  handlePlayer
+  handlePlayer,
+  handleMidiOnRecieve
 }: {
   booted: boolean,
   isFetching: boolean,
@@ -60,7 +60,8 @@ const WaveTables = ({
   loadSetting: any,
   handleOpenButton: any,
   handlePlusButton: any,
-  handlePlayer: any
+  handlePlayer: any,
+  handleMidiOnRecieve: any
   }): JSX.Element => {
 
   const debounced = useDebouncedCallback(
@@ -75,12 +76,15 @@ const WaveTables = ({
       tables_.map((table: Table, i: number) => {
         const eff = TableList.getEffectById(tables, table.effect!);      
         midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
-          console.log('whould play synth', table, e.data, eff);
           const midinote = e.data[1];
           const amp = e.data[2] * 0.0078125;
           const rate = midiratio(midinote - 60) * eff!.getRate();
           const replacedEff = new Effect(eff).set("rate", rate).set("amp", amp);
           handlePlayer(table.mode, table.bufnum, table.slice, replacedEff);
+          handleMidiOnRecieve(i);
+          setTimeout(() => {
+            handleMidiOnRecieve(-1);
+          }, 100);
         })
       });
   };
@@ -174,10 +178,10 @@ function mapDispatchToProps(dispatch: any) {
   return {
     handleOpenButton: () => dispatch(openStore()),
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
-    handlePlayer:  (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
+    handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
+    handleMidiOnRecieve: (channel: number) => dispatch(midiOnRecieve(channel)),
     loadSetting: () => dispatch(loadSetting()),
     onceLiestenBooted: () => dispatch(booted()),
-    // handleAssignMIDI: (arg: MIDIAsssignArg) => dispatch(midiAssign(arg))
   };
 };
 

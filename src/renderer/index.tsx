@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import WaveTables from './components/WaveTables';
 import { configReducer } from '../renderer/reducer';
 import { restore } from './actions/waveTables/openStore';
-import { midiOnRecieve } from './actions/midi';
 const { store, persistor } = configReducer();
 
 const DragAreaStyle = styled.div`
@@ -19,13 +18,6 @@ window.api.on!('openStoreSucseed', (_, { restoerData }) => {
     store.dispatch(restore(restoerData));
   }
 });
-
-window.api.on("onMIDIRecieve", (_, arg: { channel: number }) => {
-  store.dispatch(midiOnRecieve(arg.channel));
-  setTimeout(() => { 
-    store.dispatch(midiOnRecieve(undefined));
-  }, 100)
-})
 
 const AppContainer = styled.div`
   min-width: 500px;

@@ -5,7 +5,6 @@ import { dialog } from 'electron';
 import WavDecoder from 'wav-decoder';
 import * as Utils from './Utils';
 import SCSynth from './SCSynth';
-// import SCLang from './SCLang';
 import fs from 'fs';
 
 const playerSynthDefFilePath = __dirname + "\/../../synthDef/player.scd";
@@ -16,7 +15,6 @@ const bufRdSynthDefFilePath = __dirname + "\/../../synthDef/bufRd.scd";
 const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
-// let scLang: SCLang;
 
 // API register
 export default async function registerApi(window: BrowserWindow, isDev: boolean): Promise<void> {
@@ -26,7 +24,6 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     numBuffers: optionNumBuffers,
     // device: 'Soundflower (2ch)'
   });
-  // scLang = new SCLang();
   /**
    * Load Store file
    * returns
@@ -191,18 +188,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       })
     })
   });
-  /**
-   * assign MIDI api
-   */
-  ipcMain.on('midiAssignRequest', (e, data) => {
-    // scLang.assignMidi(0, data) // args: channelOffset, data
-    //   .then((msg) => {
-    //     e.reply('midiAssignSucseed', {});
-    //     if (isDev) { console.log('Assign MIDI:', data) }
-    //   }).catch((err: any) => {
-    //     e.reply('midiAssignFailed', err);
-    //   });
-  });
+
   /**
    * after set apis then boot server and lang.
    */
@@ -213,10 +199,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   await scSynth.boot().then((e) => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });
   });
-  
-  // await scLang.boot().catch((err: Error) => {
-  //   console.log(err);
-  // });
+
   if (scSynth.mode === 'internal') {
     await scSynth.loadSynthDefFromFile('player', playerSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('grainPlayer', grainPlayerSynthDefFilePath);
@@ -224,9 +207,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     await scSynth.loadSynthDefFromFile('recorder', recorderSynthDefFilePath);
     await scSynth.loadSynthDefFromFile('audioIn', audioInSynthDefFilePath);
   } else {
-    // await scLang.loadSynthDefs();
+    const path_ = path.resolve(__dirname, '../../../dist/synthDef');
+    await scSynth.loadSynthDefFromSynthDef(path_);
   };
-  // await scLang.connectMIDI();
 };
 
 export async function quitSC() { 

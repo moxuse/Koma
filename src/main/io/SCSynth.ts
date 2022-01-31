@@ -167,14 +167,12 @@ export default class SCSynth {
   };
 
   public unsubscribe(id: number): void {
-    // console.log('UNSUBSCRIED1:', this.listennersRemote);
     this.listennersRemote = this.listennersRemote.filter(l => {
       return l.id !== id;
     });
     this.listennersInternal = this.listennersInternal.filter(l => {
       return l.id !== id;
     });
-    // console.log('UNSUBSCRIED2:', this.listennersRemote);
   };
 
 
@@ -237,11 +235,9 @@ export default class SCSynth {
     });
     message.types += ']';
     message.args.push(0);
-    
-    // console.log(message.types,message.args, message.types.length, message.args.length);
+
     const binary = message.pack();
     this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
-    // };
   };
 
   async allocReadBuffer(file: string, bufnum: number | null) {
@@ -288,6 +284,10 @@ export default class SCSynth {
       };
     });
   };
+
+  loadSynthDefFromSynthDef(path: string) { 
+    this.sendMsg(['/d_loadDir', path]);
+  }
 
   playBuffer(bufnum: number,
     slice: ({ begin: number, end: number } | undefined),
