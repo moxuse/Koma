@@ -119,17 +119,6 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
      }
   }, [tables, id, type, editting]);
 
-  // useEffect(() => {
-  //   const onMouseout = (e: MouseEvent) => {
-  //     setEditting(false);
-  //     setId(undefined);
-  //     setType(undefined);
-  //   };        
-  //   window.addEventListener("mouseout", onMouseout, false);
-  //    return () => {              
-  //     window.removeEventListener("mouseout", onMouseout, false);      
-  //    }
-  // }, [tables, id, type, editting]);
   return (
     <ToolsErea ref={toolsEl}>
       {children}

@@ -16,7 +16,8 @@ declare global {
     { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array } } &
     { bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { amp: number, rate: number, pan: number, gain: number }} &
+      effect: { amp: number, rate: number, pan: number, gain: number }
+    } &
     { tables: Table[] } &
     { restoerData: any } &
     Error;

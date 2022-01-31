@@ -47,17 +47,4 @@ export default class Table extends Record(DefaultTable) {
   getEffect() {
     return this.get('effect');
   }
-
-  // private updateSlice(slice: Slice) {
-  //   this.set('slice', slice);
-  // };
-  // private updateEffect(effect: string) {
-  //   this.set('effect', effect);
-  // };
-  // static updateSlice(target: Table, newSlice: Slice) {
-  //   return target.updateSlice(newSlice);
-  // };
-  // static updateEffect(target: Table, effect: Effect) { 
-  //   return target.updateEffect(effect);
-  // }
 };
