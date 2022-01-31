@@ -106,7 +106,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     e,
     bufnum: number,
     slice: ({ begin: number, end: number } | undefined),
-    effect: { rate: number, pan: number, gain: number }
+    effect: { amp: number, rate: number, pan: number, gain: number }
     ) => {
     if (isDev) { console.log('play request:', bufnum, slice, effect) }
     try {
@@ -129,7 +129,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     e,
     bufnum: number,
     slice: ({ begin: number, end: number } | undefined),
-    effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
+    effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
     ) => {
     if (isDev) { console.log('grain play request:', effect.points.length, bufnum, slice, effect) }
      try {

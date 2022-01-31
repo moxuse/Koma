@@ -291,7 +291,7 @@ export default class SCSynth {
 
   playBuffer(bufnum: number,
     slice: ({ begin: number, end: number } | undefined),
-    effect: { rate: number, pan: number, gain: number }
+    effect: { amp: number, rate: number, pan: number, gain: number }
   ) {    
     if (slice && slice.begin && slice.end) {
       let begin = slice.begin;
@@ -304,6 +304,7 @@ export default class SCSynth {
         'bufnum', bufnum,
         'begin', begin,
         'end', end,
+        'amp', effect.amp,
         'rate', effect.rate,
         'pan', effect.pan,
         'gain', effect.gain
@@ -311,6 +312,7 @@ export default class SCSynth {
     } else { 
       this.sendMsg(['/s_new', 'player', this.nextNodeId(), 1, 0,
         'bufnum', bufnum,
+        'amp', effect.amp,
         'rate', effect.rate,
         'pan', effect.pan,
         'gain', effect.gain
@@ -320,7 +322,7 @@ export default class SCSynth {
 
   playGrain(bufnum: number,
     slice: ({ begin: number, end: number } | undefined),
-    effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
+    effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
   ) {
     let begin_, end_;
     if (!slice) { 
@@ -331,6 +333,7 @@ export default class SCSynth {
     }
     let msgPack = ['/s_new', 'grainPlayer', this.nextNodeId(), 1, 0,
       'bufnum', bufnum,
+      'amp', effect.amp,
       'begin', begin_,
       'end', end_,
       'rate', effect.rate,

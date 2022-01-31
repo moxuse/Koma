@@ -77,13 +77,15 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number,
         window.api.playerRequest(bufnum, slice, {
           rate: effect.getRate(),
           pan: effect.getPan(),
-          gain: effect.getGain()
+          gain: effect.getGain(),
+          amp: effect.getAmp(),
         });
         break;
       case 'grain':
         window.api.grainPlayerRequest(bufnum, slice, {
           rate: effect.getRate(),
           pan: effect.getPan(),
+          amp: effect.getAmp(),
           gain: effect.getGain(),
           points: normalizeInt8Points(effect.getPoints()),
           duration: effect.getDuration(),

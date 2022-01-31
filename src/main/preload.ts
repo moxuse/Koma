@@ -9,11 +9,11 @@ contextBridge.exposeInMainWorld(
     loadWaveTable: async (filePath: string) => ipcRenderer.send('loadWaveTable', filePath),
     playerRequest: async (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { rate: number, pan: number, gain: number }
+      effect: { amp: number, rate: number, pan: number, gain: number }
     ) => ipcRenderer.send('playerRequest', bufnum, slice, effect),
     grainPlayerRequest: async (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
+      effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{x: number, y: number}>, duration: number, trig: number }
     ) => ipcRenderer.send('grainPlayerRequest', bufnum, slice, effect),
     allocBufferRequest: async (bufnum: number, filePath: string) => ipcRenderer.send('allocBufferRequest', bufnum, filePath),
     saveStore: async () => ipcRenderer.send('saveStore'), 

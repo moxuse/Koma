@@ -72,14 +72,15 @@ const WaveTables = ({
   const assignMIDI = (t: TableList) => {
     const tables_ = t.getTables().toJS() as Array<Table>;
       midi.unscbscribeAll();
-      const arg_ = tables_.map((table: Table, i: number) => {
+      tables_.map((table: Table, i: number) => {
         const eff = TableList.getEffectById(tables, table.effect!);      
         midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
-          console.log('whould play synth', i, eff);
+          console.log('whould play synth', table, e.data, eff);
           const midinote = e.data[1];
-          const amp = e.data[2];
-          const rate = midiratio(midinote) * eff!.getRate();
-          handlePlayer(table.mode, table.bufnum, table.slice, eff);
+          const amp = e.data[2] * 0.0078125;
+          const rate = midiratio(midinote - 60) * eff!.getRate();
+          const replacedEff = new Effect(eff).set("rate", rate).set("amp", amp);
+          handlePlayer(table.mode, table.bufnum, table.slice, replacedEff);
         })
       });
   };

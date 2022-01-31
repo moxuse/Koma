@@ -58,6 +58,7 @@ export const outboundsTransform = (outboundState: any,  key: any): any => {
     let effect = new Effect();
     effect = effect.set('id', e.id);
     effect = effect.set('pan', e.pan);
+    effect = effect.set('amp', e.amp);
     effect = effect.set('rate', e.rate);
     effect = effect.set('gain', e.gain);
     effect = effect.set('duration', e.duration);

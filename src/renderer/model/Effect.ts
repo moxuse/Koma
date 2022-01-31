@@ -12,6 +12,7 @@ export type EffectData = {
   pan: number;
   rate: number;
   gain: number;
+  amp: number;
   points: Array<GrainPoint>
   duration: number;
   trig: number;
@@ -22,6 +23,7 @@ export const DefaultEffect: EffectData = {
   pan: 0,
   rate: 1,
   gain: 0,
+  amp: 1,
   duration: 0.1,
   trig: 4,
   points: []
@@ -40,6 +42,9 @@ export default class Effect extends Record(DefaultEffect) {
   getGain() {
     return this.get('gain');
   };
+  getAmp() { 
+    return this.get('amp');
+  }
   getDuration() {
     return this.get('duration');
   };

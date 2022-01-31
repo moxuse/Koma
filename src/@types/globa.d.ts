@@ -8,7 +8,7 @@ declare global {
 
   type TableMode = 'normal' | 'grain';
 
-  type MIDIAsssignArg = Array<{ mode: TableMode, bufnum: number, rate: number, pan: number, gain: number, slice: { begin: number, end: number } | undefined, trig: number | undefined, duration: number | undefined, points: Array<{ x: number, y: number }> | undefined }>;
+  type MIDIAsssignArg = Array<{ mode: TableMode, bufnum: number, amp: number, rate: number, pan: number, gain: number, slice: { begin: number, end: number } | undefined, trig: number | undefined, duration: number | undefined, points: Array<{ x: number, y: number }> | undefined }>;
 
   type IcpEventArg =
     { mode: string } &
@@ -18,7 +18,7 @@ declare global {
     { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array } } &
     { bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { rate: number, pan: number, gain: number }} &
+      effect: { amp: number, rate: number, pan: number, gain: number }} &
     { tables: Table[] } &
     { restoerData: any } &
     { data: MIDIAsssignArg } &
@@ -32,11 +32,11 @@ declare global {
     loadWaveTable: (filePath: string) => void,
     playerRequest: (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { rate: number, pan: number, gain: number }
+      effect: { amp: number, rate: number, pan: number, gain: number }
     ) => void,
     grainPlayerRequest: (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { rate: number, pan: number, gain: number, points: Array<{ x: number, y: number }>, duration: number, trig: number }
+      effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{ x: number, y: number }>, duration: number, trig: number }
     ) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
     saveStore: () => void,
