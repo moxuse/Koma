@@ -126,21 +126,21 @@ const WaveTable = ({
 
   const clickPlay = useCallback(() => {
     handlePlayer(table.getMode(), currentBufnum, slice, effect);
-  }, [handlePlayer, table, currentBufnum, slice, effect]);
+  }, [currentBufnum, slice, effect]);
 
   const deleTable = useCallback(() => {
     deleteHandler(table, sample, effect);
-  }, [deleteHandler, effect, sample, table]);
+  }, []);
 
   const setModeNormal = useCallback(() => {
     const newTable = table.set('mode', 'normal');
     handleUpdateTable(newTable);
-  }, [handleUpdateTable, table]);
+  }, [table]);
 
   const setModeGrain = useCallback(() => {
     const newTable = table.set('mode', 'grain');
     handleUpdateTable(newTable);
-  }, [handleUpdateTable, table]);
+  }, [table]);
 
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
@@ -151,7 +151,7 @@ const WaveTable = ({
     if (booted && !isAllocated) {
       allocBuffer(currentBufnum, sample);
     }
-  }, [booted, isAllocated, currentBufnum, allocBuffer, sample]);
+  }, [booted, isAllocated, currentBufnum]);
 
   const composeGraph = useMemo(() => {
     return (

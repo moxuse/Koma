@@ -6,11 +6,11 @@ import * as Utils from './Utils';
 import SCSynth from './SCSynth';
 import fs from 'fs';
 
-const playerSynthDefFilePath = './asset/synthDef/player.scd';
-const grainPlayerSynthDefFilePath = './asset/synthDef/grainPlayer.scd';
-const recorderSynthDefFilePath = './asset/synthDef/recorder.scd';
-const audioInSynthDefFilePath = './asset/synthDef/audioIn.scd';
-const bufRdSynthDefFilePath = './asset/synthDef/bufRd.scd';
+const playerSynthDefFilePath = '../assets/synthDef/player.scd';
+const grainPlayerSynthDefFilePath = '../assets/synthDef/grainPlayer.scd';
+const recorderSynthDefFilePath = '../assets/synthDef/recorder.scd';
+const audioInSynthDefFilePath = '../assets/synthDef/audioIn.scd';
+const bufRdSynthDefFilePath = '../assets/synthDef/bufRd.scd';
 const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;

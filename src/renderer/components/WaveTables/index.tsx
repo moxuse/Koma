@@ -92,35 +92,35 @@ const WaveTables = ({
   useEffect(() => {
     onceLiestenBooted();
     loadSetting();
-  }, [loadSetting, onceLiestenBooted]);
+  }, []);
 
   useEffect(() => {
     if (!isFetching) {
       debounced(tables);
     }
-  }, [tables, isFetching, debounced]);
+  }, [tables, isFetching]);
 
-  const onClickeOpenButton = useCallback(() => handleOpenButton(), [handleOpenButton]);
+  const onClickeOpenButton = useCallback(() => handleOpenButton(), []);
   const onClickeSaveButton = useCallback(() => window.api.saveStore(), []);
 
   const onClickePlusButton = useCallback(() => {
     handlePlusButton();
-  }, [handlePlusButton]);
-
-  const isAllocated = useCallback((tables_: TableList, table: Table): boolean => {
-    return TableList.getAllocatedSampleById(tables_, table.getSample()!);
   }, []);
 
+  const isAllocated = useCallback((tables_: TableList, table: Table): boolean => {
+    return TableList.getAllocatedSampleById(tables, table.getSample()!);
+  }, [isFetching, tables]);
+
   const getBufferData = (tables_: TableList, table: Table): Float32Array | undefined => {
-    return tables_.getBufferDataForSampleId(table.getSample());
+    return tables.getBufferDataForSampleId(table.getSample());
   };
 
   const getSample = (tables_: TableList, table: Table) => {
-    return TableList.getSampleById(tables_, table.getSample()!);
+    return TableList.getSampleById(tables, table.getSample()!);
   };
 
   const getEffect = (tables_: TableList, table: Table) => {
-    return TableList.getEffectById(tables_, table.getEffect()!);
+    return TableList.getEffectById(tables, table.getEffect()!);
   };
 
   const getTables = () => {

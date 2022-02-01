@@ -38,7 +38,7 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
     if (points_.length === 0) {
       setPoints(effect.getPoints());
     }
-  }, [effect, points_.length]);
+  }, [effect]);
 
   useEffect(() => {
     if (context && points_) {
@@ -70,12 +70,12 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
     setEditting(() => false);
     const newEff = effect.set('points', points_);
     handleUpdate(table, newEff);
-  }, [effect, points_, handleUpdate, table]);
+  }, [effect, points_]);
   const onMouseOut = useCallback(() => {
     setEditting(() => false);
     const newEff = effect.set('points', points_);
     handleUpdate(table, newEff);
-  }, [effect, points_, handleUpdate, table]);
+  }, [effect, points_]);
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (editting) {
       setPoints((prev) => [...prev, { x: e.offsetX, y: e.offsetY }]);
@@ -98,7 +98,7 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
       graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
       graphContainer.current?.removeEventListener('mousemove', throttleFn, false);
     };
-  }, [effect, table, graphRef, graphContainer, editting, resolution, onMouseMove, onMouseUp, onMouseOut]);
+  }, [effect, table, graphRef, graphContainer, editting, resolution]);
 
   return (
     <GraphConatainer isShown={table.getMode() === 'grain'} ref={graphContainer}>

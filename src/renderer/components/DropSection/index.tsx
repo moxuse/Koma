@@ -52,7 +52,7 @@ const DropSection = ({
       ref.current!.removeEventListener('dragover', onDragOver, false);
       ref.current!.removeEventListener('dragleave', onDragReave, false);
     };
-  }, [booted, onDragOver, onDragReave, onDrop]);
+  }, [booted]);
 
   return (
     <>

@@ -24,12 +24,12 @@ const SelctorEl = styled.select`
 `;
 
 const Selector = () => {
-  const { setResolution } = useContext(ToolsContext);
+  const { resolution, setResolution } = useContext(ToolsContext);
 
   const onChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
     setResolution(parseInt(target.value));
-  }, [setResolution]);
+  }, [resolution]);
 
   return (
     <SelctorList>

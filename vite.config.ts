@@ -7,7 +7,7 @@ import path from 'path';
 export default defineConfig({
   root: './src/renderer',
   base: './',
-  publicDir: './assets/',
+  publicDir: './public/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src/renderer'),

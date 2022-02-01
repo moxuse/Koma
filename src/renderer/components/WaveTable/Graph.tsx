@@ -33,7 +33,7 @@ const Graph = ({ id, bufferData, slice }: {
       const canvasContext = graphRef.current.getContext('2d');
       setContext(canvasContext);
     }
-  }, [bufferData]);
+  }, []);
   useEffect(() => {
     if (buffer && context) {
       const pixcelParSample = width / buffer.length;
@@ -58,7 +58,7 @@ const Graph = ({ id, bufferData, slice }: {
         );
       });
     }
-  }, [buffer, bufferData, context, slice]);
+  }, [bufferData, context, slice]);
 
   return (
     <GraphConatainer>
