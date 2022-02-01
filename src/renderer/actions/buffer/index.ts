@@ -2,38 +2,38 @@ import { Dispatch } from 'redux';
 import Sample from '../../model/Sample';
 import { updateWaveTableBySample } from '../waveTables';
 
-export type AllocReadBufferRequestPayload = {
-  filePath: string | undefined,
-  bufnum: number | undefined,
-  error: Error | undefined
-};
+export interface AllocReadBufferRequestPayload {
+  filePath: string | undefined;
+  bufnum: number | undefined;
+  error: Error | undefined;
+}
 
 export const allocReadBufferRequest = (
-  payload: AllocReadBufferRequestPayload
+  payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_REQUEST',
-  payload 
+  payload,
 });
 
-export const allocReadBufferSucceed  = (
-  payload: AllocReadBufferRequestPayload
+export const allocReadBufferSucceed = (
+  payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_SUCCEED',
-  payload 
+  payload,
 });
 
 export const allocReadBufferFailed = (
-  payload: AllocReadBufferRequestPayload
+  payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_FAILED',
-  payload 
+  payload,
 });
 
 export type AllocReadBufferAction = (
   | ReturnType<typeof allocReadBufferRequest>
   | ReturnType<typeof allocReadBufferSucceed>
   | ReturnType<typeof allocReadBufferFailed>
-)
+);
 
 const removeEvents = () => {
   window.api.removeAllListeners('playerSuccess');
@@ -44,13 +44,13 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
   return (dispatch: Dispatch<AllocReadBufferAction | any>) => {
     dispatch(allocReadBufferRequest({
       filePath: sample.getFilePath(),
-      bufnum: bufnum,
+      bufnum,
       error: undefined,
     }));
-    window.api.on!('allocBufferSucseed', (_, ard: { bufnum: number, filePath: string }) => {
+    window.api.on!('allocBufferSucseed', () => {
       dispatch(allocReadBufferSucceed({
         filePath: sample.getFilePath(),
-        bufnum: bufnum,
+        bufnum,
         error: undefined,
       }));
       removeEvents();

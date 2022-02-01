@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import WaveTable from '../WaveTable';
 import DropSection from '../DropSection';
 import TableEditor from '../TableEditor';
@@ -7,11 +7,11 @@ import TableList from '../../model/TableList';
 import Table, { Slice } from '../../model/Table';
 import Effect from '../../model/Effect';
 import MIDIReceiver from '../../lib/midi';
-import { loadSetting, booted } from '../../actions/setting';
+import { loadSetting as LoadSetting, booted as Booted } from '../../actions/setting';
 import { player } from '../../actions/buffer/player';
 import { midiOnRecieve } from '../../actions/midi';
 import { connect } from 'react-redux';
-import { loadWaveTableByDialog } from '../../actions/waveTables/ByDialog';
+import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
 import { openStore } from '../../actions/waveTables/openStore';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -37,8 +37,8 @@ const Button = styled.button`
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
-const midiratio = (input: number) => { 
-  return Math.pow(2., input * 0.083333333333);
+const midiratio = (input: number) => {
+  return Math.pow(2.0, input * 0.083333333333);
 };
 
 const midi = new MIDIReceiver();
@@ -52,76 +52,75 @@ const WaveTables = ({
   handleOpenButton,
   handlePlusButton,
   handlePlayer,
-  handleMidiOnRecieve
+  handleMidiOnRecieve,
 }: {
-  booted: boolean,
-  isFetching: boolean,
-  tables: TableList,
-  onceLiestenBooted: any,
-  loadSetting: any,
-  handleOpenButton: any,
-  handlePlusButton: any,
-  handlePlayer: any,
-  handleMidiOnRecieve: any
-  }): JSX.Element => {
-
+  booted: boolean;
+  isFetching: boolean;
+  tables: TableList;
+  onceLiestenBooted: any;
+  loadSetting: any;
+  handleOpenButton: any;
+  handlePlusButton: any;
+  handlePlayer: any;
+  handleMidiOnRecieve: any;
+}): JSX.Element => {
   const debounced = useDebouncedCallback(
     (t: TableList) => assignMIDI(t),
     // delay in ms
-    1000
+    1000,
   );
 
   const assignMIDI = (t: TableList) => {
-    const tables_ = t.getTables().toJS() as Array<Table>;
-      midi.unscbscribeAll();
-      tables_.map((table: Table, i: number) => {
-        const eff = TableList.getEffectById(tables, table.effect!);      
-        midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
-          const midinote = e.data[1];
-          const amp = e.data[2] * 0.0078125;
-          const rate = midiratio(midinote - 60) * eff!.getRate();
-          const replacedEff = new Effect(eff).set("rate", rate).set("amp", amp);
-          handlePlayer(table.mode, table.bufnum, table.slice, replacedEff);
-          handleMidiOnRecieve(i);
-          setTimeout(() => {
-            handleMidiOnRecieve(-1);
-          }, 100);
-        })
+    const tables_ = t.getTables().toJS() as Table[];
+    midi.unscbscribeAll();
+    tables_.forEach((table: Table, i: number) => {
+      const eff = TableList.getEffectById(tables, table.effect!);
+      midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
+        const midinote = e.data[1];
+        const amp = e.data[2] * 0.0078125;
+        const rate = midiratio(midinote - 60) * eff!.getRate();
+        const replacedEff = new Effect(eff).set('rate', rate).set('amp', amp);
+        handlePlayer(table.mode, table.bufnum, table.slice, replacedEff);
+        handleMidiOnRecieve(i);
+        setTimeout(() => {
+          handleMidiOnRecieve(-1);
+        }, 100);
       });
+    });
   };
 
   useEffect(() => {
     onceLiestenBooted();
     loadSetting();
-  }, []);
+  }, [loadSetting, onceLiestenBooted]);
 
   useEffect(() => {
     if (!isFetching) {
       debounced(tables);
     }
-  }, [tables, isFetching]);
+  }, [tables, isFetching, debounced]);
 
-  const onClickeOpenButton = useCallback(() => handleOpenButton(), []);
+  const onClickeOpenButton = useCallback(() => handleOpenButton(), [handleOpenButton]);
   const onClickeSaveButton = useCallback(() => window.api.saveStore(), []);
 
   const onClickePlusButton = useCallback(() => {
     handlePlusButton();
+  }, [handlePlusButton]);
+
+  const isAllocated = useCallback((tables_: TableList, table: Table): boolean => {
+    return TableList.getAllocatedSampleById(tables_, table.getSample()!);
   }, []);
 
-  const isAllocated = useCallback((tables: TableList, table: Table): boolean => {
-    return TableList.getAllocatedSampleById(tables, table.getSample()!);
-  }, [isFetching, tables]);
-
-  const getBufferData = (tables: TableList, table: Table): Float32Array | undefined => {
-    return tables.getBufferDataForSampleId(table.getSample());
-  };
-  
-  const getSample = (tables: TableList, table: Table) => {
-    return TableList.getSampleById(tables, table.getSample()!)
+  const getBufferData = (tables_: TableList, table: Table): Float32Array | undefined => {
+    return tables_.getBufferDataForSampleId(table.getSample());
   };
 
-  const getEffect = (tables: TableList, table: Table) => {
-    return TableList.getEffectById(tables, table.getEffect()!)
+  const getSample = (tables_: TableList, table: Table) => {
+    return TableList.getSampleById(tables_, table.getSample()!);
+  };
+
+  const getEffect = (tables_: TableList, table: Table) => {
+    return TableList.getEffectById(tables_, table.getEffect()!);
   };
 
   const getTables = () => {
@@ -138,42 +137,44 @@ const WaveTables = ({
           effect={getEffect(tables, table)!}
           bufferData={getBufferData(tables, table)}
           isAllocated={isAllocated(tables, table)}
-          booted={booted} />
+          booted={booted}
+        />
         );
-      }) : <p>{`loading...`}</p>
+      }) : <p>{'loading...'}</p>
     );
   };
 
   return (
     <WaveTableContainer>
-      {booted ? (<>
-        <Button onClick={onClickeSaveButton}>{`[ _ ]`}</Button>
-        <Button onClick={onClickeOpenButton}>{`[ ^ ]`}</Button>
+      {booted ? (
+        <>
+          <Button onClick={onClickeSaveButton}>{'[ _ ]'}</Button>
+          <Button onClick={onClickeOpenButton}>{'[ ^ ]'}</Button>
         </>
       ) : <></>}
       <DropSection booted={booted}>
         <TableEditor tables={tables}>
           <ToolsEditor tables={tables}>
-            <WaveTableList>        
-              {getTables()} 
+            <WaveTableList>
+              {getTables()}
             </WaveTableList>
           </ToolsEditor>
         </TableEditor>
-        {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : `synth server not booted`}        
+        {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : 'synth server not booted'}
       </DropSection>
     </WaveTableContainer>
   );
 };
 
 function mapStateToProps(
-  { waveTables, loadSetting }: any
+  { waveTables, loadSetting }: any,
 ) {
   return {
     booted: loadSetting.booted,
     isFetching: waveTables.isFetching,
     tables: waveTables.tables,
   };
-};
+}
 
 function mapDispatchToProps(dispatch: any) {
   return {
@@ -181,9 +182,9 @@ function mapDispatchToProps(dispatch: any) {
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
     handleMidiOnRecieve: (channel: number) => dispatch(midiOnRecieve(channel)),
-    loadSetting: () => dispatch(loadSetting()),
-    onceLiestenBooted: () => dispatch(booted()),
+    loadSetting: () => dispatch(LoadSetting()),
+    onceLiestenBooted: () => dispatch(Booted()),
   };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(WaveTables);

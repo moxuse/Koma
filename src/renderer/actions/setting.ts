@@ -1,34 +1,34 @@
 import { ActionCreator, Dispatch } from 'redux';
 
 export interface LoadSettingRequest {
-  type: 'LOAD_SETTING_REQUEST', payload: { isFetching: true }
-};
+  type: 'LOAD_SETTING_REQUEST'; payload: { isFetching: true };
+}
 
-export type LoadSettingPayload = {
-  isFetching: boolean,
-  mode: string,
-  error: Error | undefined
-};
+export interface LoadSettingPayload {
+  isFetching: boolean;
+  mode: string;
+  error: Error | undefined;
+}
 
-export type BootedPayload = {
-  booted: boolean,
-  mode: string,
-};
+export interface BootedPayload {
+  booted: boolean;
+  mode: string;
+}
 
-export interface BootedActioon { 
+export interface BootedActioon {
   type: 'BOOTED';
   payload: BootedPayload;
-};
+}
 
 export interface LoadSettingSuccess {
   type: 'LOAD_SETTING_SUCCESS';
   payload: LoadSettingPayload;
-};
+}
 
 export interface LoadSettingFailure {
-  type: 'LOAD_SETTING_FAILURE',
-  payload: LoadSettingPayload
-};
+  type: 'LOAD_SETTING_FAILURE';
+  payload: LoadSettingPayload;
+}
 
 export type LoadSettingAction =
   BootedActioon
@@ -40,29 +40,29 @@ export type LoadSettingAction =
  * Action Creator
  */
 export const bootedRequets: ActionCreator<LoadSettingAction> = (
-  payload: BootedPayload
+  payload: BootedPayload,
 ): LoadSettingAction => ({
   type: 'BOOTED',
-  payload
+  payload,
 } as const);
 
 export const loadSettingRequest: ActionCreator<LoadSettingAction> = (): LoadSettingAction => ({
   type: 'LOAD_SETTING_REQUEST',
-  payload: { isFetching: true }
+  payload: { isFetching: true },
 } as const);
 
 export const loadSettingSuccess: ActionCreator<LoadSettingAction> = (
-  payload: LoadSettingPayload
+  payload: LoadSettingPayload,
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_SUCCESS',
-  payload: payload
+  payload,
 } as const);
 
 export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
-  payload: LoadSettingPayload
+  payload: LoadSettingPayload,
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_FAILURE',
-  payload: payload
+  payload,
 } as const);
 
 const removeEvents = () => {
@@ -84,7 +84,7 @@ export const loadSetting = () => {
     dispatch(loadSettingRequest({
       isFetching: true,
     }));
-    window.api.on!('loadSettingSucseed', (_, arg: {}) => {
+    window.api.on!('loadSettingSucseed', () => {
       dispatch(loadSettingSuccess({
         isFetching: false,
       }));
@@ -93,7 +93,7 @@ export const loadSetting = () => {
     window.api.on!('loadSettingFailed', (_, error) => {
       dispatch(loadSettingFailure({
         isFetching: false,
-        error: error
+        error,
       }));
       removeEvents();
     });

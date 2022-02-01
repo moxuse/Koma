@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import WaveTables from './components/WaveTables';
 import { configReducer } from '../renderer/reducer';
 import { restore } from './actions/waveTables/openStore';
+
 const { store, persistor } = configReducer();
 
 const DragAreaStyle = styled.div`
@@ -30,7 +31,7 @@ const App = (): JSX.Element => {
       <Provider store={store}>
         <PersistGate loading={<div>Loading..</div>} persistor={persistor}>
           <AppContainer className="App">
-            <WaveTables></WaveTables>
+            <WaveTables />
           </AppContainer>
         </PersistGate>
       </Provider>

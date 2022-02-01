@@ -10,7 +10,7 @@ const TableEditorErea = styled.div`
 `;
 
 const TableEditor = ({ children, tables, handleUpdate }: {
-  children: JSX.Element, tables: TableList, handleUpdate: any
+  children: JSX.Element; tables: TableList; handleUpdate: any;
 }) => {
   const tableList = useRef<HTMLDivElement>(null);
   const [editting, setEditting] = useState<boolean>(false);
@@ -20,30 +20,30 @@ const TableEditor = ({ children, tables, handleUpdate }: {
   /**
    * wavetable edit with mouse event
    */
-  const normalize = (x_: number,  width: number) => { 
+  const normalize = (x_: number, width: number) => {
     const x = x_ / width;
-    return x
-  }
-  const calcSlice = (table: Table, { from, to }: {from: number, to: number }): Slice => { 
-    const begin = Math.min(from, to);
-    const end = Math.max(from, to);
+    return x;
+  };
+  const calcSlice = (table: Table, { from_, to_ }: {from_: number; to_: number }): Slice => {
+    const begin = Math.min(from_, to_);
+    const end = Math.max(from_, to_);
     return { begin, end };
-  }  
+  };
 
-  useEffect(() => {    
+  useEffect(() => {
     const onMousedown = (e: MouseEvent) => {
       setEditting(true);
       const target = e.target as HTMLElement;
       const rect = target?.getBoundingClientRect();
       const x_ = e.clientX - rect.left;
-      const y_ = e.clientY - rect.top;
+      // const y_ = e.clientY - rect.top;
       setFrom(normalize(x_, rect.width));
       setId(target.id);
     };
-    tableList.current?.addEventListener("mousedown", onMousedown, false);
-    return () => { 
-      tableList.current?.removeEventListener("mousedown", onMousedown, false);
-    }
+    tableList.current?.addEventListener('mousedown', onMousedown, false);
+    return () => {
+      tableList.current?.removeEventListener('mousedown', onMousedown, false);
+    };
   }, [tables, id, editting]);
   useEffect(() => {
     const onMousemove = (e: MouseEvent) => {
@@ -51,52 +51,52 @@ const TableEditor = ({ children, tables, handleUpdate }: {
         const target: HTMLElement = e.target as HTMLElement;
         const rect = target?.getBoundingClientRect();
         const x_ = e.clientX - rect.left;
-        const y_ = e.clientY - rect.top;        
+        // const y_ = e.clientY - rect.top;
         if (id) {
           const table = TableList.getTableById(tables, id);
           if (table && from) {
             setTo(normalize(x_, rect.width));
             if (to) {
-              const newSlice = calcSlice(table, { from, to });
+              const newSlice = calcSlice(table, { from_: from, to_: to });
               handleUpdate(table, newSlice);
             }
           }
         }
       }
     };
-    tableList.current?.addEventListener("mousemove", onMousemove, false);
-    return () => { 
-      tableList.current?.removeEventListener("mousemove", onMousemove, false);
-    }
-  }, [tables,id, editting]);
+    tableList.current?.addEventListener('mousemove', onMousemove, false);
+    return () => {
+      tableList.current?.removeEventListener('mousemove', onMousemove, false);
+    };
+  }, [tables, id, editting]);
   useEffect(() => {
-    const onMouseup = (e: MouseEvent) => {
+    const onMouseup = () => {
       setEditting(false);
       setId(undefined);
-      const target = e.target as HTMLElement;
+      // const target = e.target as HTMLElement;
       // console.log('mouseup', target.id);
-    };        
-     tableList.current?.addEventListener("mouseup", onMouseup, false);
-     return () => {              
-       tableList.current?.removeEventListener("mouseup", onMouseup, false);      
-     }
-   }, [tables, id, editting]);
+    };
+    tableList.current?.addEventListener('mouseup', onMouseup, false);
+    return () => {
+      tableList.current?.removeEventListener('mouseup', onMouseup, false);
+    };
+  }, [tables, id, editting]);
   return (
     <TableEditorErea ref={tableList}>
       {children}
     </TableEditorErea>
-  )
-}
-
-function mapStateToProps({}) {
-  return {};
+  );
 };
+
+function mapStateToProps() {
+  return {};
+}
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleUpdate: (table: Table, slice: Slice) => dispatch(updateSlice(table, slice))
+    handleUpdate: (table: Table, slice: Slice) => dispatch(updateSlice(table, slice)),
   };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableEditor);
 

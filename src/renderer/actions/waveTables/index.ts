@@ -4,64 +4,64 @@ import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
 import { getNewId, ommitFileName } from '../helper';
 
-export type LoadWaveTableRequestPayload = {
-  isFetching: boolean,
-  filePath: string,
-  table: Table | undefined,
-  sample: Sample | undefined,
-  effect:  Effect | undefined,
-  error: Error | undefined
-};
+export interface LoadWaveTableRequestPayload {
+  isFetching: boolean;
+  filePath: string;
+  table: Table | undefined;
+  sample: Sample | undefined;
+  effect: Effect | undefined;
+  error: Error | undefined;
+}
 /**
  * Action Creator
  */
 export const loadWaveTableRequest = (
-   payload: LoadWaveTableRequestPayload
- ) => ({
+  payload: LoadWaveTableRequestPayload,
+) => ({
   type: 'LOAD_WAVE_TABLE_REQUEST',
-  payload
+  payload,
 });
 
 export const loadWaveTableSuccess = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_SUCCESS',
-  payload
+  payload,
 });
 
 export const loadWaveTableFailure = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_FAILURE',
-  payload
+  payload,
 });
 
 export const deleteWaveTableRequest = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'DELETE_WAVE_TABLE_REQUEST',
-  payload
+  payload,
 });
 
 export const updateWaveTableByTableRequest = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'UPDATE_WAVE_TABLE_BY_TABLE_REQUEST',
-  payload
+  payload,
 });
 
 export const updateWaveTableBySampleRequest = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'UPDATE_WAVE_TABLE_BY_SAMPLE_REQUEST',
-  payload
+  payload,
 });
 
 export const updateWaveTableByEffectRequest = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'UPDATE_WAVE_TABLE_BY_EFFECT_REQUEST',
-  payload
+  payload,
 });
 
 export type LoadWaveTableAction = (
@@ -78,17 +78,17 @@ const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableFailed');
 };
 
-export const loadWaveTables = (filePath: string) => (
-  dispatch: Dispatch<LoadWaveTableAction>
+export const loadWaveTables = (filePath_: string) => (
+  dispatch: Dispatch<LoadWaveTableAction>,
 ) => {
   dispatch(loadWaveTableRequest({
     isFetching: true,
-    filePath: filePath,
+    filePath: filePath_,
     table: undefined,
     sample: undefined,
     effect: undefined,
-    error: undefined
-  }))
+    error: undefined,
+  }));
   window.api.on!('loadWaveTableSucseed', (_, { bufnum, filePath, data }) => {
     const sampleId = getNewId();
     const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
@@ -96,10 +96,10 @@ export const loadWaveTables = (filePath: string) => (
       id: getNewId(),
       mode: 'normal',
       name: ommitFileName(filePath),
-      bufnum: bufnum,
+      bufnum,
       sample: sampleId,
       effect: sampleId,
-      slice: undefined
+      slice: undefined,
     });
     let e = new Effect();
     e = e.set('id', sampleId);
@@ -108,73 +108,73 @@ export const loadWaveTables = (filePath: string) => (
       table: t,
       sample: s,
       effect: e,
-      filePath: filePath,
-      error: undefined
+      filePath,
+      error: undefined,
     }));
-    removeEvents()
+    removeEvents();
   });
   window.api.on!('loadWaveTableFailed', (_, error) => {
     dispatch(loadWaveTableFailure({
       isFetching: false,
-      filePath: filePath,
+      filePath: filePath_,
       table: undefined,
       sample: undefined,
       effect: undefined,
-      error: error
+      error,
     }));
     removeEvents();
   });
-  window.api.loadWaveTable(filePath);
+  window.api.loadWaveTable(filePath_);
 };
 
 export const deleteWaveTable = (table: Table, sample: Sample, effect: Effect) => (
-  dispatch: Dispatch<LoadWaveTableAction>
+  dispatch: Dispatch<LoadWaveTableAction>,
 ) => {
   dispatch(deleteWaveTableRequest({
     isFetching: false,
     filePath: sample.getFilePath() || '',
-    table: table,
-    sample: sample,
-    effect: effect,
-    error: undefined
+    table,
+    sample,
+    effect,
+    error: undefined,
   }));
 };
 
 export const updateWaveTableByTable = (table: Table) => (
-  dispatch: Dispatch<LoadWaveTableAction>
+  dispatch: Dispatch<LoadWaveTableAction>,
 ) => {
   dispatch(updateWaveTableByTableRequest({
     isFetching: false,
     filePath: '',
-    table: table,
+    table,
     sample: undefined,
     effect: undefined,
-    error: undefined
+    error: undefined,
   }));
 };
 
 export const updateWaveTableBySample = (sample: Sample) => (
-  dispatch: Dispatch<LoadWaveTableAction>
+  dispatch: Dispatch<LoadWaveTableAction>,
 ) => {
   dispatch(updateWaveTableBySampleRequest({
     isFetching: false,
     filePath: sample.getFilePath() || '',
     table: undefined,
-    sample: sample,
+    sample,
     effect: undefined,
-    error: undefined
+    error: undefined,
   }));
 };
 
 export const updateWaveTableByEffect = (table: Table, effect: Effect) => (
-  dispatch: Dispatch<LoadWaveTableAction>
+  dispatch: Dispatch<LoadWaveTableAction>,
 ) => {
   dispatch(updateWaveTableByEffectRequest({
     isFetching: false,
     filePath: '',
-    table: table,
+    table,
     sample: undefined,
-    effect: effect,
-    error: undefined
+    effect,
+    error: undefined,
   }));
 };

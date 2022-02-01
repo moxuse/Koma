@@ -1,7 +1,6 @@
-
 type MidiEventCallback = (event: WebMidi.MIDIMessageEvent) => void;
 
-interface MidiEvent { 
+interface MidiEvent {
   id: number;
   channel: number;
   callback: MidiEventCallback;
@@ -18,7 +17,7 @@ export interface Midi {
 export interface MidiActions {
   initDevices: () => void;
   updateDevice: () => void;
-  subscribe: (channel: number, callback: MidiEventCallback) => number; 
+  subscribe: (channel: number, callback: MidiEventCallback) => number;
   unsubscribe: (id: number) => number;
 }
 
@@ -28,8 +27,8 @@ export default class MIDIReceiver implements Midi, MidiActions {
   events: MidiEvent[];
   isReady: boolean;
   eventId: number;
-  
-  constructor() { 
+
+  constructor() {
     this.eventId = 0;
     this.isReady = false;
     this.devices = [];
@@ -37,34 +36,22 @@ export default class MIDIReceiver implements Midi, MidiActions {
     this.initDevices().then(() => {
       if (this.isReady) {
         this.assignEvents();
-      };
+      }
     });
-  };
+  }
 
   async initDevices() {
     await navigator.requestMIDIAccess().then(
       (midiAccess: WebMidi.MIDIAccess) => { // succeed
         this.access = midiAccess;
-        this.access.inputs.forEach(entry => this.devices.push(entry.name || ' --- '));
+        this.access.inputs.forEach((entry: WebMidi.MIDIAccess) => this.devices.push(entry.name || ' --- '));
         this.isReady = true;
       },
-      (msg: string) => { //failed
+      (msg: string) => { // failed
         console.error('web midi  error:', msg);
         this.isReady = false;
-      }
+      },
     );
-  };
-  
-  private assignEvents() {
-    this.access?.inputs.forEach(entry => {
-      entry.onmidimessage = ((e: WebMidi.MIDIMessageEvent) => {
-        this.events.forEach(event => {
-          if (event.channel === (e.data[0] - 0x90)) {
-            event.callback(e);
-          }
-        });
-      })
-   });
   }
 
   updateDevice(): void {
@@ -74,7 +61,7 @@ export default class MIDIReceiver implements Midi, MidiActions {
     }
     this.devices = [];
     this.initDevices();
-  };
+  }
 
   getEventId = () => {
     const next = this.eventId;
@@ -86,17 +73,29 @@ export default class MIDIReceiver implements Midi, MidiActions {
     const id = this.getEventId();
     this.events.push({ id, channel, callback });
     return id;
-  }; 
+  }
 
   unsubscribe(id: number): number {
-    this.events = this.events.filter(e => {
+    this.events = this.events.filter((e) => {
       return e.id !== id;
     });
     return id;
-  };
+  }
 
-  unscbscribeAll() { 
+  unscbscribeAll() {
     this.events = [];
   }
-};
+
+  private assignEvents() {
+    this.access?.inputs.forEach((entry: WebMidi.MIDIAccess) => {
+      entry.onmidimessage = ((e: WebMidi.MIDIMessageEvent) => {
+        this.events.forEach((event) => {
+          if (event.channel === (e.data[0] - 0x90)) {
+            event.callback(e);
+          }
+        });
+      });
+    });
+  }
+}
 

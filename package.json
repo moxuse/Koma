@@ -1,39 +1,51 @@
 {
   "name": "msplr",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A simple sampler app",
-  "main": "main.js",
+  "main": "dist/main/background.js",
+  "homepage": "https://moxus.org",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/moxuse/msplr.git"
+  },
   "scripts": {
-    "dev": "run-p dev:*",
-    "dev:electron": "wait-on ./dist/main/index.js && cross-env NODE_ENV=\"development\" electron dist/main",
-    "dev:tsc": "tsc -w -p tsconfig.main.json",
-    "dev:webpack": "webpack --watch",
-    "test": "jest",
-    "app:dir": "electron-builder --dir",
-    "build:osx": "rimraf dist && NODE_ENV=\"production\" webpack --mode=production && electron-builder --mac --x64"
+    "dev": "concurrently -k -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run dev:electron\"",
+    "dev:react": "vite && npm run copy:media",
+    "dev:electron": "cross-env NODE_ENV=development node build/electron.js",    
+    "build": "npm run build:react && npm run build:electron",
+    "build:react": "vite build",
+    "build:electron": "cross-env NODE_ENV=production node build/electron.js && electron-builder build --publish never",
+    "serve:react": "vite preview",
+    "clean": "rm -rf dist",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "jest"
   },
   "author": "moxus.org",
-  "license": "MIT",
   "build": {
     "productName": "msplr",
-    "asar": true,
+    "appId": "org.moxus.msplr",
+    "copyright": "All Rights Reserved, moxus.org",
+    "asar": false,
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icons/mac/icon.icns"
+    },
+    "win": {
+      "icon": "build/icons/win/icon.ico"
+    },
+    "linux": {
+      "icon": "build/icons/png/512x512.png"
+    },
     "extends": null,
     "extraMetadata": {
-      "main": "dist/main.js"
+      "main": "dist/main/background.js"
     },
     "files": [
-      "dist/index.html",
-      "dist/app.js",
-      "dist/main.js",
-      "dist/preload.js",
-      "dist/synthDef/*",
-      "dist/sound/*",
-      "dist/font/*"
-    ],
-    "appId": "org.moxus.msplr",
-    "mac": {
-      "target": "dmg"
-    }
+      "node_modules",
+      "dist/main/**",
+      "dist/renderer/**"
+    ]
   },
   "dependencies": {
     "assert": "^2.0.0",
@@ -64,9 +76,6 @@
     "ws": "^8.4.0"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.112",
-    "@swc/helpers": "^0.2.14",
-    "@types/copy-webpack-plugin": "^8.0.1",
     "@types/electron-load-devtool": "^1.2.1",
     "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.6",
@@ -80,27 +89,30 @@
     "@types/redux-persist": "^4.3.1",
     "@types/styled-components": "^5.1.15",
     "@types/webmidi": "^2.0.6",
-    "copy-webpack-plugin": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "@vitejs/plugin-react": "^1.0.4",
+    "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "electron": "^16.0.5",
     "electron-builder": "^22.14.5",
+    "electron-connect": "^0.6.3",
     "electron-load-devtool": "^1.2.0",
     "electron-reload": "^2.0.0-alpha.1",
-    "html-webpack-plugin": "^5.5.0",
+    "esbuild": "^0.13.6",
+    "eslint": "^8.0.1",
+    "eslint-config-ali": "^12.2.2",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "jest": "^27.4.3",
-    "mini-css-extract-plugin": "^2.4.5",
-    "node-loader": "^2.0.0",
-    "npm-run-all": "^4.1.5",
+    "mini-css-extract-plugin": "^2.4.5",    
     "process": "^0.11.10",
     "rimraf": "^2.6.3",
-    "style-loader": "^3.3.1",
-    "swc-loader": "^0.1.15",
     "ts-jest": "^27.1.0",
-    "ts-node": "^10.4.0",
     "typescript": "^4.5.2",
-    "wait-on": "^6.0.0",
-    "webpack": "^5.64.2",
-    "webpack-cli": "^4.9.1"
+    "vite": "^2.6.7",
+    "vite-plugin-eslint": "^1.3.0"
   }
 }

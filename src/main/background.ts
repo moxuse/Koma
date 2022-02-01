@@ -1,8 +1,8 @@
 import path from 'path';
 import { BrowserWindow, app } from 'electron';
-import loadDevtool from 'electron-load-devtool';
+// import loadDevtool from 'electron-load-devtool';
 import registerApi, { quitSC } from './io/registerApi';
-const fsExtra = require('fs-extra');
+import fsExtra from 'fs-extra';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -18,7 +18,7 @@ if (isDev) {
     forceHardReset: true,
     hardResetMethod: 'exit',
   });
-};
+}
 
 // make BrowserWindow
 const createWindow = () => {
@@ -29,21 +29,23 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: true,
       backgroundThrottling: false,
-      preload: path.resolve(__dirname, 'preload.js'),
+      preload: path.resolve(__dirname, './preload.js'),
     },
     width: 500,
-    height: 450
+    height: 450,
   });
 
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
-  };
-  
+  }
+
   registerApi(mainWindow, isDev);
 
   // load app
-  let url = isDev ? '../index.html' : './dist/index.html';
-  mainWindow.loadFile(url);
+  // let url = isDev ? path.join(__dirname, '../index.html') : path.join(__dirname, '../renderer/index.html');
+  // console.log('LOAD URL,', url);
+  // mainWindow.loadFile(url);
+  process.env.ENV === 'production' ? mainWindow.loadFile(path.join(__dirname, '../renderer/index.html')) : mainWindow.loadURL(`http://localhost:${process.env.PORT}`);
 };
 
 app.whenReady().then(async () => {
@@ -55,5 +57,8 @@ fsExtra.emptyDirSync(app.getPath('userData'));
 // when close window
 app.once('window-all-closed', async () => {
   await quitSC();
-  app.quit()
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+  // app.quit()
 });

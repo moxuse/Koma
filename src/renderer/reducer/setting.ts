@@ -1,4 +1,4 @@
-import { LoadSettingAction, LoadSettingPayload, BootedPayload } from "../actions/setting";
+import { LoadSettingAction, LoadSettingPayload, BootedPayload } from '../actions/setting';
 
 const settingInitialState: LoadSettingPayload & BootedPayload = {
   booted: false,
@@ -8,7 +8,7 @@ const settingInitialState: LoadSettingPayload & BootedPayload = {
 };
 
 export const loadSetting = (
-  state = settingInitialState, action: LoadSettingAction
+  state = settingInitialState, action: LoadSettingAction,
 ) => {
   switch (action.type) {
     case 'BOOTED':
@@ -16,30 +16,30 @@ export const loadSetting = (
         booted: true,
         isFetching: state.isFetching,
         mode: action.payload.mode,
-        error: state.error
+        error: state.error,
       };
     case 'LOAD_SETTING_REQUEST':
       return {
         booted: state.booted,
         isFetching: state.isFetching,
         mode: state.mode,
-        error: state.error
+        error: state.error,
       };
     case 'LOAD_SETTING_SUCCESS':
       return {
         booted: state.booted,
         isFetching: action.payload.isFetching,
         mode: state.mode,
-        error: state.error
+        error: state.error,
       };
     case 'LOAD_SETTING_FAILURE':
       return {
         booted: state.booted,
         isFetching: action.payload.isFetching,
         mode: state.mode,
-        error: action.payload.error
+        error: action.payload.error,
       };
     default:
       return state;
-  };
+  }
 };

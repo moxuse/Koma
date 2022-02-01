@@ -2,33 +2,33 @@ import { Dispatch } from 'redux';
 import Effect from '../../model/Effect';
 import { normalizeInt8Points } from '../helper';
 
-export type PlayerRequestPayload = {
-  isPlaying: boolean,
-  bufnum: number,
-  slice: { begin: number, end: number } | undefined
-  effect: Effect,
-  error: Error | undefined
-};
+export interface PlayerRequestPayload {
+  isPlaying: boolean;
+  bufnum: number;
+  slice: { begin: number; end: number } | undefined;
+  effect: Effect;
+  error: Error | undefined;
+}
 
 export const playerRequest = (
-  payload: PlayerRequestPayload
+  payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_REQUEST',
-  payload 
+  payload,
 });
 
-export const playerSuccess  = (
-  payload: PlayerRequestPayload
+export const playerSuccess = (
+  payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_SUCCESS',
-  payload 
+  payload,
 });
 
 export const playerFailure = (
-  payload: PlayerRequestPayload
+  payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_FAILURE',
-  payload 
+  payload,
 });
 
 export type PlayerAction = (
@@ -42,22 +42,22 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 };
 
-export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number, end: number} |  undefined), effect: Effect ) => {
+export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number; end: number} | undefined), effect: Effect) => {
   return (dispatch: Dispatch<PlayerAction>) => {
     // console.log(effect.getPoints().length)
     dispatch(playerRequest({
       isPlaying: true,
-      bufnum: bufnum,
-      slice: slice,
-      effect: effect,
+      bufnum,
+      slice,
+      effect,
       error: undefined,
     }));
-    window.api.on!('playerSuccess', (_) => {
+    window.api.on!('playerSuccess', () => {
       dispatch(playerSuccess({
         isPlaying: false,
-        bufnum: bufnum,
-        slice: slice,
-        effect: effect,
+        bufnum,
+        slice,
+        effect,
         error: undefined,
       }));
       removeEvents();
@@ -65,9 +65,9 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number,
     window.api.on!('playerFailure', (_, arg: Error) => {
       dispatch(playerFailure({
         isPlaying: false,
-        bufnum: bufnum,
-        slice: slice,
-        effect: effect,
+        bufnum,
+        slice,
+        effect,
         error: arg,
       }));
       removeEvents();
@@ -89,7 +89,7 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number,
           gain: effect.getGain(),
           points: normalizeInt8Points(effect.getPoints()),
           duration: effect.getDuration(),
-          trig: effect.getTrig()
+          trig: effect.getTrig(),
         });
         break;
       default:

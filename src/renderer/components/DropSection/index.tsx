@@ -6,15 +6,15 @@ import styled from 'styled-components';
 const DropSectionContainer = styled.div`
   color: white;
   width: 100%;
-  background-color: ${(props: { dragging: boolean }) => props.dragging ? "#F6A900" : "#000"}
+  background-color: ${(props: { dragging: boolean }) => (props.dragging ? '#F6A900' : '#000')}
 `;
 
 const DropSection = ({
-  booted, isFetching, handleDrop, children
+  booted, handleDrop, children,
 }: {
-  booted: boolean, isFetching: boolean, handleDrop: any, children: any
+  booted: boolean; handleDrop: any; children: any;
 }): JSX.Element => {
-  let ref = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
 
   const onDragOver = useCallback((e: DragEvent) => {
@@ -23,39 +23,40 @@ const DropSection = ({
       e.preventDefault();
     } else {
       return false;
-    };
+    }
   }, []);
-  const onDragReave = useCallback((_) => {
-    setDragging(false);  }, []);
+  const onDragReave = useCallback(() => {
+    setDragging(false);
+  }, []);
   const onDrop = useCallback((e: DragEvent) => {
     e.stopPropagation();
-    if (e.preventDefault) {      
+    if (e.preventDefault) {
       e.preventDefault();
     } else {
       return false;
-    };
+    }
     const files = e.dataTransfer?.files;
     if (files && files.length >= 1) {
-      handleDrop(files[0].path);  
-    };
-    setDragging(false);    
+      handleDrop(files[0].path);
+    }
+    setDragging(false);
   }, []);
   useEffect(() => {
     if (booted) {
-      ref.current!.addEventListener('drop', onDrop, false)
-      ref.current!.addEventListener("dragover", onDragOver, false);
-      ref.current!.addEventListener("dragleave", onDragReave, false);
-    };
+      ref.current!.addEventListener('drop', onDrop, false);
+      ref.current!.addEventListener('dragover', onDragOver, false);
+      ref.current!.addEventListener('dragleave', onDragReave, false);
+    }
     return () => {
       ref.current!.removeEventListener('drop', onDrop, false);
       ref.current!.removeEventListener('dragover', onDragOver, false);
-      ref.current!.removeEventListener("dragleave", onDragReave, false);
+      ref.current!.removeEventListener('dragleave', onDragReave, false);
     };
-  }, [booted]);
-  
+  }, [booted, onDragOver, onDragReave, onDrop]);
+
   return (
     <>
-      <DropSectionContainer dragging={ dragging }>
+      <DropSectionContainer dragging={dragging}>
         <div ref={ref}>
           <div>
             {children}
@@ -68,20 +69,20 @@ const DropSection = ({
 };
 
 function mapStateToProps({
-  waveTables: { isFetching, error }
+  waveTables: { isFetching, error },
 }: {
-  waveTables: { isFetching: boolean, error: string }
+  waveTables: { isFetching: boolean; error: string };
 }) {
   return {
     isFetching,
-    error
+    error,
   };
-};
+}
 
-function mapDispatchToProps(dispatch: any ) {
+function mapDispatchToProps(dispatch: any) {
   return {
-    handleDrop: (filePath: string) => dispatch(loadWaveTables(filePath))
+    handleDrop: (filePath: string) => dispatch(loadWaveTables(filePath)),
   };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(DropSection);

@@ -1,5 +1,5 @@
-import { PlayerRequestPayload, PlayerAction } from "../../actions/buffer/player";
-import Effect from "../../model/Effect";
+import { PlayerRequestPayload, PlayerAction } from '../../actions/buffer/player';
+import Effect from '../../model/Effect';
 
 const playerInitialState: PlayerRequestPayload = {
   isPlaying: false,
@@ -17,7 +17,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
         effect: action.payload.effect,
-        error: undefined
+        error: undefined,
       };
     case 'PLAYER_SUCCESS':
       return {
@@ -25,7 +25,7 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
         effect: action.payload.effect,
-        error: undefined
+        error: undefined,
       };
     case 'PLAYER_FAILURE':
       return {
@@ -33,9 +33,9 @@ export const player = (state = playerInitialState, action: PlayerAction) => {
         bufnum: action.payload.bufnum,
         slice: action.payload.slice,
         effect: action.payload.effect,
-        error: action.payload.error
+        error: action.payload.error,
       };
     default:
       return state;
-  };
+  }
 };

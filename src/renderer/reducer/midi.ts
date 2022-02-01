@@ -1,11 +1,11 @@
-import { MIDIAssignAction, MIDIAssignPayload } from "../actions/midi";
+import { MIDIAssignAction, MIDIAssignPayload } from '../actions/midi';
 
 const midiInitialState: MIDIAssignPayload = {
-  channel: -1
+  channel: -1,
 };
 
 export const midiAssign = (
-  state = midiInitialState, action: MIDIAssignAction
+  state = midiInitialState, action: MIDIAssignAction,
 ) => {
   switch (action.type) {
     case 'MIDI_ON_RECIEVE':
@@ -14,5 +14,5 @@ export const midiAssign = (
       };
     default:
       return state;
-  };
+  }
 };

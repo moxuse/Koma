@@ -1,4 +1,4 @@
-import { AllocReadBufferRequestPayload, AllocReadBufferAction } from "../../actions/buffer";
+import { AllocReadBufferRequestPayload, AllocReadBufferAction } from '../../actions/buffer';
 
 const allocReadBufferInitPayload: AllocReadBufferRequestPayload = {
   filePath: undefined,
@@ -8,28 +8,28 @@ const allocReadBufferInitPayload: AllocReadBufferRequestPayload = {
 
 export const allocReadBuffer = (
   state = allocReadBufferInitPayload,
-  action: AllocReadBufferAction
+  action: AllocReadBufferAction,
 ) => {
   switch (action.type) {
     case 'ALLOC_READ_BUFFER_REQUEST':
       return {
         filePath: action.payload.filePath,
         bufnum: action.payload.bufnum,
-        error: state.error
+        error: state.error,
       };
     case 'ALLOC_READ_BUFFER_SUCCEED':
       return {
         filePath: action.payload.filePath,
         bufnum: action.payload.bufnum,
-        error: state.error
+        error: state.error,
       };
     case 'ALLOC_READ_BUFFER_FAILED':
       return {
         filePath: state.filePath,
         bufnum: state.bufnum,
-        error: action.payload.error
+        error: action.payload.error,
       };
     default:
       return state;
-  };
+  }
 };

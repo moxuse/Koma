@@ -9,11 +9,11 @@ import throttle from 'lodash.throttle';
 
 export const GrainEditorSize = {
   width: 150,
-  height: 60
-}
+  height: 60,
+};
 
 const GraphConatainer = styled.div`
-  visibility: ${(props: { isShown: boolean }) => (props.isShown) ? 'visible' : 'hidden'};
+  visibility: ${(props: { isShown: boolean }) => ((props.isShown) ? 'visible' : 'hidden')};
   position: absolute;
   z-index: 2;
   background-color: rgba(0,0,0,0.0);
@@ -26,10 +26,10 @@ const GraphConatainer = styled.div`
   }
 `;
 
-const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Effect, handleUpdate: any }): JSX.Element => {
+const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Effect; handleUpdate: any }): JSX.Element => {
   const { resolution } = React.useContext(ToolsContext);
-  const [points_, setPoints] = useState<Array<GrainPoint>>([]);
-  const [context, setContext] = useState<CanvasRenderingContext2D | null>()
+  const [points_, setPoints] = useState<GrainPoint[]>([]);
+  const [context, setContext] = useState<CanvasRenderingContext2D | null>();
   const [editting, setEditting] = useState<boolean>(false);
   const graphRef = useRef<HTMLCanvasElement>(null);
   const graphContainer = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
     if (points_.length === 0) {
       setPoints(effect.getPoints());
     }
-  }, [effect]);
+  }, [effect, points_.length]);
 
   useEffect(() => {
     if (context && points_) {
@@ -57,64 +57,64 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table, effect: Ef
         prevPoint = point;
       });
       context.stroke();
-    };
+    }
   }, [context, graphRef, graphContainer, editting, points_]);
 
   const onMouseDown = (e: MouseEvent) => {
     const firstPoint = { x: e.offsetX, y: e.offsetY };
-    setPoints((prev) => []);
-    setEditting(prev => true);
-    setPoints(prev => [...prev, firstPoint]);
+    setPoints(() => []);
+    setEditting(() => true);
+    setPoints((prev) => [...prev, firstPoint]);
   };
   const onMouseUp = useCallback(() => {
-    setEditting(prev => false);
+    setEditting(() => false);
     const newEff = effect.set('points', points_);
     handleUpdate(table, newEff);
-  }, [table, effect, points_]);
-  const onMouseOut = useCallback(() => {    
-    setEditting(prev => false);
+  }, [effect, points_, handleUpdate, table]);
+  const onMouseOut = useCallback(() => {
+    setEditting(() => false);
     const newEff = effect.set('points', points_);
-    handleUpdate(table, newEff);    
-  }, [table, effect, points_]); 
+    handleUpdate(table, newEff);
+  }, [effect, points_, handleUpdate, table]);
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (editting) {
-      setPoints(prev => [...prev, { x: e.offsetX, y: e.offsetY }]);
+      setPoints((prev) => [...prev, { x: e.offsetX, y: e.offsetY }]);
     }
   }, [editting]);
-  
-  useEffect(() => { 
+
+  useEffect(() => {
     if (graphRef.current) {
-      const canvasContext = graphRef.current.getContext("2d");
+      const canvasContext = graphRef.current.getContext('2d');
       setContext(canvasContext);
-    };
+    }
     const throttleFn = throttle(onMouseMove, resolution);
     graphContainer.current?.addEventListener('mousedown', onMouseDown, false);
     graphContainer.current?.addEventListener('mouseup', onMouseUp, false);
     graphContainer.current?.addEventListener('mouseout', onMouseOut, false);
-    graphContainer.current?.addEventListener('mousemove', throttleFn, false);    
+    graphContainer.current?.addEventListener('mousemove', throttleFn, false);
     return () => {
       graphContainer.current?.removeEventListener('mousedown', onMouseDown, false);
       graphContainer.current?.removeEventListener('mouseup', onMouseUp, false);
       graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
-      graphContainer.current?.removeEventListener('mousemove',  throttleFn, false);
+      graphContainer.current?.removeEventListener('mousemove', throttleFn, false);
     };
-  }, [effect, table, graphRef, graphContainer, editting, resolution]);
+  }, [effect, table, graphRef, graphContainer, editting, resolution, onMouseMove, onMouseUp, onMouseOut]);
 
   return (
     <GraphConatainer isShown={table.getMode() === 'grain'} ref={graphContainer}>
-      <canvas width={GrainEditorSize.width} height={GrainEditorSize.height} ref={graphRef}></canvas>
+      <canvas width={GrainEditorSize.width} height={GrainEditorSize.height} ref={graphRef} />
     </GraphConatainer>
   );
 };
 
-function mapStateToProps({}) {
+function mapStateToProps() {
   return {};
-};
+}
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    handleUpdate: (table: Table, effect: Effect) => dispatch(updateWaveTableByEffect(table, effect))
+    handleUpdate: (table: Table, effect: Effect) => dispatch(updateWaveTableByEffect(table, effect)),
   };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(GrainEditor);

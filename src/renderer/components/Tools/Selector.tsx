@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback } from 'react';
 import styled from 'styled-components';
 import { ToolsContext } from './Context';
 
@@ -23,15 +23,16 @@ const SelctorEl = styled.select`
   background-color: #333;
 `;
 
-const Selector = () => { 
-  const { resolution, setResolution } = useContext(ToolsContext);
+const Selector = () => {
+  const { setResolution } = useContext(ToolsContext);
 
-  const onChange = useCallback((e: React.ChangeEvent) => { 
+  const onChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
     setResolution(parseInt(target.value));
-  },[resolution])
+  }, [setResolution]);
 
-  return (<SelctorList>
+  return (
+    <SelctorList>
       <SelctorLabel>res</SelctorLabel>
       <SelctorEl onChange={onChange} name="resolution-selector">
         <option value="25">0.025</option>
@@ -39,7 +40,8 @@ const Selector = () => {
         <option value="100">0.1</option>
         <option value="250">0.25</option>
       </SelctorEl>
-  </SelctorList>)
-}
+    </SelctorList>
+  );
+};
 
 export default Selector;

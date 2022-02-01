@@ -53,7 +53,7 @@ describe('scSytnth server buffer allocation', () => {
       await scSynth.boot();
       // expect(scSynth.mode).toEqual('remote');
       scSynth.allocReadBuffer(bufNum, sampleFilePath);
-      
+
     });
   });
 });
@@ -61,7 +61,7 @@ describe('scSytnth server buffer allocation', () => {
 describe('scSytnth server buffer allocation', () => {
   it('on Remote', async () => {
     const scSynth = new SCSynth();
-    return new Promise(async (resolve, reject) => {      
+    return new Promise(async (resolve, reject) => {
       await scSynth.boot();
       const bunnum = await scSynth.allocReadBuffer(sampleFilePath)
         .catch((e) => {
@@ -77,7 +77,7 @@ describe('scSytnth server buffer allocation', () => {
 describe('scSytnth server load synthDef', () => {
   it('on Remote', async () => {
     const scSynth = new SCSynth();
-    return new Promise(async (resolve, reject) => {      
+    return new Promise(async (resolve, reject) => {
       await scSynth.boot();
       // expect(scSynth.mode).toEqual('remote');
       const bunnum = await scSynth.loadSynthDefFromFile('recorder', recorderStnthDefFilePath)

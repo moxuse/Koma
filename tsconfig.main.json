@@ -1,9 +1,0 @@
-{
-  "extends": ".",
-  "baseUrl": "./src",
-  "compilerOptions": {
-    "module": "CommonJS",
-    "outDir": "dist"
-  },
-  "include": ["src/**/*.ts"]
-}

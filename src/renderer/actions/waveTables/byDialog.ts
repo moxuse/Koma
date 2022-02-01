@@ -9,24 +9,24 @@ import { getNewId, ommitFileName } from '../helper';
  * Action Creator
  */
 export const loadWaveTableByDialogRequest = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_REQUEST',
-  payload
+  payload,
 });
 
 export const loadWaveTableByDialogSuccess = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS',
-  payload
+  payload,
 });
 
 export const loadWaveTableByDialogFailure = (
-  payload: LoadWaveTableRequestPayload
+  payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_FAILURE',
-  payload
+  payload,
 });
 
 export type LoadWaveTableByDialogAction = (
@@ -48,7 +48,7 @@ export const loadWaveTableByDialog = () => {
       filePath: '',
       sample: undefined,
       effect: undefined,
-      error: undefined
+      error: undefined,
     }));
     window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, data }) => {
       const sampleId = getNewId();
@@ -57,10 +57,10 @@ export const loadWaveTableByDialog = () => {
         id: getNewId(),
         mode: 'normal',
         name: ommitFileName(filePath),
-        bufnum: bufnum,
+        bufnum,
         sample: sampleId,
         effect: sampleId,
-        slice: undefined
+        slice: undefined,
       });
       let e = new Effect();
       e = e.set('id', sampleId);
@@ -70,7 +70,7 @@ export const loadWaveTableByDialog = () => {
         table: t,
         effect: e,
         sample: s,
-        error: undefined
+        error: undefined,
       }));
       removeEvents();
     });
@@ -82,8 +82,8 @@ export const loadWaveTableByDialog = () => {
           table: undefined,
           sample: undefined,
           effect: undefined,
-          error: arg
-        }
+          error: arg,
+        },
       ));
       removeEvents();
     });

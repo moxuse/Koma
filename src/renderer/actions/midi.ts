@@ -1,13 +1,13 @@
 import { ActionCreator, Dispatch } from 'redux';
 
-export type MIDIAssignPayload = {
-  channel: number
+export interface MIDIAssignPayload {
+  channel: number;
 }
 
 export interface MIDIOnRecieve {
-  type: 'MIDI_ON_RECIEVE',
-  payload: MIDIAssignPayload
-};
+  type: 'MIDI_ON_RECIEVE';
+  payload: MIDIAssignPayload;
+}
 
 export type MIDIAssignAction = MIDIOnRecieve;
 
@@ -16,10 +16,10 @@ export type MIDIAssignAction = MIDIOnRecieve;
  */
 
 export const midiOnRecieveAction: ActionCreator<MIDIAssignAction> = (
-  payload: MIDIAssignPayload
+  payload: MIDIAssignPayload,
 ): MIDIAssignAction => ({
   type: 'MIDI_ON_RECIEVE',
-  payload: payload
+  payload,
 } as const);
 
 
@@ -27,4 +27,4 @@ export const midiOnRecieve = (channel: number | undefined) => {
   return (dispatch: Dispatch<MIDIAssignAction>) => {
     dispatch(midiOnRecieveAction({ channel }));
   };
-}
+};

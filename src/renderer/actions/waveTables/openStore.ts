@@ -1,35 +1,36 @@
 import { Dispatch } from 'redux';
 import TableList from '../../model/TableList';
-import { outboundsTransform } from "../../../renderer/reducer";
+// eslint-disable-next-line import/no-cycle
+import { outboundsTransform } from '../../../renderer/reducer';
 
-export type OpenStorePayload = {
+export interface OpenStorePayload {
   isFetching: boolean;
   tables: TableList | undefined;
   error: Error | undefined;
-};
+}
 
 /**
  * Action Creator
  */
 export const openStoreRequest = (
-  payload: OpenStorePayload
+  payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_REQUEST',
-  payload
+  payload,
 });
 
 export const openStoreSuccess = (
-  payload: OpenStorePayload
+  payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_SUCCESS',
-  payload
+  payload,
 });
 
 export const openStoreFailure = (
-  payload: OpenStorePayload
+  payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_FAILURE',
-  payload
+  payload,
 });
 
 export type OpenStoreAction = (
@@ -48,7 +49,7 @@ export const openStore = () => {
     dispatch(openStoreRequest({
       isFetching: true,
       tables: undefined,
-      error: undefined
+      error: undefined,
     }));
 
     window.api.on!('openStoreFailed', (_, arg: Error) => {
@@ -56,8 +57,8 @@ export const openStore = () => {
         {
           isFetching: false,
           tables: undefined,
-          error: arg
-        }
+          error: arg,
+        },
       ));
       removeEvents();
     });
@@ -69,8 +70,8 @@ export const restore = (restoerData: any) => {
   return (dispatch: Dispatch<OpenStoreAction>) => {
     dispatch(openStoreSuccess({
       isFetching: false,
-      tables: outboundsTransform(restoerData.waveTables, '').tables,
-      error: undefined
+      tables: outboundsTransform(restoerData.waveTables).tables,
+      error: undefined,
     }));
   };
-}
+};
