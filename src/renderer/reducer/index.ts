@@ -143,7 +143,9 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
-const middleware = ENV === 'development' ? applyMiddleware(thunk, logger) : applyMiddleware(thunk);
+console.log(import.meta.env)
+
+const middleware = import.meta.env.DEV ? applyMiddleware(thunk, logger) : applyMiddleware(thunk);
 
 export const configReducer = () => {
   const store = createStore(persistedReducer, composeWithDevTools(middleware));

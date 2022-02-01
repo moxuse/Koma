@@ -1,4 +1,5 @@
 **/*.d.ts
 node_modules/
 dist/
+src/@types
 **/*.test.ts

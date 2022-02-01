@@ -3,7 +3,6 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "typeRoots": ["src/types"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "esModuleInterop": true,
@@ -13,14 +12,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "baseUrl": "./",
-    "sourceMap": true
+    "sourceMap": true,
   },
   "ts-node": {
     // "transpileOnly": true,
     // "transpiler": "ts-node/transpilers/swc-experimental",
     "compilerOptions": {
-      "target": "ES2018",
+      "target": "ES2015",
       "module": "CommonJS"
     }
   }

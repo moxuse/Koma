@@ -44,7 +44,7 @@ export default class MIDIReceiver implements Midi, MidiActions {
     await navigator.requestMIDIAccess().then(
       (midiAccess: WebMidi.MIDIAccess) => { // succeed
         this.access = midiAccess;
-        this.access.inputs.forEach((entry: WebMidi.MIDIAccess) => this.devices.push(entry.name || ' --- '));
+        this.access.inputs.forEach((entry) => this.devices.push(entry.name || ' --- '));
         this.isReady = true;
       },
       (msg: string) => { // failed
@@ -87,7 +87,7 @@ export default class MIDIReceiver implements Midi, MidiActions {
   }
 
   private assignEvents() {
-    this.access?.inputs.forEach((entry: WebMidi.MIDIAccess) => {
+    this.access?.inputs.forEach((entry) => {
       entry.onmidimessage = ((e: WebMidi.MIDIMessageEvent) => {
         this.events.forEach((event) => {
           if (event.channel === (e.data[0] - 0x90)) {
