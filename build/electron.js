@@ -1,4 +1,5 @@
 const esbuild = require('esbuild');
+const copyStaticFiles = require('esbuild-copy-static-files');
 const path = require('path');
 const fs = require('fs');
 
@@ -31,6 +32,16 @@ if (process.env.NODE_ENV === 'production') {
     define: {
       'process.env.ENV': '\'production\'',
     },
+    plugins: [
+      copyStaticFiles({
+        src: path.join(__dirname, '../assets/'),
+        dest: path.join(__dirname, '../dist/'),
+        dereference: true,
+        errorOnExist: false,
+        preserveTimestamps: false,
+        recursive: true,
+      })
+    ],
   });
 } else {
   esbuild.build({

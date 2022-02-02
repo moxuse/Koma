@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run copy\" \"npm run dev:electron\"",
     "dev:react": "vite",
-    "dev:electron": "cross-env NODE_ENV=development node build/electron.js --trace-warnings ...",    
+    "dev:electron": "cross-env NODE_ENV=development node build/electron.js --trace-warnings ...",
     "build": "npm run build:react && npm run copy && npm run build:electron",
     "build:react": "vite build",
     "build:electron": "cross-env NODE_ENV=production node build/electron.js && electron-builder build --publish never",
@@ -45,7 +45,10 @@
     "files": [
       "node_modules",
       "dist/main/**",
-      "dist/renderer/**"
+      "dist/renderer/**",
+      "dist/assets/**",
+      "dist/font/**",
+      "dist/index.html"
     ]
   },
   "dependencies": {
@@ -102,13 +105,14 @@
     "electron-load-devtool": "^1.2.0",
     "electron-reload": "^2.0.0-alpha.1",
     "esbuild": "^0.13.6",
+    "esbuild-copy-static-files": "^0.1.0",
     "eslint": "^8.0.1",
     "eslint-config-ali": "^12.2.2",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "jest": "^27.4.3",
-    "mini-css-extract-plugin": "^2.4.5",    
+    "mini-css-extract-plugin": "^2.4.5",
     "process": "^0.11.10",
     "rimraf": "^2.6.3",
     "ts-jest": "^27.1.0",

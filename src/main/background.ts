@@ -45,7 +45,7 @@ const createWindow = () => {
   // let url = isDev ? path.join(__dirname, '../index.html') : path.join(__dirname, '../renderer/index.html');
   // console.log('LOAD URL,', url);
   // mainWindow.loadFile(url);
-  process.env.ENV === 'production' ? mainWindow.loadFile(path.join(__dirname, '../renderer/index.html')) : mainWindow.loadURL(`http://localhost:${process.env.PORT}`);
+  process.env.ENV === 'production' ? mainWindow.loadFile(path.join(__dirname, '../index.html')) : mainWindow.loadURL(`http://localhost:${process.env.PORT}`);
 };
 
 app.whenReady().then(async () => {
