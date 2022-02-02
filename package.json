@@ -27,7 +27,7 @@
     "productName": "msplr",
     "appId": "org.moxus.msplr",
     "copyright": "All Rights Reserved, moxus.org",
-    "asar": false,
+    "asar": true,
     "mac": {
       "target": "dmg",
       "icon": "build/icons/mac/icon.icns"
