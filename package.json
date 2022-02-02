@@ -9,13 +9,14 @@
     "url": "https://github.com/moxuse/msplr.git"
   },
   "scripts": {
-    "dev": "concurrently -k -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run dev:electron\"",
-    "dev:react": "vite && npm run copy:media",
-    "dev:electron": "cross-env NODE_ENV=development node build/electron.js",    
-    "build": "npm run build:react && npm run build:electron",
+    "dev": "concurrently --kill-others-on-fail -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run copy\" \"npm run dev:electron\"",
+    "dev:react": "vite",
+    "dev:electron": "cross-env NODE_ENV=development node build/electron.js --trace-warnings ...",    
+    "build": "npm run build:react && npm run copy && npm run build:electron",
     "build:react": "vite build",
     "build:electron": "cross-env NODE_ENV=production node build/electron.js && electron-builder build --publish never",
     "serve:react": "vite preview",
+    "copy": "cp -r assets dist",
     "clean": "rm -rf dist",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",

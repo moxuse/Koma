@@ -85,34 +85,34 @@ const TransformTables = createTransform(
       waveTables: {
         tables: inboundState.tables ? inboundState.tables.getTables().toJS().map((t: Table) => {
           return {
-            id: t['id'],
-            mode: t['mode'],
-            name: t['name'],
-            bufnum: t['bufnum'],
-            sample: t['sample'],
-            effect: t['effect'],
-            slice: { begin: t['slice']?.begin, end: t['slice']?.end },
+            id: t.id,
+            mode: t.mode,
+            name: t.name,
+            bufnum: t.bufnum,
+            sample: t.sample,
+            effect: t.effect,
+            slice: { begin: t.slice?.begin, end: t.slice?.end },
           };
         }) : [],
         samples: inboundState.tables ? inboundState.tables.getSamples().toJS().map((s: Sample) => {
           return {
-            id: s['id'],
+            id: s.id,
             allocated: false,
-            filePath: s['filePath'],
-            buffer: float32ArrayToBase64(s['buffer']!),
+            filePath: s.filePath,
+            buffer: float32ArrayToBase64(s.buffer!),
           };
         }) : [],
         effects: inboundState.tables ? inboundState.tables.getEffects().toJS().map((e: Effect) => {
           // console.log('inbound points', e['points'])
           return {
-            id: e['id'],
-            pan: e['pan'],
-            rate: e['rate'],
-            gain: e['gain'],
-            amp: e['amp'],
-            points: e['points'],
-            duration: e['duration'],
-            trig: e['trig'],
+            id: e.id,
+            pan: e.pan,
+            rate: e.rate,
+            gain: e.gain,
+            amp: e.amp,
+            points: e.points,
+            duration: e.duration,
+            trig: e.trig,
           };
         }) : [],
       },
@@ -144,7 +144,7 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
-console.log(import.meta.env)
+console.log(import.meta.env);
 
 const middleware = import.meta.env.DEV ? applyMiddleware(thunk, logger) : applyMiddleware(thunk);
 

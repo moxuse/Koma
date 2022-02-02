@@ -199,14 +199,13 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   });
 
   if (scSynth.mode === 'internal') {
-    console.log('load SYNTHDEFS:', playerSynthDefFilePath);
-    await scSynth.loadSynthDefFromFile('player', playerSynthDefFilePath);
-    await scSynth.loadSynthDefFromFile('grainPlayer', grainPlayerSynthDefFilePath);
-    await scSynth.loadSynthDefFromFile('bufRd', bufRdSynthDefFilePath);
-    await scSynth.loadSynthDefFromFile('recorder', recorderSynthDefFilePath);
-    await scSynth.loadSynthDefFromFile('audioIn', audioInSynthDefFilePath);
+    await scSynth.loadSynthDefFromFile('player', path.resolve(__dirname, playerSynthDefFilePath));
+    await scSynth.loadSynthDefFromFile('grainPlayer', path.resolve(__dirname, grainPlayerSynthDefFilePath));
+    await scSynth.loadSynthDefFromFile('bufRd', path.resolve(__dirname, bufRdSynthDefFilePath));
+    await scSynth.loadSynthDefFromFile('recorder', path.resolve(__dirname, recorderSynthDefFilePath));
+    await scSynth.loadSynthDefFromFile('audioIn', path.resolve(__dirname, audioInSynthDefFilePath));
   } else {
-    const path_ = path.resolve(__dirname, '../../../dist/synthDef');
+    const path_ = path.resolve(__dirname, '../assets/synthDef');
     await scSynth.loadSynthDefFromSynthDef(path_);
   }
 }

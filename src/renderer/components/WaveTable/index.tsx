@@ -126,7 +126,7 @@ const WaveTable = ({
 
   const clickPlay = useCallback(() => {
     handlePlayer(table.getMode(), currentBufnum, slice, effect);
-  }, [currentBufnum, slice, effect]);
+  }, [table, currentBufnum, slice, effect]);
 
   const deleTable = useCallback(() => {
     deleteHandler(table, sample, effect);

@@ -159,7 +159,8 @@ export default class SCSynth {
 
     message.types += '[';
     message.args.push(0);
-    positions.forEach(() => {
+    positions.forEach((p) => {
+      message.args.push(p);
       message.types += 'i';
     });
     message.types += ']';
