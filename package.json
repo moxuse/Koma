@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run copy\" \"npm run dev:electron\"",
     "dev:react": "vite",
-    "dev:electron": "cross-env NODE_ENV=development node build/electron.js --trace-warnings ...",
+    "dev:electron": "cross-env NODE_ENV=development node build/electron.js",
     "build": "npm run build:react && npm run copy && npm run build:electron",
     "build:react": "vite build",
     "build:electron": "cross-env NODE_ENV=production node build/electron.js && electron-builder build --publish never",
