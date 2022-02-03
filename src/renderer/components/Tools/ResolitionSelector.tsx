@@ -1,6 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import styled from 'styled-components';
-import { ToolsContext } from './Context';
+import { ResolutionContext } from './Context/Resolution';
 
 
 const SelctorList = styled.li`
@@ -23,8 +23,8 @@ const SelctorEl = styled.select`
   background-color: #333;
 `;
 
-const Selector = () => {
-  const { resolution, setResolution } = useContext(ToolsContext);
+const ResolitionSelector = () => {
+  const { resolution, setResolution } = useContext(ResolutionContext);
 
   const onChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
@@ -44,4 +44,4 @@ const Selector = () => {
   );
 };
 
-export default Selector;
+export default ResolitionSelector;

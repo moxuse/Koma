@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
-import { ToolsContextProvider } from '../Tools/Context';
+import { ResolutionContextProvider } from '../Tools/Context/Resolution';
+import { AxisYContextProvider } from '../Tools/Context/AxisY';
 import Graph from './Graph';
 import GrainEditor from '../Tools/GrainEditor';
 import Tools from '../Tools';
@@ -172,16 +173,18 @@ const WaveTable = ({
           <WaveTableModeSelector onClick={setModeGrain} selected={table.getMode() === 'grain'}>[G]</WaveTableModeSelector>
         </ul>
       </WaveTableHeader>
-      <ToolsContextProvider>
-        <div>
-          {<GrainEditor table={table} effect={effect} />}
-          {bufferData ?
-            composeGraph
-            : <div>{'drag'}</div>
-          }
-        </div>
-        <Tools table={table} effect={effect} />
-      </ToolsContextProvider>
+      <ResolutionContextProvider>
+        <AxisYContextProvider>
+          <div>
+            {<GrainEditor table={table} effect={effect} />}
+            {bufferData ?
+              composeGraph
+              : <div>{'drag'}</div>
+            }
+          </div>
+          <Tools table={table} effect={effect} />
+        </AxisYContextProvider>
+      </ResolutionContextProvider>
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {'[ x ]'}
       </StyledButton>

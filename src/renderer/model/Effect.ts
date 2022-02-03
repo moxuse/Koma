@@ -5,6 +5,8 @@ export interface GrainPoint {
   y: number;
 }
 
+export type AxisYType = 'rate' | 'dur';
+
 export type EffectKeys = keyof EffectData;
 
 export interface EffectData {
@@ -16,6 +18,7 @@ export interface EffectData {
   points: GrainPoint[];
   duration: number;
   trig: number;
+  axisY: AxisYType;
 }
 
 export const DefaultEffect: EffectData = {
@@ -27,6 +30,7 @@ export const DefaultEffect: EffectData = {
   duration: 0.1,
   trig: 4,
   points: [],
+  axisY: 'rate',
 };
 
 export default class Effect extends Record(DefaultEffect) {
@@ -53,5 +57,8 @@ export default class Effect extends Record(DefaultEffect) {
   }
   getPoints() {
     return this.get('points');
+  }
+  getAxisY() {
+    return this.get('axisY');
   }
 }

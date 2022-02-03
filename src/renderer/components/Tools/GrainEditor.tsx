@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { ToolsContext } from '../Tools/Context';
+import { ResolutionContext } from './Context/Resolution';
 import Effect, { GrainPoint } from '../../model/Effect';
 import Table from '../../model/Table';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
@@ -27,7 +27,7 @@ const GraphConatainer = styled.div`
 `;
 
 const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Effect; handleUpdate: any }): JSX.Element => {
-  const { resolution } = React.useContext(ToolsContext);
+  const { resolution } = React.useContext(ResolutionContext);
   const [points_, setPoints] = useState<GrainPoint[]>([]);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
   const [editting, setEditting] = useState<boolean>(false);

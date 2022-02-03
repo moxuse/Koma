@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const ToolsContext = React.createContext<{
+export const ResolutionContext = React.createContext<{
   resolution: number;
   setResolution: (resolution: number) => void;
 }>({
@@ -10,7 +10,7 @@ export const ToolsContext = React.createContext<{
       },
     });
 
-export const ToolsContextProvider: React.FC<any> = ({ children }) => {
+export const ResolutionContextProvider: React.FC<any> = ({ children }) => {
   const [resolution, setResolution] = React.useState<number>(50);
 
   // 初期化処理
@@ -19,8 +19,8 @@ export const ToolsContextProvider: React.FC<any> = ({ children }) => {
   }, []);
 
   return (
-    <ToolsContext.Provider value={{ resolution, setResolution }}>
+    <ResolutionContext.Provider value={{ resolution, setResolution }}>
       {children}
-    </ToolsContext.Provider>
+    </ResolutionContext.Provider>
   );
 };

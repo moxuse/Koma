@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Knob from '../Tools/Knob';
-import Selector from './Selector';
+import ResolutionSelector from './ResolitionSelector';
+import { AxisYContext } from './Context/AxisY';
+import AxisYSelector from './AxisYSelector';
+import { updateWaveTableByEffect } from '../../actions/waveTables';
 import Table from '../../model/Table';
 import Effect from '../../model/Effect';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+const SelectorList = styled.ul`
+`;
 
 export interface Spec {
   type: 'linear' | 'exp';
@@ -46,12 +52,20 @@ export const TrigSpec: Spec = {
 const ToolsList = styled.ul`
 `;
 
-const Tools = ({ table, effect }: {
-  table: Table; effect: Effect;
+const Tools = ({ table, effect, handleUpdateAxisY }: {
+  table: Table; effect: Effect; handleUpdateAxisY: any;
 }) => {
+  const { axisY } = React.useContext(AxisYContext);
   const getMode = () => {
     return table.getMode();
   };
+
+  useEffect(() => {
+    console.log('change axisY', axisY);
+    const newEff = effect.set('axisY', axisY);
+    handleUpdateAxisY(table, newEff);
+  }, [table, effect, axisY]);
+
   return (
     <>
       {getMode() === 'normal' ? (
@@ -77,8 +91,13 @@ const Tools = ({ table, effect }: {
         </ToolsList>)
         :
         (
-          <ToolsList key={`tool-grain-${ table.getId()}`}>
-            <Selector />
+          <ToolsList key={`tool-grain-${table.getId()}`}>
+            <li>
+              <SelectorList>
+                <ResolutionSelector />
+                <AxisYSelector />
+              </SelectorList>
+            </li>
             <Knob
               id={`${table.getEffect() }-trig`}
               label="trig"
@@ -102,8 +121,9 @@ function mapStateToProps() {
   return {};
 }
 
-function mapDispatchToProps() {
+function mapDispatchToProps(dispatch: any) {
   return {
+    handleUpdateAxisY: (table: Table, effect: Effect) => dispatch(updateWaveTableByEffect(table, effect)),
   };
 }
 

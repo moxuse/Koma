@@ -90,6 +90,7 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number;
           points: normalizeInt8Points(effect.getPoints()),
           duration: effect.getDuration(),
           trig: effect.getTrig(),
+          axisY: effect.getAxisY(),
         });
         break;
       default:

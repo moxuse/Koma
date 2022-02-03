@@ -66,6 +66,7 @@ export const outboundsTransform = (outboundState: any): any => {
     effect = effect.set('duration', e.duration);
     effect = effect.set('points', Object.values(e.points));
     effect = effect.set('trig', e.trig);
+    effect = effect.set('axisY', e.axisY);
     newTableList = TableList.appendEffect(newTableList, effect);
   });
 
@@ -113,6 +114,7 @@ const TransformTables = createTransform(
             points: e.points,
             duration: e.duration,
             trig: e.trig,
+            axisY: e.axisY,
           };
         }) : [],
       },

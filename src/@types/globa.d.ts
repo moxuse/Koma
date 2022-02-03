@@ -1,5 +1,6 @@
 import { IpcMainEvent } from 'electron';
 import Table from '../renderer/model/Table';
+import { AxisYType } from '../renderer/model/Effect';
 
 declare global {
   interface Window {
@@ -16,7 +17,7 @@ declare global {
     { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array } } &
     { bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { amp: number, rate: number, pan: number, gain: number }
+      effect: { amp: number, rate: number, pan: number, gain: number, axisY: AxisYType }
     } &
     { tables: Table[] } &
     { restoerData: any } &
@@ -34,7 +35,7 @@ declare global {
     ) => void,
     grainPlayerRequest: (bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
-      effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{ x: number, y: number }>, duration: number, trig: number }
+      effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{ x: number, y: number }>, duration: number, trig: number, axisY: AxisYType }
     ) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
     saveStore: () => void,

@@ -263,7 +263,7 @@ export default class SCSynth {
 
   playGrain(bufnum: number,
     slice: ({ begin: number; end: number } | undefined),
-    effect: { amp: number; rate: number; pan: number; gain: number; points: Array<{ x: number; y: number }>; duration: number; trig: number }) {
+    effect: { amp: number; rate: number; pan: number; gain: number; points: Array<{ x: number; y: number }>; duration: number; trig: number; axisY: string }) {
     let begin_;
     let end_;
     if (!slice) {
@@ -272,7 +272,9 @@ export default class SCSynth {
       begin_ = slice.begin;
       end_ = slice.end;
     }
-    const msgPack = ['/s_new', 'grainPlayer', this.nextNodeId(), 1, 0,
+    const synthName = effect.axisY === 'dur' ? 'grainDur' : 'grainRate';
+
+    const msgPack = ['/s_new', synthName, this.nextNodeId(), 1, 0,
       'bufnum', bufnum,
       'amp', effect.amp,
       'begin', begin_,

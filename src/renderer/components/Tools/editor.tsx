@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import Table from '../../model/Table';
 import Effect, { EffectKeys } from '../../model/Effect';
@@ -7,7 +6,6 @@ import { Spec, PanSpec, RateSpec, GainSpec, DurSpec, TrigSpec } from '.';
 import { connect } from 'react-redux';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
-
 
 const ToolsErea = styled.div`
 `;
