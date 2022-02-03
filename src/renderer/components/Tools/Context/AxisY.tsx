@@ -10,12 +10,12 @@ export const AxisYContext = React.createContext<{
         console.log('axisY:', axisY);
       } });
 
-export const AxisYContextProvider: React.FC<any> = ({ children }) => {
-  const [axisY, setAxisY] = React.useState<AxisYType>('rate');
+export const AxisYContextProvider: React.FC<any> = ({ children, value }) => {
+  const [axisY, setAxisY] = React.useState<AxisYType>(value);
 
   // 初期化処理
   React.useEffect(() => {
-    setAxisY('rate');
+    setAxisY(value);
   }, []);
 
   return (

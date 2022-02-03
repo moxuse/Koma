@@ -174,7 +174,7 @@ const WaveTable = ({
         </ul>
       </WaveTableHeader>
       <ResolutionContextProvider>
-        <AxisYContextProvider>
+        <AxisYContextProvider value={effect.getAxisY()}>
           <div>
             {<GrainEditor table={table} effect={effect} />}
             {bufferData ?

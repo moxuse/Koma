@@ -61,7 +61,6 @@ const Tools = ({ table, effect, handleUpdateAxisY }: {
   };
 
   useEffect(() => {
-    console.log('change axisY', axisY);
     const newEff = effect.set('axisY', axisY);
     handleUpdateAxisY(table, newEff);
   }, [table, effect, axisY]);
@@ -95,7 +94,7 @@ const Tools = ({ table, effect, handleUpdateAxisY }: {
             <li>
               <SelectorList>
                 <ResolutionSelector />
-                <AxisYSelector />
+                <AxisYSelector value={effect.get('axisY')} />
               </SelectorList>
             </li>
             <Knob

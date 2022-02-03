@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { AxisYContext } from './Context/AxisY';
 import { AxisYType } from '../../model/Effect';
@@ -24,22 +24,33 @@ const AxisYSelectorEl = styled.select`
   background-color: #333;
 `;
 
-const AxisYSelector = () => {
-  const { axisY, setAxisY } = useContext(AxisYContext);
+const AxisYSelector = ({ value }: { value: AxisYType }) => {
+  console.log(value);
+  const { setAxisY } = useContext(AxisYContext);
+  const selector = useRef<HTMLSelectElement>(null);
+
+  useEffect(() => {
+    if (selector.current) {
+      selector.current.selectedIndex = value === 'rate' ? 0 : 1;
+    }
+  }, []);
 
   const onChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
+    console.log('===============react onChange change', target.value);
     setAxisY(target.value as AxisYType);
-  }, [axisY]);
+  }, []);
 
   return (
-    <AxisYSelectorList>
-      <AxisYSelectorLabel>y-axis</AxisYSelectorLabel>
-      <AxisYSelectorEl onChange={onChange} name="axis-y-selector">
-        <option value="rate">rate</option>
-        <option value="dur">dur</option>
-      </AxisYSelectorEl>
-    </AxisYSelectorList>
+    <>
+      <AxisYSelectorList>
+        <AxisYSelectorLabel>y-axis</AxisYSelectorLabel>
+        <AxisYSelectorEl ref={selector} onChange={onChange} name="axis-y-selector">
+          <option value="rate">rate</option>
+          <option value="dur">dur</option>
+        </AxisYSelectorEl>
+      </AxisYSelectorList>
+    </>
   );
 };
 
