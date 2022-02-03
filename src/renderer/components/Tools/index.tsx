@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import Knob from '../Tools/Knob';
 import ResolutionSelector from './ResolitionSelector';
-import { AxisYContext } from './Context/AxisY';
 import AxisYSelector from './AxisYSelector';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import Table from '../../model/Table';
-import Effect from '../../model/Effect';
+import Effect, { AxisYType } from '../../model/Effect';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -55,15 +54,14 @@ const ToolsList = styled.ul`
 const Tools = ({ table, effect, handleUpdateAxisY }: {
   table: Table; effect: Effect; handleUpdateAxisY: any;
 }) => {
-  const { axisY } = React.useContext(AxisYContext);
   const getMode = () => {
     return table.getMode();
   };
 
-  useEffect(() => {
-    const newEff = effect.set('axisY', axisY);
+  const onChange = useCallback((value: string) => {
+    const newEff = effect.set('axisY', value as AxisYType);
     handleUpdateAxisY(table, newEff);
-  }, [table, effect, axisY]);
+  }, [table, effect]);
 
   return (
     <>
@@ -94,7 +92,7 @@ const Tools = ({ table, effect, handleUpdateAxisY }: {
             <li>
               <SelectorList>
                 <ResolutionSelector />
-                <AxisYSelector value={effect.get('axisY')} />
+                <AxisYSelector value={effect.get('axisY')} onChange={onChange} />
               </SelectorList>
             </li>
             <Knob
