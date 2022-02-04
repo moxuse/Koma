@@ -8,10 +8,13 @@ const AxisYSelectorList = styled.li`
   display: inline-flex;
   height: 100%;
   flex-direction: column;
+  max-width: 55px;
+  margin: 0;
 `;
 
 const AxisYSelectorLabel = styled.div`
   color: #666;
+  font-size: 0.8em;
   height: 30%;
   margin: 0;
 `;
@@ -36,7 +39,6 @@ const AxisYSelector = ({ value, onChange }: { value: AxisYType; onChange: (value
 
   const onHandleChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
-    console.log('===============react onChange change', target.value);
     onChange(target.value);
   }, []);
 

@@ -19,14 +19,18 @@ import styled from 'styled-components';
 
 const WaveTableContainer = styled.div`
   width: 100%;
-  ul {
-    padding: 4px;
+  li {
+    list-style: none;
+  }
+  select:focus {
+    outline: none;
   }
 `;
 
 const WaveTableList = styled.ul`
   margin: 0;
   padding: 0px;
+  padding: 4px;
 `;
 
 const Button = styled.button`

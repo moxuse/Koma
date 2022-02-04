@@ -59,6 +59,13 @@ font-size: 13px;
   color: #888;
 `;
 
+const WaveTableModeList = styled.ul`
+  display: flex;
+  align-items: center;
+  padding: 0 4px 0 4px;
+  list-style-type: none;
+`;
+
 const WaveTableModeSelector = styled.li`
   cursor: pointer;
   color: ${(props: { selected: boolean }) => (props.selected ? '#aaa' : '#666')};
@@ -167,10 +174,10 @@ const WaveTable = ({
       <WaveTableHeader>
         <WaveTableChannel triggered={triggered}>{`ch${ channel}`}</WaveTableChannel>
         <WaveTableName>{table.getName()}</WaveTableName>
-        <ul>
+        <WaveTableModeList>
           <WaveTableModeSelector onClick={setModeNormal} selected={table.getMode() === 'normal'}>[N]</WaveTableModeSelector>
           <WaveTableModeSelector onClick={setModeGrain} selected={table.getMode() === 'grain'}>[G]</WaveTableModeSelector>
-        </ul>
+        </WaveTableModeList>
       </WaveTableHeader>
       <ResolutionContextProvider>
         <div>

@@ -9,6 +9,12 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 const SelectorList = styled.ul`
+  padding: 0px 4px 0 4px;
+  margin-top: -10px;
+`;
+
+const SelectorItem = styled.li`
+  max-width: 52px;
 `;
 
 export interface Spec {
@@ -49,6 +55,9 @@ export const TrigSpec: Spec = {
 };
 
 const ToolsList = styled.ul`
+  display: flex;
+  align-items: center;
+  padding: 0;
 `;
 
 const Tools = ({ table, effect, handleUpdateAxisY }: {
@@ -89,12 +98,12 @@ const Tools = ({ table, effect, handleUpdateAxisY }: {
         :
         (
           <ToolsList key={`tool-grain-${table.getId()}`}>
-            <li>
+            <SelectorItem>
               <SelectorList>
                 <ResolutionSelector />
                 <AxisYSelector value={effect.get('axisY')} onChange={onChange} />
               </SelectorList>
-            </li>
+            </SelectorItem>
             <Knob
               id={`${table.getEffect() }-trig`}
               label="trig"
