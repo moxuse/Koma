@@ -41,6 +41,19 @@ const Button = styled.button`
   box-shadow: inset 0px 0px 0px #0C0C0C;
 `;
 
+const FooterList = styled.ul`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0;
+  padding: 0;
+  max-width: 500px;
+`;
+
+const MidiDeviceIndicator = styled.div`
+  margin-right: 40px;
+`;
+
 const midiratio = (input: number) => {
   return Math.pow(2.0, input * 0.083333333333);
 };
@@ -164,7 +177,14 @@ const WaveTables = ({
             </WaveTableList>
           </ToolsEditor>
         </TableEditor>
-        {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : 'synth server not booted'}
+        <FooterList>
+          <li>
+            {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : 'synth server not booted'}
+          </li>
+          <li>
+            <MidiDeviceIndicator>{midi.devices}</MidiDeviceIndicator>
+          </li>
+        </FooterList>
       </DropSection>
     </WaveTableContainer>
   );
