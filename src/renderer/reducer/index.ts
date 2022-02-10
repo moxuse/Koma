@@ -130,7 +130,7 @@ const rootPersistConfig = {
   key: 'root',
   blacklist: ['player', 'allocReadBuffer', 'loadSetting', 'midiAssign'],
   whitelist: ['waveTables'],
-  storage,
+  storage: storage,
   transforms: [TransformTables],
   throttle: 10,
   debug: true,
@@ -154,5 +154,5 @@ export const configReducer = () => {
   const store = createStore(persistedReducer, composeWithDevTools(middleware));
 
   const persistor = persistStore(store);
-  return { store, persistor };
+  return { store: store, persistor: persistor };
 };

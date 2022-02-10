@@ -12,21 +12,21 @@ export const loadWaveTableByDialogRequest = (
   payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_REQUEST',
-  payload,
+  payload: payload,
 });
 
 export const loadWaveTableByDialogSuccess = (
   payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS',
-  payload,
+  payload: payload,
 });
 
 export const loadWaveTableByDialogFailure = (
   payload: LoadWaveTableRequestPayload,
 ) => ({
   type: 'LOAD_WAVE_TABLE_BY_DIALOG_FAILURE',
-  payload,
+  payload: payload,
 });
 
 export type LoadWaveTableByDialogAction = (
@@ -57,7 +57,7 @@ export const loadWaveTableByDialog = () => {
         id: getNewId(),
         mode: 'normal',
         name: ommitFileName(filePath),
-        bufnum,
+        bufnum: bufnum,
         sample: sampleId,
         effect: sampleId,
         slice: undefined,

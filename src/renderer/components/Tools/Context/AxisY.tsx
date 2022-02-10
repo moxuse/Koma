@@ -19,7 +19,7 @@ export const AxisYContextProvider: React.FC<any> = ({ children, value }) => {
   }, []);
 
   return (
-    <AxisYContext.Provider value={{ axisY, setAxisY }}>
+    <AxisYContext.Provider value={{ axisY: axisY, setAxisY: setAxisY }}>
       {children}
     </AxisYContext.Provider>
   );

@@ -19,7 +19,7 @@ export const ResolutionContextProvider: React.FC<any> = ({ children }) => {
   }, []);
 
   return (
-    <ResolutionContext.Provider value={{ resolution, setResolution }}>
+    <ResolutionContext.Provider value={{ resolution: resolution, setResolution: setResolution }}>
       {children}
     </ResolutionContext.Provider>
   );

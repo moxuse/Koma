@@ -72,11 +72,12 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         error: state.error,
       };
     case 'UPDATE_WAVE_TABLE_BY_SAMPLE_REQUEST':
-      return {
+      const t = {
         isFetching: false,
         tables: TableList.updateSample(state.tables, action.payload.sample!.getId(), action.payload.sample!),
         error: state.error,
       };
+      return t;
     case 'UPDATE_WAVE_TABLE_BY_EFFECT_REQUEST':
       return {
         isFetching: false,

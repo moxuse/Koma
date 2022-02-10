@@ -1,7 +1,8 @@
+const sc = require('supercolliderjs');
 import * as dgram from 'dgram';
 import * as OSC from 'osc-js';
 import * as osc from '@supercollider/osc';
-import sc from 'supercolliderjs';
+// import sc from 'supercolliderjs';
 
 
 export type SCSynthMode = 'internal' | 'remote';
@@ -117,7 +118,6 @@ export default class SCSynth {
     });
   }
 
-
   sendMsg(arg: OSCMessageArg) {
     if (this.mode === 'internal') {
       this.server.send.msg(arg);
@@ -182,23 +182,24 @@ export default class SCSynth {
     this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
   }
 
-  async allocReadBuffer(file: string, bufnum: number | null) {
-    return new Promise<{ value: osc.OscType | undefined; error: Error | undefined }>((resolve, reject) => {
+  allocReadBuffer(file: string, bufnum: number | null) {
+    return new Promise((resolve, reject) => {
       const failId = this.subscribe('/fail', () => {
         this.unsubscribe(failId);
         this.unsubscribe(doneId);
-        reject({ value: undefined, id: new Error('/fail') });
+        reject(new Error('/fail'));
       });
       const doneId = this.subscribe('/done', (msg) => {
         this.unsubscribe(failId);
         this.unsubscribe(doneId);
-        if (msg && msg[0] == '/b_allocRead') {
-          resolve({ value: msg[1], error: undefined });
+        if (msg && msg[0] === '/b_allocRead') {
+          const arg = { value: msg[1] };
+          resolve(arg);
         } else {
-          reject({ value: undefined, error: new Error('failed at /done msg') });
+          reject(new Error('failed at /done msg'));
         }
       });
-      if (bufnum === null) {
+      if (bufnum == null) {
         bufnum = this.nextBufnum();
       } else {
         this.bufnum = bufnum + 1;
@@ -207,8 +208,8 @@ export default class SCSynth {
     });
   }
 
-  async loadSynthDefFromFile(name: string, file: string) {
-    return new Promise<{ id: number; error: Error | undefined }>((resolve, reject) => {
+  loadSynthDefFromFile(name: string, file: string) {
+    return new Promise((resolve, reject) => {
       const doneId = this.subscribe('/done', (msg) => {
         this.unsubscribe(doneId);
         if (msg && msg[0] == '/d_recv') {
@@ -341,7 +342,7 @@ export default class SCSynth {
   private subscribeRemote(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
     this.listennersRemote.push({
-      id,
+      id: id,
       name: address,
       event: callback,
     });
@@ -351,7 +352,7 @@ export default class SCSynth {
   private subscribeInternal(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
     this.listennersInternal.push({
-      id,
+      id: id,
       name: address,
       event: callback,
     });

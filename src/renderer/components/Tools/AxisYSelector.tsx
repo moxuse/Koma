@@ -27,7 +27,6 @@ const AxisYSelectorEl = styled.select`
 `;
 
 const AxisYSelector = ({ value, onChange }: { value: AxisYType; onChange: (value: string) => void }) => {
-  console.log(value);
   // const { setAxisY } = useContext(AxisYContext);
   const selector = useRef<HTMLSelectElement>(null);
 

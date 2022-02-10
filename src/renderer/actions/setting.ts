@@ -43,7 +43,7 @@ export const bootedRequets: ActionCreator<LoadSettingAction> = (
   payload: BootedPayload,
 ): LoadSettingAction => ({
   type: 'BOOTED',
-  payload,
+  payload: payload,
 } as const);
 
 export const loadSettingRequest: ActionCreator<LoadSettingAction> = (): LoadSettingAction => ({
@@ -55,14 +55,14 @@ export const loadSettingSuccess: ActionCreator<LoadSettingAction> = (
   payload: LoadSettingPayload,
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_SUCCESS',
-  payload,
+  payload: payload,
 } as const);
 
 export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
   payload: LoadSettingPayload,
 ): LoadSettingAction => ({
   type: 'LOAD_SETTING_FAILURE',
-  payload,
+  payload: payload,
 } as const);
 
 const removeEvents = () => {

@@ -11,7 +11,7 @@ export const updateSliceFailed = (
   payload: UpdateSlicePayload,
 ) => ({
   type: 'ADD_SLICE_FAILED',
-  payload,
+  payload: payload,
 });
 
 export type UpdateSliceAction = ReturnType<typeof updateSliceFailed>;
@@ -37,7 +37,7 @@ export const updateSliceFail = (id: string) => {
   return (dispatch: Dispatch<UpdateSliceAction | any>) => {
     if (id !== undefined) {
       dispatch(updateSliceFailed({
-        id,
+        id: id,
         error: new Error(`Add Slice Fail id: ${ id}`),
       }));
     }

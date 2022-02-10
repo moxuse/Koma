@@ -12,13 +12,13 @@ const execPath =
     : '../../node_modules/.bin/electron';
 
 // hot reload elecron
-if (isDev) {
-  require('electron-reload')(__dirname + 'index.js', {
-    electron: path.resolve(__dirname, execPath),
-    forceHardReset: true,
-    hardResetMethod: 'exit',
-  });
-}
+// if (isDev) {
+//   require('electron-reload')(__dirname + 'index.js', {
+//     electron: path.resolve(__dirname, execPath),
+//     forceHardReset: true,
+//     hardResetMethod: 'exit',
+//   });
+// }
 
 // make BrowserWindow
 const createWindow = () => {

@@ -27,7 +27,7 @@ const TableEditor = ({ children, tables, handleUpdate }: {
   const calcSlice = (table: Table, { from_, to_ }: {from_: number; to_: number }): Slice => {
     const begin = Math.min(from_, to_);
     const end = Math.max(from_, to_);
-    return { begin, end };
+    return { begin: begin, end: end };
   };
 
   useEffect(() => {

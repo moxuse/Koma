@@ -12,21 +12,21 @@ export const allocReadBufferRequest = (
   payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_REQUEST',
-  payload,
+  payload: payload,
 });
 
 export const allocReadBufferSucceed = (
   payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_SUCCEED',
-  payload,
+  payload: payload,
 });
 
 export const allocReadBufferFailed = (
   payload: AllocReadBufferRequestPayload,
 ) => ({
   type: 'ALLOC_READ_BUFFER_FAILED',
-  payload,
+  payload: payload,
 });
 
 export type AllocReadBufferAction = (
@@ -36,21 +36,21 @@ export type AllocReadBufferAction = (
 );
 
 const removeEvents = () => {
-  window.api.removeAllListeners('playerSuccess');
-  window.api.removeAllListeners('playerFailure');
+  window.api.removeAllListeners('allocBufferSucseed');
+  window.api.removeAllListeners('allocBufferFailed');
 };
 
 export const allocReadBuffer = (bufnum: number, sample: Sample) => {
   return (dispatch: Dispatch<AllocReadBufferAction | any>) => {
     dispatch(allocReadBufferRequest({
       filePath: sample.getFilePath(),
-      bufnum,
+      bufnum: bufnum,
       error: undefined,
     }));
-    window.api.on!('allocBufferSucseed', () => {
+    window.api.on!('allocBufferSucseed', (_, arg: { bufnum: number; filePath: string }) => {
       dispatch(allocReadBufferSucceed({
-        filePath: sample.getFilePath(),
-        bufnum,
+        filePath: arg.filePath,
+        bufnum: arg.bufnum,
         error: undefined,
       }));
       removeEvents();

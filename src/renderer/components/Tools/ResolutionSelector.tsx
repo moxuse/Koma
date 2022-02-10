@@ -23,7 +23,7 @@ const SelctorEl = styled.select`
   background-color: #333;
 `;
 
-const ResolitionSelector = () => {
+const ResolutionSelector = () => {
   const { resolution, setResolution } = useContext(ResolutionContext);
 
   const onChange = useCallback((e: React.ChangeEvent) => {
@@ -44,4 +44,4 @@ const ResolitionSelector = () => {
   );
 };
 
-export default ResolitionSelector;
+export default ResolutionSelector;

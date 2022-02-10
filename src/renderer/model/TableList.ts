@@ -11,7 +11,7 @@ const DefaultTableList = {
 
 export default class TableList extends Record(DefaultTableList) {
   static getTableById(target: TableList, id: string): Table | undefined {
-    return target.getTables().filter((table) => {
+    return target.getTables().filter(table => {
       return table.getId() === id;
     }).get(0);
   }
@@ -25,7 +25,7 @@ export default class TableList extends Record(DefaultTableList) {
   }
 
   static getSampleById(target: TableList, id: string): Sample | undefined {
-    return target.getSamples().filter((sample) => {
+    return target.getSamples().filter(sample => {
       return sample.getId() === id;
     }).get(0);
   }
@@ -39,7 +39,7 @@ export default class TableList extends Record(DefaultTableList) {
   }
 
   static getEffectById(target: TableList, id: string): Effect | undefined {
-    return target.getEffects().filter((effect) => {
+    return target.getEffects().filter(effect => {
       return effect.getId() === id;
     }).get(0);
   }
@@ -83,17 +83,17 @@ export default class TableList extends Record(DefaultTableList) {
   }
 
   static deleteTable(target: TableList, targetId: string): TableList {
-    const filtered = target.getTables().filter((t) => t.getId() !== targetId);
+    const filtered = target.getTables().filter(t => t.getId() !== targetId);
     return TableList.newFromSampleList(target.getSamples()).set('tables', filtered).set('effects', target.getEffects());
   }
 
   static deleteSample(target: TableList, targetId: string): TableList {
-    const filtered = target.getSamples().filter((s) => s.getId() !== targetId);
+    const filtered = target.getSamples().filter(s => s.getId() !== targetId);
     return TableList.newFromTableList(target.getTables()).set('samples', filtered).set('effects', target.getEffects());
   }
 
   static deleteEffect(target: TableList, targetId: string): TableList {
-    const filtered = target.getEffects().filter((s) => s.getId() !== targetId);
+    const filtered = target.getEffects().filter(s => s.getId() !== targetId);
     return TableList.newFromTableList(target.getTables()).set('effects', filtered).set('samples', target.getSamples());
   }
 
@@ -137,7 +137,7 @@ export default class TableList extends Record(DefaultTableList) {
   }
 
   getBufferDataForSampleId(id?: string): Float32Array | undefined {
-    const filtered = this.get('samples').filter((s) => s.getId() === id);
+    const filtered = this.get('samples').filter(s => s.getId() === id);
     if (filtered) {
       return filtered.get(0)?.getBuffer();
     }

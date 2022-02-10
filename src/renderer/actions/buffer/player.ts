@@ -14,21 +14,21 @@ export const playerRequest = (
   payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_REQUEST',
-  payload,
+  payload: payload,
 });
 
 export const playerSuccess = (
   payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_SUCCESS',
-  payload,
+  payload: payload,
 });
 
 export const playerFailure = (
   payload: PlayerRequestPayload,
 ) => ({
   type: 'PLAYER_FAILURE',
-  payload,
+  payload: payload,
 });
 
 export type PlayerAction = (
@@ -47,17 +47,17 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number;
     // console.log(effect.getPoints().length)
     dispatch(playerRequest({
       isPlaying: true,
-      bufnum,
-      slice,
-      effect,
+      bufnum: bufnum,
+      slice: slice,
+      effect: effect,
       error: undefined,
     }));
     window.api.on!('playerSuccess', () => {
       dispatch(playerSuccess({
         isPlaying: false,
-        bufnum,
-        slice,
-        effect,
+        bufnum: bufnum,
+        slice: slice,
+        effect: effect,
         error: undefined,
       }));
       removeEvents();
@@ -65,9 +65,9 @@ export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number;
     window.api.on!('playerFailure', (_, arg: Error) => {
       dispatch(playerFailure({
         isPlaying: false,
-        bufnum,
-        slice,
-        effect,
+        bufnum: bufnum,
+        slice: slice,
+        effect: effect,
         error: arg,
       }));
       removeEvents();

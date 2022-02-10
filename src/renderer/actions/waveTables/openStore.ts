@@ -16,21 +16,21 @@ export const openStoreRequest = (
   payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_REQUEST',
-  payload,
+  payload: payload,
 });
 
 export const openStoreSuccess = (
   payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_SUCCESS',
-  payload,
+  payload: payload,
 });
 
 export const openStoreFailure = (
   payload: OpenStorePayload,
 ) => ({
   type: 'OPEN_STORE_FAILURE',
-  payload,
+  payload: payload,
 });
 
 export type OpenStoreAction = (

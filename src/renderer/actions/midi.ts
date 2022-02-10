@@ -19,12 +19,12 @@ export const midiOnRecieveAction: ActionCreator<MIDIAssignAction> = (
   payload: MIDIAssignPayload,
 ): MIDIAssignAction => ({
   type: 'MIDI_ON_RECIEVE',
-  payload,
+  payload: payload,
 } as const);
 
 
 export const midiOnRecieve = (channel: number | undefined) => {
   return (dispatch: Dispatch<MIDIAssignAction>) => {
-    dispatch(midiOnRecieveAction({ channel }));
+    dispatch(midiOnRecieveAction({ channel: channel }));
   };
 };

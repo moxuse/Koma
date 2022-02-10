@@ -17,13 +17,14 @@ const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
 
+
 // API register
 export default async function registerApi(window: BrowserWindow, isDev: boolean): Promise<void> {
   console.log('register events for the api');
 
   scSynth = new SCSynth({
     numBuffers: optionNumBuffers,
-    // device: 'Soundflower (2ch)'
+    device: 'Soundflower (2ch)',
   });
   /**
    * Load Store file
@@ -48,25 +49,25 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'loadWaveTableByDialogSucseed'
    * 'loadWaveTableByDialogFailed'
    */
-  ipcMain.on('loadWaveTableByDialog', (e) => {
-    dialog.showOpenDialog(window, {
+  ipcMain.on('loadWaveTableByDialog', async (e) => {
+    const result = await dialog.showOpenDialog(window, {
       properties: ['openFile', 'openDirectory'],
       filters: [{ name: 'msplr', extensions: ['wav'] }],
-    }).then((result) => {
-      if (result.canceled) { e.reply('loadWaveTableByDialogCanceled'); }
-
-      Utils.readFile(result.filePaths[0]).then((buffer: Buffer) => {
-        return WavDecoder.decode(buffer, {});
-      }).then((audioData) => {
-        return scSynth.allocReadBuffer(result.filePaths[0], null)
-          .then((msg) => {
-            e.reply('loadWaveTableByDialogSucseed', { bufnum: msg.value, filePath: result.filePaths[0], data: Utils.reduceAudioData(audioData.channelData[0]) });
-            if (isDev) { console.log('loaded audio data:', audioData); }
-          });
-      }).catch((err: any) => {
-        e.reply('loadWaveTableByDialogFailed', err);
-      });
     });
+    // .then((result) => {
+    if (result.canceled) {
+      e.reply('loadWaveTableByDialogCanceled');
+      return;
+    }
+    const buffer = await Utils.readFile(result.filePaths[0]);
+
+    const audioData = await WavDecoder.decode(buffer, {});
+
+    const msg = await scSynth.allocReadBuffer(result.filePaths[0], null);
+    const arg = { bufnum: msg.value, filePath: result.filePaths[0], data: Utils.reduceAudioData(audioData.channelData[0]) };
+    e.reply('loadWaveTableByDialogSucseed', arg);
+
+    if (isDev) { console.log('loaded audio data:', msg, result, audioData); }
   });
   // window.api.openFileDialog();
 
@@ -83,7 +84,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     }).then((audioData) => {
       return scSynth.allocReadBuffer(filePath, null)
         .then((msg) => {
-          e.reply('loadWaveTableSucseed', { bufnum: msg.value, filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
+          e.reply('loadWaveTableSucseed', { bufnum: msg.value, filePath: filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
           if (isDev) { console.log('loaded audio data:', Utils.reduceAudioData(audioData.channelData[0])); }
         });
     }).catch((err: any) => {
@@ -145,7 +146,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ipcMain.on('allocBufferRequest', (e, bufnum, filePath) => {
     if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath); }
     scSynth.allocReadBuffer(filePath, bufnum).then(() => {
-      e.reply('allocBufferSucseed', { bufnum, filePath });
+      e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath });
     }).catch((err: any) => {
       e.reply('allocBufferFailed', err);
     });
@@ -180,9 +181,12 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       properties: ['openFile', 'openDirectory'],
       filters: [{ name: 'Msplr', extensions: ['msplr'] }],
     }).then((result) => {
-      if (result.canceled) { e.reply('openStoreCanceled'); }
+      if (result.canceled) {
+        e.reply('openStoreCanceled');
+        return;
+      }
       Utils.restoreData(result.filePaths[0]).then((restoerData: any) => {
-        e.reply('openStoreSucseed', { restoerData });
+        e.reply('openStoreSucseed', { restoerData: restoerData });
       }).catch((err: any) => {
         e.reply('openStoreFailed', err);
       });
@@ -194,7 +198,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    */
   scSynth.subscribe('/midi', async (msg) => {
     const channel = parseInt(msg![0] as string);
-    window.webContents.send('onMIDIRecieve', { channel });
+    window.webContents.send('onMIDIRecieve', { channel: channel });
   });
   await scSynth.boot().then(() => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });

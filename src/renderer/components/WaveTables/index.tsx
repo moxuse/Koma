@@ -125,20 +125,21 @@ const WaveTables = ({
   }, []);
 
   const isAllocated = useCallback((tables_: TableList, table: Table): boolean => {
-    return TableList.getAllocatedSampleById(tables, table.getSample()!);
+    return TableList.getAllocatedSampleById(tables_, table.getSample()!);
   }, [isFetching, tables]);
 
   const getBufferData = (tables_: TableList, table: Table): Float32Array | undefined => {
-    return tables.getBufferDataForSampleId(table.getSample());
+    return tables_.getBufferDataForSampleId(table.getSample());
   };
 
   const getSample = (tables_: TableList, table: Table) => {
-    return TableList.getSampleById(tables, table.getSample()!);
+    return TableList.getSampleById(tables_, table.getSample()!);
   };
 
   const getEffect = (tables_: TableList, table: Table) => {
-    return TableList.getEffectById(tables, table.getEffect()!);
+    return TableList.getEffectById(tables_, table.getEffect()!);
   };
+
 
   const getTables = () => {
     let i = 0;

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import Knob from '../Tools/Knob';
-import ResolutionSelector from './ResolitionSelector';
+import ResolutionSelector from './ResolutionSelector';
 import AxisYSelector from './AxisYSelector';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import Table from '../../model/Table';
