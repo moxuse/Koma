@@ -50,7 +50,7 @@ export default class SCSynth {
 
   nextBufnum = () => {
     const next = this.bufnum;
-    this.bufnum++;
+    this.bufnum += 1;
     return next;
   };
 
@@ -199,12 +199,8 @@ export default class SCSynth {
           reject(new Error('failed at /done msg'));
         }
       });
-      if (bufnum == null) {
-        bufnum = this.nextBufnum();
-      } else {
-        this.bufnum = bufnum + 1;
-      }
-      this.sendMsg(['/b_allocRead', bufnum, file]);
+      const nextBufnum = bufnum || this.nextBufnum();
+      setTimeout(() => this.sendMsg(['/b_allocRead', nextBufnum, file]), 250);
     });
   }
 
