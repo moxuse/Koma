@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const width = 150;
 const height = 60;
 
-const GraphConatainer = styled.div`
+const GraphContainer = styled.div`
   z-index: 1;
   margin: 2px 0 2px 0;
   display: inline-table;
@@ -36,7 +36,7 @@ const Graph = ({ id, bufferData, slice }: {
   }, []);
   useEffect(() => {
     if (buffer && context) {
-      const pixcelParSample = width / buffer.length;
+      const pixelParSample = width / buffer.length;
       context.clearRect(0, 0, width, height);
       if (slice) {
         context.fillStyle = '#333';
@@ -45,15 +45,15 @@ const Graph = ({ id, bufferData, slice }: {
         );
       }
       buffer?.forEach((val, i) => {
-        if (slice && inRangeSlice(i * pixcelParSample, slice)) {
+        if (slice && inRangeSlice(i * pixelParSample, slice)) {
           context.fillStyle = '#0ff';
         } else {
           context.fillStyle = '#fff';
         }
         context.fillRect(
-          i * pixcelParSample,
+          i * pixelParSample,
           height * 0.5,
-          pixcelParSample,
+          pixelParSample,
           val * height * 0.5,
         );
       });
@@ -61,9 +61,9 @@ const Graph = ({ id, bufferData, slice }: {
   }, [bufferData, context, slice]);
 
   return (
-    <GraphConatainer>
+    <GraphContainer>
       <canvas id={id} width={width} height={height} ref={graphRef} />
-    </GraphConatainer>
+    </GraphContainer>
   );
 };
 

@@ -25,21 +25,21 @@ export default class SCSynth {
   private socket;
   private server: any;
   private options: ServerOptions;
-  private listennersRemote: Array<{ id: number; name: string; event: SCSynthEvent }>;
-  private listennersInternal: Array<{ id: number; name: string; event: SCSynthEvent }>;
+  private listenersRemote: Array<{ id: number; name: string; event: SCSynthEvent }>;
+  private listenersInternal: Array<{ id: number; name: string; event: SCSynthEvent }>;
   private udpPort = 8000;
 
   constructor(options: ServerOptions) {
     this.mode = 'remote';
     this.socket = dgram.createSocket('udp4');
     this.socket.bind(this.udpPort, 'localhost');
-    this.listennersRemote = [];
-    this.listennersInternal = [];
+    this.listenersRemote = [];
+    this.listenersInternal = [];
     this.options = options;
   }
 
   /**
-   * getter for gloabal Ids
+   * getter for global Ids
    */
   nextNodeId = () => {
     const next = this.nodeId;
@@ -109,10 +109,10 @@ export default class SCSynth {
   }
 
   unsubscribe(id: number): void {
-    this.listennersRemote = this.listennersRemote.filter((l) => {
+    this.listenersRemote = this.listenersRemote.filter((l) => {
       return l.id !== id;
     });
-    this.listennersInternal = this.listennersInternal.filter((l) => {
+    this.listenersInternal = this.listenersInternal.filter((l) => {
       return l.id !== id;
     });
   }
@@ -311,7 +311,7 @@ export default class SCSynth {
   private initRemoteListeners() {
     this.socket.on('message', (data: Buffer) => {
       const msg = osc.unpackMessage(data);
-      this.listennersRemote.forEach(({ name, event }) => {
+      this.listenersRemote.forEach(({ name, event }) => {
         if (msg.address === name) {
           event(msg.args);
         }
@@ -324,7 +324,7 @@ export default class SCSynth {
 
   private async initInternalListeners() {
     return this.server.receive.subscribe((msg: string[]) => {
-      this.listennersInternal.forEach(({ name, event }) => {
+      this.listenersInternal.forEach(({ name, event }) => {
         if (msg[0] === name) {
           msg.shift();
           event(msg);
@@ -335,7 +335,7 @@ export default class SCSynth {
 
   private subscribeRemote(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
-    this.listennersRemote.push({
+    this.listenersRemote.push({
       id: id,
       name: address,
       event: callback,
@@ -345,7 +345,7 @@ export default class SCSynth {
 
   private subscribeInternal(address: string, callback: SCSynthEvent): number {
     const id = this.getEventId();
-    this.listennersInternal.push({
+    this.listenersInternal.push({
       id: id,
       name: address,
       event: callback,

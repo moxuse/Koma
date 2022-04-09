@@ -40,7 +40,7 @@ const WaveTableHeader = styled.div`
   }
   ul {
     height: 30%;
-    decolation: none;
+    decoration: none;
   }
 `;
 
@@ -102,7 +102,7 @@ const WaveTable = ({
   allocBuffer,
   booted,
   isAllocated,
-  onMDIDRecieveAtChannel,
+  onMDIDReceiveAtChannel,
 }: {
   channel: number;
   table: Table;
@@ -115,21 +115,21 @@ const WaveTable = ({
   handlePlayer: any;
   handleUpdateTable: any;
   isAllocated: boolean;
-  onMDIDRecieveAtChannel: number | undefined;
+  onMDIDReceiveAtChannel: number | undefined;
 }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [slice, setSlice] = useState<Slice | undefined>(undefined);
   const [triggered, setTriggered] = useState<boolean>(false);
   const [playButtonActive] = useState<boolean>(false);
   useEffect(() => {
-    const b = onMDIDRecieveAtChannel === channel;
+    const b = onMDIDReceiveAtChannel === channel;
     if (b) {
       setTriggered(b);
     }
     setTimeout(() => {
       setTriggered(false);
     }, 250);
-  }, [channel, onMDIDRecieveAtChannel]);
+  }, [channel, onMDIDReceiveAtChannel]);
 
   const clickPlay = useCallback(() => {
     handlePlayer(table.getMode(), currentBufnum, slice, effect);
@@ -204,7 +204,7 @@ function mapStateToProps(
     isPlaying: player.isPlaying,
     playerBufnum: player.bufnum,
     error: player.error,
-    onMDIDRecieveAtChannel: midiAssign.channel,
+    onMDIDReceiveAtChannel: midiAssign.channel,
   };
 }
 

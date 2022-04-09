@@ -3,7 +3,7 @@ import { LoadWaveTableRequestPayload } from './index';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
-import { getNewId, ommitFileName } from '../helper';
+import { getNewId, omitFileName } from '../helper';
 
 /**
  * Action Creator
@@ -36,7 +36,7 @@ export type LoadWaveTableByDialogAction = (
 );
 
 const removeEvents = () => {
-  window.api.removeAllListeners('loadWaveTableByDialogSucseed');
+  window.api.removeAllListeners('loadWaveTableByDialogSucceed');
   window.api.removeAllListeners('loadWaveTableByDialogFailed');
 };
 
@@ -50,13 +50,13 @@ export const loadWaveTableByDialog = () => {
       effect: undefined,
       error: undefined,
     }));
-    window.api.on!('loadWaveTableByDialogSucseed', (_, { bufnum, filePath, data }) => {
+    window.api.on!('loadWaveTableByDialogSucceed', (_, { bufnum, filePath, data }) => {
       const sampleId = getNewId();
       const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
       const t = new Table({
         id: getNewId(),
         mode: 'normal',
-        name: ommitFileName(filePath),
+        name: omitFileName(filePath),
         bufnum: bufnum,
         sample: sampleId,
         effect: sampleId,

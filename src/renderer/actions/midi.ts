@@ -4,27 +4,27 @@ export interface MIDIAssignPayload {
   channel: number;
 }
 
-export interface MIDIOnRecieve {
-  type: 'MIDI_ON_RECIEVE';
+export interface MIDIOnReceive {
+  type: 'MIDI_ON_RECEIVE';
   payload: MIDIAssignPayload;
 }
 
-export type MIDIAssignAction = MIDIOnRecieve;
+export type MIDIAssignAction = MIDIOnReceive;
 
 /**
  * Action Creator
  */
 
-export const midiOnRecieveAction: ActionCreator<MIDIAssignAction> = (
+export const midiOnReceiveAction: ActionCreator<MIDIAssignAction> = (
   payload: MIDIAssignPayload,
 ): MIDIAssignAction => ({
-  type: 'MIDI_ON_RECIEVE',
+  type: 'MIDI_ON_RECEIVE',
   payload: payload,
 } as const);
 
 
-export const midiOnRecieve = (channel: number | undefined) => {
+export const midiOnReceive = (channel: number | undefined) => {
   return (dispatch: Dispatch<MIDIAssignAction>) => {
-    dispatch(midiOnRecieveAction({ channel: channel }));
+    dispatch(midiOnReceiveAction({ channel: channel }));
   };
 };

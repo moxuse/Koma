@@ -1,10 +1,10 @@
 import fs from 'fs';
 
-export const OMMITED_RATE = 24;
+export const OMITTED_RATE = 24;
 export const DETAILED_RATE = 8;
 
 export const reduceAudioData = (data: Float32Array): { omitted: Float32Array; detailed: Float32Array } => {
-  const omitted = data.filter((sample, i) => i % OMMITED_RATE === 0);
+  const omitted = data.filter((sample, i) => i % OMITTED_RATE === 0);
   const detailed = data.filter((sample, i) => i % DETAILED_RATE === 0);
   return { omitted: omitted, detailed: detailed };
 };

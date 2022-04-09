@@ -13,14 +13,14 @@ declare global {
     { mode: string } &
     { channel: number } &
     { tables: Table } &
-    { bufnum: number, data: { ommited: Float32Array, detailed: Float32Array } } &    
+    { bufnum: number, data: { omitted: Float32Array, detailed: Float32Array } } &    
     { bufnum: number, filePath: string, data: { omitted: Float32Array, detailed: Float32Array } } &
     { bufnum: number,
       slice: ({ begin: number, end: number } | undefined),
       effect: { amp: number, rate: number, pan: number, gain: number, axisY: AxisYType }
     } &
     { tables: Table[] } &
-    { restoerData: any } &
+    { restoreData: any } &
     Error;
   
   type IpcEvent = ((e: IpcMainEvent, arg: IcpEventArg) => void) | undefined;

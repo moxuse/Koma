@@ -36,7 +36,7 @@ export type AllocReadBufferAction = (
 );
 
 const removeEvents = () => {
-  window.api.removeAllListeners('allocBufferSucseed');
+  window.api.removeAllListeners('allocBufferSucceed');
   window.api.removeAllListeners('allocBufferFailed');
 };
 
@@ -47,7 +47,7 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
       bufnum: bufnum,
       error: undefined,
     }));
-    window.api.on!('allocBufferSucseed', (_, arg: { bufnum: number; filePath: string }) => {
+    window.api.on!('allocBufferSucceed', (_, arg: { bufnum: number; filePath: string }) => {
       dispatch(allocReadBufferSucceed({
         filePath: arg.filePath,
         bufnum: arg.bufnum,

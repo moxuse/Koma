@@ -9,7 +9,7 @@ import Effect from '../../model/Effect';
 import MIDIReceiver from '../../lib/midi';
 import { loadSetting as LoadSetting, booted as Booted } from '../../actions/setting';
 import { player } from '../../actions/buffer/player';
-import { midiOnRecieve } from '../../actions/midi';
+import { midiOnReceive } from '../../actions/midi';
 import { connect } from 'react-redux';
 import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
 import { openStore } from '../../actions/waveTables/openStore';
@@ -64,22 +64,22 @@ const WaveTables = ({
   booted,
   isFetching,
   tables,
-  onceLiestenBooted,
+  onceListenBooted,
   loadSetting,
   handleOpenButton,
   handlePlusButton,
   handlePlayer,
-  handleMidiOnRecieve,
+  handleMidiOnReceive,
 }: {
   booted: boolean;
   isFetching: boolean;
   tables: TableList;
-  onceLiestenBooted: any;
+  onceListenBooted: any;
   loadSetting: any;
   handleOpenButton: any;
   handlePlusButton: any;
   handlePlayer: any;
-  handleMidiOnRecieve: any;
+  handleMidiOnReceive: any;
 }): JSX.Element => {
   const debounced = useDebouncedCallback(
     (t: TableList) => assignMIDI(t),
@@ -89,25 +89,25 @@ const WaveTables = ({
 
   const assignMIDI = (t: TableList) => {
     const tables_ = t.getTables().toJS() as Table[];
-    midi.unscbscribeAll();
+    midi.unsubscribeAll();
     tables_.forEach((table: Table, i: number) => {
       const eff = TableList.getEffectById(tables, table.effect!);
       midi.subscribe(i, (e: WebMidi.MIDIMessageEvent) => {
-        const midinote = e.data[1];
+        const midiNote = e.data[1];
         const amp = e.data[2] * 0.0078125;
-        const rate = midiratio(midinote - 60) * eff!.getRate();
+        const rate = midiratio(midiNote - 60) * eff!.getRate();
         const replacedEff = new Effect(eff).set('rate', rate).set('amp', amp);
         handlePlayer(table.mode, table.bufnum, table.slice, replacedEff);
-        handleMidiOnRecieve(i);
+        handleMidiOnReceive(i);
         setTimeout(() => {
-          handleMidiOnRecieve(-1);
+          handleMidiOnReceive(-1);
         }, 100);
       });
     });
   };
 
   useEffect(() => {
-    onceLiestenBooted();
+    onceListenBooted();
     loadSetting();
   }, []);
 
@@ -117,10 +117,10 @@ const WaveTables = ({
     }
   }, [tables, isFetching]);
 
-  const onClickeOpenButton = useCallback(() => handleOpenButton(), []);
-  const onClickeSaveButton = useCallback(() => window.api.saveStore(), []);
+  const onClickOpenButton = useCallback(() => handleOpenButton(), []);
+  const onClickSaveButton = useCallback(() => window.api.saveStore(), []);
 
-  const onClickePlusButton = useCallback(() => {
+  const onClickPlusButton = useCallback(() => {
     handlePlusButton();
   }, []);
 
@@ -166,8 +166,8 @@ const WaveTables = ({
     <WaveTableContainer>
       {booted ? (
         <>
-          <Button onClick={onClickeSaveButton}>{'[ _ ]'}</Button>
-          <Button onClick={onClickeOpenButton}>{'[ ^ ]'}</Button>
+          <Button onClick={onClickSaveButton}>{'[ _ ]'}</Button>
+          <Button onClick={onClickOpenButton}>{'[ ^ ]'}</Button>
         </>
       ) : <></>}
       <DropSection booted={booted}>
@@ -180,7 +180,7 @@ const WaveTables = ({
         </TableEditor>
         <FooterList>
           <li>
-            {booted ? (<Button onClick={onClickePlusButton}>{'[ + ]'}</Button>) : 'synth server not booted'}
+            {booted ? (<Button onClick={onClickPlusButton}>{'[ + ]'}</Button>) : 'synth server not booted'}
           </li>
           <li>
             <MidiDeviceIndicator>{midi.devices}</MidiDeviceIndicator>
@@ -206,9 +206,9 @@ function mapDispatchToProps(dispatch: any) {
     handleOpenButton: () => dispatch(openStore()),
     handlePlusButton: () => dispatch(loadWaveTableByDialog()),
     handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
-    handleMidiOnRecieve: (channel: number) => dispatch(midiOnRecieve(channel)),
+    handleMidiOnReceive: (channel: number) => dispatch(midiOnReceive(channel)),
     loadSetting: () => dispatch(LoadSetting()),
-    onceLiestenBooted: () => dispatch(Booted()),
+    onceListenBooted: () => dispatch(Booted()),
   };
 }
 

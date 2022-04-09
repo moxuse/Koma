@@ -15,7 +15,7 @@ export interface BootedPayload {
   mode: string;
 }
 
-export interface BootedActioon {
+export interface BootedAction {
   type: 'BOOTED';
   payload: BootedPayload;
 }
@@ -31,7 +31,7 @@ export interface LoadSettingFailure {
 }
 
 export type LoadSettingAction =
-  BootedActioon
+  BootedAction
   | LoadSettingRequest
   | LoadSettingSuccess
   | LoadSettingFailure;
@@ -39,7 +39,7 @@ export type LoadSettingAction =
 /**
  * Action Creator
  */
-export const bootedRequets: ActionCreator<LoadSettingAction> = (
+export const bootedRequests: ActionCreator<LoadSettingAction> = (
   payload: BootedPayload,
 ): LoadSettingAction => ({
   type: 'BOOTED',
@@ -66,14 +66,14 @@ export const loadSettingFailure: ActionCreator<LoadSettingAction> = (
 } as const);
 
 const removeEvents = () => {
-  window.api.removeAllListeners('loadSettingSucseed');
+  window.api.removeAllListeners('loadSettingSucceed');
   window.api.removeAllListeners('loadSettingFailed');
 };
 
 export const booted = () => {
   return (dispatch: Dispatch<LoadSettingAction>) => {
     window.api.once('booted', (_, arg: { mode: string }) => {
-      dispatch(bootedRequets({ mode: arg.mode }));
+      dispatch(bootedRequests({ mode: arg.mode }));
     });
   };
 };
@@ -83,7 +83,7 @@ export const loadSetting = () => {
     dispatch(loadSettingRequest({
       isFetching: true,
     }));
-    window.api.on!('loadSettingSucseed', () => {
+    window.api.on!('loadSettingSucceed', () => {
       dispatch(loadSettingSuccess({
         isFetching: false,
       }));

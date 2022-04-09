@@ -6,14 +6,14 @@ import { updateSlice } from '../../actions/buffer/slice';
 import styled from 'styled-components';
 
 
-const TableEditorErea = styled.div`
+const TableEditorArea = styled.div`
 `;
 
 const TableEditor = ({ children, tables, handleUpdate }: {
   children: JSX.Element; tables: TableList; handleUpdate: any;
 }) => {
   const tableList = useRef<HTMLDivElement>(null);
-  const [editting, setEditting] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
   const [id, setId] = useState<string | undefined>(undefined);
   const [from, setFrom] = useState<number | undefined>(undefined);
   const [to, setTo] = useState<number | undefined>(undefined);
@@ -32,7 +32,7 @@ const TableEditor = ({ children, tables, handleUpdate }: {
 
   useEffect(() => {
     const onMousedown = (e: MouseEvent) => {
-      setEditting(true);
+      setEditing(true);
       const target = e.target as HTMLElement;
       const rect = target?.getBoundingClientRect();
       const x_ = e.clientX - rect.left;
@@ -44,10 +44,10 @@ const TableEditor = ({ children, tables, handleUpdate }: {
     return () => {
       tableList.current?.removeEventListener('mousedown', onMousedown, false);
     };
-  }, [tables, id, editting]);
+  }, [tables, id, editing]);
   useEffect(() => {
     const onMousemove = (e: MouseEvent) => {
-      if (editting) {
+      if (editing) {
         const target: HTMLElement = e.target as HTMLElement;
         const rect = target?.getBoundingClientRect();
         const x_ = e.clientX - rect.left;
@@ -68,10 +68,10 @@ const TableEditor = ({ children, tables, handleUpdate }: {
     return () => {
       tableList.current?.removeEventListener('mousemove', onMousemove, false);
     };
-  }, [tables, id, editting]);
+  }, [tables, id, editing]);
   useEffect(() => {
     const onMouseup = () => {
-      setEditting(false);
+      setEditing(false);
       setId(undefined);
       // const target = e.target as HTMLElement;
       // console.log('mouseup', target.id);
@@ -80,11 +80,11 @@ const TableEditor = ({ children, tables, handleUpdate }: {
     return () => {
       tableList.current?.removeEventListener('mouseup', onMouseup, false);
     };
-  }, [tables, id, editting]);
+  }, [tables, id, editing]);
   return (
-    <TableEditorErea ref={tableList}>
+    <TableEditorArea ref={tableList}>
       {children}
-    </TableEditorErea>
+    </TableEditorArea>
   );
 };
 

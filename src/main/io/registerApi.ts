@@ -29,24 +29,24 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   /**
    * Load Store file
    * returns
-   * 'loadStoreSucseed'
+   * 'loadStoreSucceed'
    */
   ipcMain.on('loadSetting', async (e) => {
     if (isDev) { console.log('loadSetting!! in api'); }
-    await scSynth.checkRemoteHealth().then(isHealthy => {
+    await scSynth.checkRemoteHealth().then((isHealthy) => {
       if (isHealthy) {
         window.webContents.postMessage('booted', { mode: scSynth.mode });
       }
     });
 
-    e.reply('loadSettingSucseed');
+    e.reply('loadSettingSucceed');
   });
 
   /**
    * Read Wav file from path
    * returns
    * 'loadWaveTableByDialogCanceled'
-   * 'loadWaveTableByDialogSucseed'
+   * 'loadWaveTableByDialogSucceed'
    * 'loadWaveTableByDialogFailed'
    */
   ipcMain.on('loadWaveTableByDialog', async (e) => {
@@ -65,7 +65,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
 
     const msg = await scSynth.allocReadBuffer(result.filePaths[0], null);
     const arg = { bufnum: msg.value, filePath: result.filePaths[0], data: Utils.reduceAudioData(audioData.channelData[0]) };
-    e.reply('loadWaveTableByDialogSucseed', arg);
+    e.reply('loadWaveTableByDialogSucceed', arg);
 
     if (isDev) { console.log('loaded audio data:', msg, result, audioData); }
   });
@@ -75,7 +75,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * Read Wav file from path
    * returns
    * 'loadWaveTable'
-   * 'loadWaveTableSucseed'
+   * 'loadWaveTableSucceed'
    * 'loadWaveTableFailed'
    */
   ipcMain.on('loadWaveTable', (e, filePath) => {
@@ -84,7 +84,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     }).then((audioData) => {
       return scSynth.allocReadBuffer(filePath, null)
         .then((msg) => {
-          e.reply('loadWaveTableSucseed', { bufnum: msg.value, filePath: filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
+          e.reply('loadWaveTableSucceed', { bufnum: msg.value, filePath: filePath, data: Utils.reduceAudioData(audioData.channelData[0]) });
           if (isDev) { console.log('loaded audio data:', Utils.reduceAudioData(audioData.channelData[0])); }
         });
     }).catch((err: any) => {
@@ -140,13 +140,13 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
 
   /**
    * allocBufferRequest
-   * allocBufferSucseed
+   * allocBufferSucceed
    * allocBufferFailed
    */
   ipcMain.on('allocBufferRequest', (e, bufnum, filePath) => {
     if (isDev) { console.log('allocBufferRequest', e, bufnum, filePath); }
     scSynth.allocReadBuffer(filePath, bufnum).then(() => {
-      e.reply('allocBufferSucseed', { bufnum: bufnum, filePath: filePath });
+      e.reply('allocBufferSucceed', { bufnum: bufnum, filePath: filePath });
     }).catch((err: any) => {
       e.reply('allocBufferFailed', err);
     });
@@ -158,13 +158,13 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ipcMain.on('saveStore', (e) => {
     window.webContents
       .executeJavaScript('localStorage.getItem("persist:root");', true)
-      .then(data => {
+      .then((data) => {
         dialog.showSaveDialog({
           filters: [{ name: 'WaveTable', extensions: ['msplr'] }],
         }).then((result) => {
           if (result.filePath) {
             const finalJson = data.replace(/\\"/g, '"').replace(/"{/g, '{').replace(/}"/g, '}');
-            fs.writeFile(result.filePath, finalJson, {}, err => {
+            fs.writeFile(result.filePath, finalJson, {}, (err) => {
               e.reply('saveStoreFailed', err);
             });
           }
@@ -185,8 +185,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
         e.reply('openStoreCanceled');
         return;
       }
-      Utils.restoreData(result.filePaths[0]).then((restoerData: any) => {
-        e.reply('openStoreSucseed', { restoerData: restoerData });
+      Utils.restoreData(result.filePaths[0]).then((restoreData: any) => {
+        e.reply('openStoreSucceed', { restoreData: restoreData });
       }).catch((err: any) => {
         e.reply('openStoreFailed', err);
       });
@@ -198,7 +198,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    */
   scSynth.subscribe('/midi', async (msg) => {
     const channel = parseInt(msg![0] as string, 10);
-    window.webContents.send('onMIDIRecieve', { channel: channel });
+    window.webContents.send('onMIDIReceive', { channel: channel });
   });
   await scSynth.boot().then(() => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });

@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import TableList from '../../model/TableList';
 // eslint-disable-next-line import/no-cycle
-import { outboundsTransform } from '../../../renderer/reducer';
+import { outboundTransform } from '../../../renderer/reducer';
 
 export interface OpenStorePayload {
   isFetching: boolean;
@@ -40,7 +40,7 @@ export type OpenStoreAction = (
 );
 
 const removeEvents = () => {
-  window.api.removeAllListeners('openStoreSucseed');
+  window.api.removeAllListeners('openStoreSucceed');
   window.api.removeAllListeners('openStoreFailed');
 };
 
@@ -66,11 +66,11 @@ export const openStore = () => {
   };
 };
 
-export const restore = (restoerData: any) => {
+export const restore = (restoreData: any) => {
   return (dispatch: Dispatch<OpenStoreAction>) => {
     dispatch(openStoreSuccess({
       isFetching: false,
-      tables: outboundsTransform(restoerData.waveTables).tables,
+      tables: outboundTransform(restoreData.waveTables).tables,
       error: undefined,
     }));
   };

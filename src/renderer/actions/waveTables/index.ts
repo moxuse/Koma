@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
-import { getNewId, ommitFileName } from '../helper';
+import { getNewId, omitFileName } from '../helper';
 
 export interface LoadWaveTableRequestPayload {
   isFetching: boolean;
@@ -74,7 +74,7 @@ export type LoadWaveTableAction = (
 );
 
 const removeEvents = () => {
-  window.api.removeAllListeners('loadWaveTableSucseed');
+  window.api.removeAllListeners('loadWaveTableSucceed');
   window.api.removeAllListeners('loadWaveTableFailed');
 };
 
@@ -89,13 +89,13 @@ export const loadWaveTables = (filePath_: string) => (
     effect: undefined,
     error: undefined,
   }));
-  window.api.on!('loadWaveTableSucseed', (_, { bufnum, filePath, data }) => {
+  window.api.on!('loadWaveTableSucceed', (_, { bufnum, filePath, data }) => {
     const sampleId = getNewId();
     const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
     const t = new Table({
       id: getNewId(),
       mode: 'normal',
-      name: ommitFileName(filePath),
+      name: omitFileName(filePath),
       bufnum: bufnum,
       sample: sampleId,
       effect: sampleId,

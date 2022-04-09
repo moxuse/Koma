@@ -34,7 +34,7 @@ const base64ToFloat32Array = (base64: string) => {
   return new Float32Array(bytes.buffer);
 };
 
-export const outboundsTransform = (outboundState: any): any => {
+export const outboundTransform = (outboundState: any): any => {
   // console.log('outboundState', outboundState)
   let newTableList = new TableList();
   outboundState.waveTables.tables.forEach((t: Table) => {
@@ -70,12 +70,12 @@ export const outboundsTransform = (outboundState: any): any => {
     newTableList = TableList.appendEffect(newTableList, effect);
   });
 
-  const retunVal = {
+  const returnVal = {
     ...outboundState,
     tables: newTableList,
   };
 
-  return retunVal;
+  return returnVal;
 };
 
 const TransformTables = createTransform(
@@ -121,7 +121,7 @@ const TransformTables = createTransform(
     };
     return returnVal;
   },
-  outboundsTransform, {
+  outboundTransform, {
     whitelist: ['waveTables', 'tables'],
   },
 );

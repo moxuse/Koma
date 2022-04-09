@@ -82,7 +82,7 @@ export default class MIDIReceiver implements Midi, MidiActions {
     return id;
   }
 
-  unscbscribeAll() {
+  unsubscribeAll() {
     this.events = [];
   }
 

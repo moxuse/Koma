@@ -13,10 +13,10 @@ const DragAreaStyle = styled.div`
   -webkit-app-region: drag;
 `;
 
-window.api.on!('openStoreSucseed', (_, { restoerData }) => {
-  if (restoerData) {
+window.api.on!('openStoreSucceed', (_, { restoreData }) => {
+  if (restoreData) {
     persistor.purge();
-    store.dispatch(restore(restoerData));
+    store.dispatch(restore(restoreData));
   }
 });
 

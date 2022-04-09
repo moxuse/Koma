@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 import { updateWaveTableByEffect } from '../../actions/waveTables';
 import styled from 'styled-components';
 
-const ToolsErea = styled.div`
+const ToolsArea = styled.div`
 `;
 
-const calcSpac = (val: number, add: number, key: string): number => {
+const calcSpace = (val: number, add: number, key: string): number => {
   const clip = (value: number, add_: number, spec: Spec): number => {
     let value_ = value;
     // eslint-disable-next-line default-case
@@ -53,16 +53,16 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
   children: JSX.Element; tables: TableList; handleUpdate: any;
 }) => {
   const toolsEl = useRef<HTMLDivElement>(null);
-  const [editting, setEditting] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
   const [id, setId] = useState<string | undefined>(undefined);
   const [type, setType] = useState<string | undefined>(undefined);
   /**
    * tools edit with mouse event
    */
   const parseId = (id_: string): { id: string; type: string } | false => {
-    const splitted = id_.split('-');
-    if (id_ && splitted.length > 1) {
-      return { id: splitted[0], type: splitted[1] };
+    const split = id_.split('-');
+    if (id_ && split.length > 1) {
+      return { id: split[0], type: split[1] };
     }
     return false;
   };
@@ -76,29 +76,29 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
       const target: HTMLElement = e.target as HTMLElement;
       const parsed = parseId(target.id);
       if (parsed) {
-        setEditting(true);
+        setEditing(true);
         setId(parsed.id);
         setType(parsed.type);
       } else {
-        setEditting(false);
+        setEditing(false);
       }
     };
     window.addEventListener('mousedown', onMousedown, false);
     return () => {
       window.removeEventListener('mousedown', onMousedown, false);
     };
-  }, [tables, id, type, editting]);
+  }, [tables, id, type, editing]);
   useEffect(() => {
     const onMousemove = (e: MouseEvent) => {
-      if (editting && id && type) {
+      if (editing && id && type) {
         const key: EffectKeys = type as EffectKeys;
         const eff = getEffect(tables, id);
         let val;
         if (eff && key) {
           val = eff.get(key);
           if (typeof val === 'number') {
-            const neweffect = eff.set(key, calcSpac(val, e.movementY * -0.025, key));
-            handleUpdate(tables, neweffect);
+            const newEffect = eff.set(key, calcSpace(val, e.movementY * -0.025, key));
+            handleUpdate(tables, newEffect);
           }
         }
       }
@@ -107,10 +107,10 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
     return () => {
       window.removeEventListener('mousemove', onMousemove, false);
     };
-  }, [tables, id, type, editting]);
+  }, [tables, id, type, editing]);
   useEffect(() => {
     const onMouseup = () => {
-      setEditting(false);
+      setEditing(false);
       setId(undefined);
       setType(undefined);
     };
@@ -118,12 +118,12 @@ const ToolsEditor = ({ children, tables, handleUpdate }: {
     return () => {
       window.removeEventListener('mouseup', onMouseup, false);
     };
-  }, [tables, id, type, editting]);
+  }, [tables, id, type, editing]);
 
   return (
-    <ToolsErea ref={toolsEl}>
+    <ToolsArea ref={toolsEl}>
       {children}
-    </ToolsErea>
+    </ToolsArea>
   );
 };
 

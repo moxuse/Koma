@@ -12,7 +12,7 @@ export const GrainEditorSize = {
   height: 60,
 };
 
-const GraphConatainer = styled.div`
+const GraphContainer = styled.div`
   visibility: ${(props: { isShown: boolean }) => ((props.isShown) ? 'visible' : 'hidden')};
   position: absolute;
   z-index: 2;
@@ -30,7 +30,7 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
   const { resolution } = React.useContext(ResolutionContext);
   const [points_, setPoints] = useState<GrainPoint[]>([]);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
-  const [editting, setEditting] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
   const graphRef = useRef<HTMLCanvasElement>(null);
   const graphContainer = useRef<HTMLDivElement>(null);
 
@@ -58,29 +58,29 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
       });
       context.stroke();
     }
-  }, [context, graphRef, graphContainer, editting, points_]);
+  }, [context, graphRef, graphContainer, editing, points_]);
 
   const onMouseDown = (e: MouseEvent) => {
     const firstPoint = { x: e.offsetX, y: e.offsetY };
     setPoints(() => []);
-    setEditting(() => true);
+    setEditing(() => true);
     setPoints((prev) => [...prev, firstPoint]);
   };
   const onMouseUp = useCallback(() => {
-    setEditting(() => false);
+    setEditing(() => false);
     const newEff = effect.set('points', points_);
     handleUpdate(table, newEff);
   }, [effect, points_]);
   const onMouseOut = useCallback(() => {
-    setEditting(() => false);
+    setEditing(() => false);
     const newEff = effect.set('points', points_);
     handleUpdate(table, newEff);
   }, [effect, points_]);
   const onMouseMove = useCallback((e: MouseEvent) => {
-    if (editting) {
+    if (editing) {
       setPoints((prev) => [...prev, { x: e.offsetX, y: e.offsetY }]);
     }
-  }, [editting]);
+  }, [editing]);
 
   useEffect(() => {
     if (graphRef.current) {
@@ -98,12 +98,12 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
       graphContainer.current?.removeEventListener('mouseout', onMouseOut, false);
       graphContainer.current?.removeEventListener('mousemove', throttleFn, false);
     };
-  }, [effect, table, graphRef, graphContainer, editting, resolution]);
+  }, [effect, table, graphRef, graphContainer, editing, resolution]);
 
   return (
-    <GraphConatainer isShown={table.getMode() === 'grain'} ref={graphContainer}>
+    <GraphContainer isShown={table.getMode() === 'grain'} ref={graphContainer}>
       <canvas width={GrainEditorSize.width} height={GrainEditorSize.height} ref={graphRef} />
-    </GraphConatainer>
+    </GraphContainer>
   );
 };
 
