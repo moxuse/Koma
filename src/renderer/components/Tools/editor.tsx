@@ -12,18 +12,19 @@ const ToolsErea = styled.div`
 
 const calcSpac = (val: number, add: number, key: string): number => {
   const clip = (value: number, add_: number, spec: Spec): number => {
+    let value_ = value;
     // eslint-disable-next-line default-case
     switch (spec.type) {
       case 'linear':
-        value += add_;
+        value_ += add_;
         break;
       case 'exp':
-        value += (add * value + add_);
+        value_ += (add * value_ + add_);
         break;
     }
-    if (value < spec.min) { value = spec.min; }
-    if (value > spec.max) { value = spec.max; }
-    return value;
+    if (value_ < spec.min) { value_ = spec.min; }
+    if (value_ > spec.max) { value_ = spec.max; }
+    return value_;
   };
   let val_ = val;
   switch (key) {

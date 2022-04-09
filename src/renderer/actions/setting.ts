@@ -73,7 +73,6 @@ const removeEvents = () => {
 export const booted = () => {
   return (dispatch: Dispatch<LoadSettingAction>) => {
     window.api.once('booted', (_, arg: { mode: string }) => {
-      // console.log('dispatched...booted?')
       dispatch(bootedRequets({ mode: arg.mode }));
     });
   };

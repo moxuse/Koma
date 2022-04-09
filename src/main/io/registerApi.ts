@@ -197,7 +197,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * after set apis then boot server and lang.
    */
   scSynth.subscribe('/midi', async (msg) => {
-    const channel = parseInt(msg![0] as string);
+    const channel = parseInt(msg![0] as string, 10);
     window.webContents.send('onMIDIRecieve', { channel: channel });
   });
   await scSynth.boot().then(() => {

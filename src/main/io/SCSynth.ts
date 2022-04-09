@@ -1,9 +1,8 @@
-const sc = require('supercolliderjs');
 import * as dgram from 'dgram';
 import * as OSC from 'osc-js';
 import * as osc from '@supercollider/osc';
 // import sc from 'supercolliderjs';
-
+const sc = require('supercolliderjs');
 
 export type SCSynthMode = 'internal' | 'remote';
 
@@ -110,10 +109,10 @@ export default class SCSynth {
   }
 
   unsubscribe(id: number): void {
-    this.listennersRemote = this.listennersRemote.filter(l => {
+    this.listennersRemote = this.listennersRemote.filter((l) => {
       return l.id !== id;
     });
-    this.listennersInternal = this.listennersInternal.filter(l => {
+    this.listennersInternal = this.listennersInternal.filter((l) => {
       return l.id !== id;
     });
   }
@@ -208,18 +207,18 @@ export default class SCSynth {
     return new Promise((resolve, reject) => {
       const doneId = this.subscribe('/done', (msg) => {
         this.unsubscribe(doneId);
-        if (msg && msg[0] == '/d_recv') {
+        if (msg && msg[0] === '/d_recv') {
           resolve({ id: doneId, error: undefined });
         } else {
-          reject({ id: doneId, error: new Error('maybe /fail') });
+          reject(new Error('maybe /fail'));
         }
       });
       if (this.mode === 'internal') {
         this.server?.loadSynthDef(name, file).catch((e: Error) => {
-          reject({ id: doneId, error: e });
+          reject(e);
         });
       } else {
-        reject({ id: doneId, error: new Error('server not booted at internal.') });
+        reject(new Error('server not booted at internal.'));
       }
     });
   }
@@ -232,8 +231,7 @@ export default class SCSynth {
     slice: ({ begin: number; end: number } | undefined),
     effect: { amp: number; rate: number; pan: number; gain: number }) {
     if (slice && slice.begin && slice.end) {
-      const begin = slice.begin;
-      const end = slice.end;
+      const { begin, end } = slice;
       // if (effect.rate < 0) {
       //   end = slice.begin;
       //   begin = slice.end;
@@ -283,8 +281,8 @@ export default class SCSynth {
       'duration', effect.duration,
     ];
 
-    const positions: number[] = effect.points.map(p => { return p.x; });
-    const rates: number[] = effect.points.map(p => { return p.y * -1; });
+    const positions: number[] = effect.points.map((p) => { return p.x; });
+    const rates: number[] = effect.points.map((p) => { return p.y * -1; });
     this.sendMsgWithPoints(msgPack, positions, rates);
   }
 
