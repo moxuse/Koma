@@ -1,6 +1,6 @@
 import { List, Record } from 'immutable';
 import Table from './Table';
-import Sample from './Sample';
+import Sample, { SampleState } from './Sample';
 import Effect from './Effect';
 
 const DefaultTableList = {
@@ -52,11 +52,11 @@ export default class TableList extends Record(DefaultTableList) {
     return index;
   }
 
-  static getAllocatedSampleById(target: TableList, id: string): boolean {
-    let alloc = false;
+  static getSampleStateById(target: TableList, id: string): SampleState {
+    let alloc = 'NOT_ALLOCATED' as SampleState;
     target.getSamples().forEach((sample) => {
       if (sample.getId() === id) {
-        alloc = sample.getAllocated();
+        alloc = sample.getState();
       }
     });
     return alloc;
@@ -138,7 +138,7 @@ export default class TableList extends Record(DefaultTableList) {
 
   getBufferDataForSampleId(id?: string): Float32Array | undefined {
     const filtered = this.get('samples').filter((s) => s.getId() === id);
-    if (filtered && filtered.get(0)) {
+    if (filtered) {
       return filtered.get(0)?.getBuffer();
     }
     return new Float32Array();

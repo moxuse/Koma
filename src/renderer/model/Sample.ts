@@ -1,15 +1,17 @@
 import { Record } from 'immutable';
 
+export type SampleState = 'NOT_ALLOCATED' | 'EMPTY' | 'ALLOCATED';
+
 export interface SampleType {
   id: string;
-  allocated: boolean;
+  state: SampleState;
   filePath: string | undefined;
   buffer: Float32Array | undefined;
 }
 
 const DefaultSample: SampleType = {
   id: '0',
-  allocated: false,
+  state: 'NOT_ALLOCATED',
   filePath: undefined,
   buffer: new Float32Array(),
 };
@@ -18,8 +20,8 @@ export default class Sample extends Record(DefaultSample) {
   getId() {
     return this.get('id');
   }
-  getAllocated() {
-    return this.get('allocated');
+  getState() {
+    return this.get('state');
   }
   getFilePath() {
     return this.get('filePath');

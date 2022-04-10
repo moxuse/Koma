@@ -3,7 +3,7 @@ import { LoadWaveTableRequestPayload } from './index';
 import Table from '../../model/Table';
 import Sample from '../../model/Sample';
 import Effect from '../../model/Effect';
-import { getNewId, omitFileName } from '../helper';
+import { omitFileName } from '../helper';
 
 /**
  * Action Creator
@@ -40,7 +40,7 @@ const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableByDialogFailed');
 };
 
-export const loadWaveTableByDialog = () => {
+export const loadWaveTableByDialog = (table: Table) => {
   return (dispatch: Dispatch<LoadWaveTableByDialogAction>) => {
     dispatch(loadWaveTableByDialogRequest({
       isFetching: true,
@@ -51,19 +51,18 @@ export const loadWaveTableByDialog = () => {
       error: undefined,
     }));
     window.api.on!('loadWaveTableByDialogSucceed', (_, { bufnum, filePath, data }) => {
-      const sampleId = getNewId();
-      const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
+      const s = new Sample({ id: table.get('sample'), state: 'ALLOCATED', filePath, buffer: data.omitted });
       const t = new Table({
-        id: getNewId(),
+        id: table.getId(),
         mode: 'normal',
         name: omitFileName(filePath),
         bufnum: bufnum,
-        sample: sampleId,
-        effect: sampleId,
+        sample: table.get('sample'),
+        effect: table.get('effect'),
         slice: undefined,
       });
       let e = new Effect();
-      e = e.set('id', sampleId);
+      e = e.set('id', table.get('effect')!);
       dispatch(loadWaveTableByDialogSuccess({
         isFetching: false,
         filePath: '',

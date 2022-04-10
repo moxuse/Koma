@@ -54,7 +54,7 @@ export const allocReadBuffer = (bufnum: number, sample: Sample) => {
         error: undefined,
       }));
       removeEvents();
-      const newSample = new Sample(sample).set('allocated', true);
+      const newSample = new Sample(sample).set('state', 'ALLOCATED');
       dispatch(updateWaveTableBySample(newSample));
     });
     window.api.on!('allocBufferFailed', (_, arg: Error) => {

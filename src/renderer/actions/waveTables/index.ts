@@ -92,6 +92,7 @@ export const addEmptyWaveTable = () => (
   const sampleId = getNewId();
   let s = new Sample();
   s = s.set('id', sampleId);
+  s = s.set('state', 'EMPTY');
   let e = new Effect();
   e = e.set('id', sampleId);
   let table = new Table({
@@ -127,7 +128,7 @@ export const loadWaveTables = (filePath_: string) => (
   }));
   window.api.on!('loadWaveTableSucceed', (_, { bufnum, filePath, data }) => {
     const sampleId = getNewId();
-    const s = new Sample({ id: sampleId, allocated: true, filePath, buffer: data.omitted });
+    const s = new Sample({ id: sampleId, state: 'ALLOCATED', filePath, buffer: data.omitted });
     const t = new Table({
       id: getNewId(),
       mode: 'normal',

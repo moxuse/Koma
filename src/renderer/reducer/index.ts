@@ -54,7 +54,7 @@ export const outboundTransform = (outboundState: any): any => {
   outboundState.waveTables.samples.forEach((s: Sample) => {
     let sample = new Sample();
     sample = sample.set('id', s.id);
-    sample = sample.set('allocated', false);
+    sample = sample.set('state', s.state);
     sample = sample.set('buffer', base64ToFloat32Array(s.buffer));
     sample = sample.set('filePath', s.filePath);
     newTableList = TableList.appendSample(newTableList, sample);
@@ -101,7 +101,7 @@ const TransformTables = createTransform(
         samples: inboundState.tables ? inboundState.tables.getSamples().toJS().map((s: Sample) => {
           return {
             id: s.id,
-            allocated: false,
+            state: s.state === 'ALLOCATED' ? 'NOT_ALLOCATED' : s.state,
             filePath: s.filePath,
             buffer: float32ArrayToBase64(s.buffer!),
           };

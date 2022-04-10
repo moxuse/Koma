@@ -55,8 +55,9 @@ export const waveTables = (state = tablesInitialState, action: ActionType) => {
         error: state.error,
       };
     case 'LOAD_WAVE_TABLE_BY_DIALOG_SUCCESS':
-      let newTable = TableList.appendTable(state.tables, action.payload.table!);
-      newTable = TableList.appendEffect(newTable, action.payload.effect!);
+      let newTable = TableList.updateTable(state.tables, action.payload.table!.getId()!, action.payload.table!);
+      newTable = TableList.updateEffect(newTable, action.payload.effect!.getId()!, action.payload.effect!);
+      newTable = TableList.updateSample(newTable, action.payload.sample!.getId()!, action.payload.sample!);
       return {
         isFetching: action.payload.isFetching,
         tables: TableList.appendSample(newTable, action.payload.sample!),

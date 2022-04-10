@@ -2,14 +2,15 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import Table, { Slice } from '../../model/Table';
-import Sample from '../../model/Sample';
+import Sample, { SampleState } from '../../model/Sample';
 import Effect from '../../model/Effect';
 import { ResolutionContextProvider } from '../Tools/Context/Resolution';
 import Graph from './Graph';
 import GrainEditor from '../Tools/GrainEditor';
 import Tools from '../Tools';
 import styled, { css, keyframes } from 'styled-components';
-// import { allocReadBuffer } from '../../actions/buffer';
+import { allocReadBuffer } from '../../actions/buffer';
+import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
 import { player as Player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
 
@@ -46,7 +47,7 @@ const WaveTableHeader = styled.div`
 
 const WaveTableChannel = styled.p`
   
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
 
   ${(props: { triggered: boolean }) => props.triggered && css`
@@ -55,8 +56,11 @@ const WaveTableChannel = styled.p`
 `;
 
 const WaveTableName = styled.p`
-font-size: 13px;
+  font-size: 15px;
   color: #888;
+  .button {
+    color: #fff;
+  }
 `;
 
 const WaveTableModeList = styled.ul`
@@ -99,9 +103,10 @@ const WaveTable = ({
   handlePlayer,
   handleUpdateTable,
   deleteHandler,
-  // allocBuffer,
+  allocBuffer,
+  handleLoadWaveTable,
   booted,
-  isAllocated,
+  sampleState,
   onMDIDReceiveAtChannel,
 }: {
   channel: number;
@@ -110,11 +115,12 @@ const WaveTable = ({
   effect: Effect;
   bufferData: Float32Array | undefined;
   deleteHandler: any;
-  // allocBuffer: any;
+  allocBuffer: any;
+  handleLoadWaveTable: any;
   booted: boolean;
   handlePlayer: any;
   handleUpdateTable: any;
-  isAllocated: boolean;
+  sampleState: SampleState;
   onMDIDReceiveAtChannel: number | undefined;
 }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
@@ -155,25 +161,29 @@ const WaveTable = ({
   }, [table]);
 
   useEffect(() => {
-    if (booted && !isAllocated) {
-      // allocBuffer(currentBufnum, sample);
+    if (booted && sampleState === 'NOT_ALLOCATED') {
+      allocBuffer(currentBufnum, sample);
     }
-  }, [booted, isAllocated, currentBufnum]);
+  }, [booted, sampleState, currentBufnum]);
 
   const composeGraph = useMemo(() => {
     return (
       <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} />
     );
   }, [table, bufferData]);
-  console.log('~~~~~~~~~~~****', bufferData, table, sample, effect);
   return (
     <WaveTableContainer key={table.getId()}>
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
         {'[ > ]'}
       </StyledButton>
       <WaveTableHeader>
-        <WaveTableChannel triggered={triggered}>{`ch${ channel}`}</WaveTableChannel>
-        <WaveTableName>{table.getName()}</WaveTableName>
+        <WaveTableChannel triggered={triggered}>{`ch${channel}`}</WaveTableChannel>
+        <WaveTableName>
+          {sampleState === 'EMPTY'
+            ? (<span className={'button'} onClick={() => { handleLoadWaveTable(table); }}>{'[+]'}</span>)
+            : table.getName()
+          }
+        </WaveTableName>
         <WaveTableModeList>
           <WaveTableModeSelector onClick={setModeNormal} selected={table.getMode() === 'normal'}>[N]</WaveTableModeSelector>
           <WaveTableModeSelector onClick={setModeGrain} selected={table.getMode() === 'grain'}>[G]</WaveTableModeSelector>
@@ -181,18 +191,17 @@ const WaveTable = ({
       </WaveTableHeader>
       <ResolutionContextProvider>
         <div>
-          {<GrainEditor table={table} effect={effect} isLoaded={sample.getAllocated()} />}
-          {bufferData ?
+          {<GrainEditor table={table} effect={effect} isLoaded={sampleState === 'ALLOCATED'} />}
+          {sampleState !== 'NOT_ALLOCATED' ?
             composeGraph
             : <div>{'drag'}</div>
           }
         </div>
-        <Tools table={table} effect={effect} isLoaded={sample.getAllocated()} />
+        <Tools table={table} effect={effect} isLoaded={sampleState === 'ALLOCATED'} />
       </ResolutionContextProvider>
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {'[ x ]'}
       </StyledButton>
-      {isAllocated ? (<></>) : (<p>{'not allocated yet..'}</p>)}
     </WaveTableContainer>
   );
 };
@@ -213,7 +222,8 @@ function mapDispatchToProps(dispatch: any) {
     handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(Player(mode, bufnum, slice, effect)),
     deleteHandler: (table: Table, sample: Sample, effect: Effect) => dispatch(deleteWaveTable(table, sample, effect)),
     handleUpdateTable: (table: Table) => dispatch(updateWaveTableByTable(table)),
-    // allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
+    allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
+    handleLoadWaveTable: (table: Table) => dispatch(loadWaveTableByDialog(table)),
   };
 }
 

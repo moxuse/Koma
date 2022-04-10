@@ -6,12 +6,12 @@ import ToolsEditor from '../Tools/Editor';
 import TableList from '../../model/TableList';
 import Table, { Slice } from '../../model/Table';
 import Effect from '../../model/Effect';
+import { SampleState } from '../../model/Sample';
 import MIDIReceiver from '../../lib/midi';
 import { loadSetting as LoadSetting, booted as Booted } from '../../actions/setting';
 import { player } from '../../actions/buffer/player';
 import { midiOnReceive } from '../../actions/midi';
 import { connect } from 'react-redux';
-// import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
 import { addEmptyWaveTable } from '../../actions/waveTables';
 import { openStore } from '../../actions/waveTables/openStore';
 import { useDebouncedCallback } from 'use-debounce';
@@ -125,8 +125,8 @@ const WaveTables = ({
     handlePlusButton();
   }, []);
 
-  const isAllocated = useCallback((tables_: TableList, table: Table): boolean => {
-    return TableList.getAllocatedSampleById(tables_, table.getSample()!);
+  const sampleState = useCallback((tables_: TableList, table: Table): SampleState => {
+    return TableList.getSampleStateById(tables_, table.getSample()!);
   }, [isFetching, tables]);
 
   const getBufferData = (tables_: TableList, table: Table): Float32Array | undefined => {
@@ -155,7 +155,7 @@ const WaveTables = ({
           sample={getSample(tables, table)!}
           effect={getEffect(tables, table)!}
           bufferData={getBufferData(tables, table)}
-          isAllocated={isAllocated(tables, table)}
+          sampleState={sampleState(tables, table)}
           booted={booted}
         />
         );

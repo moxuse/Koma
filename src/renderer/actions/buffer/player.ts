@@ -42,8 +42,11 @@ const removeEvents = () => {
   window.api.removeAllListeners('playerFailure');
 };
 
-export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number; end: number} | undefined), effect: Effect) => {
+export const player = (mode: TableMode, bufnum: number, slice: ({ begin: number; end: number } | undefined), effect: Effect) => {
   return (dispatch: Dispatch<PlayerAction>) => {
+    if (bufnum === 600) {
+      return;
+    }
     // console.log(effect.getPoints().length)
     dispatch(playerRequest({
       isPlaying: true,
