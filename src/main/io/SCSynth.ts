@@ -22,6 +22,8 @@ export default class SCSynth {
   private eventId = 0;
   private nodeId = 8000;
   private bufnum = 600;
+  private currentRecordBufnum = 3000;
+  private bufferListener = 0;
   private socket;
   private server: any;
   private options: ServerOptions;
@@ -290,8 +292,42 @@ export default class SCSynth {
     this.sendMsg(['/b_free', bufnum]);
   }
 
-  async writeBufferAsWav(bufNum: number, filePath: string) {
+  writeBufferAsWav(bufNum: number, filePath: string) {
     this.sendMsg(['/b_write', bufNum, filePath, 'wav', 'int24']);
+  }
+
+  startRecord(bufnum_: number, callback: (msg: any) => void) {
+    this.currentRecordBufnum = bufnum_;
+    this.sendMsg(['/s_new', 'audioIn', 2000, 1, 0]);
+    this.sendMsg(['/s_new', 'recorder', 3000, 1, 0, 'bufNum', bufnum_]);
+    this.bufferListener = this.subscribe('/buf_info', callback);
+  }
+
+  stopRecord(path: string) {
+    return new Promise((resolve, reject) => {
+      const failId = this.subscribe('/fail', () => {
+        this.unsubscribe(failId);
+        this.unsubscribe(doneId);
+        reject(new Error('/fail record wav :' + path));
+      });
+      const doneId = this.subscribe('/done', (msg) => {
+        this.unsubscribe(failId);
+        this.unsubscribe(doneId);
+        if (msg && msg[0] === '/b_write') {
+          const arg = { value: path };
+          resolve(arg);
+        } else {
+          reject(new Error('failed at /done msg'));
+        }
+      });
+      this.unsubscribe(this.bufferListener);
+      this.writeBufferAsWav(this.currentRecordBufnum, path);
+      setTimeout(() => {
+        this.sendMsg(['/n_free', 3000]);
+        this.sendMsg(['/n_free', 2000]);
+        this.freeBuffer(this.currentRecordBufnum);
+      }, 50);
+    });
   }
 
   private async tryBoot() {

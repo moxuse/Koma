@@ -10,6 +10,7 @@ import { loadSetting } from './setting';
 import { waveTables } from './waveTables';
 import { allocReadBuffer } from './buffer';
 import { player } from './buffer/player';
+import { record } from './buffer/record';
 import { midiAssign } from './midi';
 import TableList from '../model/TableList';
 import Table, { Slice } from '../model/Table';
@@ -131,7 +132,7 @@ const TransformTables = createTransform(
 
 const rootPersistConfig = {
   key: 'root',
-  blacklist: ['player', 'allocReadBuffer', 'loadSetting', 'midiAssign'],
+  blacklist: ['player', 'record', 'allocReadBuffer', 'loadSetting', 'midiAssign'],
   whitelist: ['waveTables'],
   storage: storage,
   transforms: [TransformTables],
@@ -144,6 +145,7 @@ const rootReducer = combineReducers({
   waveTables,
   allocReadBuffer,
   player,
+  record,
   midiAssign,
 });
 

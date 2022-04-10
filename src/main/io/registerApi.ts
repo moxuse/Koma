@@ -5,6 +5,7 @@ import WavDecoder from 'wav-decoder';
 import { AxisYType } from '../../renderer/model/Effect';
 import * as Utils from './Utils';
 import SCSynth from './SCSynth';
+import SCLang from './SCLang';
 import fs from 'fs';
 
 const playerSynthDefFilePath = '../assets/synthDef/player.scd';
@@ -16,6 +17,7 @@ const bufRdSynthDefFilePath = '../assets/synthDef/bufRd.scd';
 const optionNumBuffers = '12000';
 
 let scSynth: SCSynth;
+let scLang: SCLang;
 
 
 // API register
@@ -26,6 +28,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     numBuffers: optionNumBuffers,
     // device: 'Soundflower (2ch)',
   });
+
+  scLang = new SCLang();
   /**
    * Load Store file
    * returns
@@ -153,6 +157,51 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   });
 
   /**
+   * start record
+   * returns
+   * 'startRecordRequest'
+   * 'startRecordSuccess'
+   * 'startRecordFailure'
+   */
+  ipcMain.on('startRecordRequest', (
+    e,
+    bufnum: number,
+  ) => {
+    if (isDev) { console.log('start record request:', bufnum); }
+    try {
+      scLang.startRecord(bufnum);
+      scSynth.startRecord(bufnum, (msg) => {
+        console.log("+++++++++++++++++++++++", msg[0], typeof msg[0]);
+      });
+    } catch (err) {
+      e.reply('startRecordFailure', err);
+    }
+    e.reply('startRecordSuccess', bufnum);
+  });
+
+  /**
+   * stop record
+   * returns
+   * 'stopRecordRequest'
+   * 'stopRecordSuccess'
+   * 'stopRecordFailure'
+   */
+  ipcMain.on('stopRecordRequest', (
+    e,
+    writePath: string,
+  ) => {
+    if (isDev) { console.log('stop record request:', writePath); }
+    scSynth.stopRecord(writePath).then((e) => {
+      console.log("~~~~~~~~~~~~~~stopRecord end", e);
+      e.reply('stopRecordSuccess', e.value);
+    }).catch((err: any) => {
+      console.log("~~~~~~~~~~~~~~stopRecord error", err);
+      e.reply('stopRecordFailure', err);
+    });
+    scLang.stopRecord();
+  });
+
+  /**
    * save store as file
    */
   ipcMain.on('saveStore', (e) => {
@@ -203,6 +252,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   await scSynth.boot().then(() => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });
   });
+
+  scLang.boot(); 
 
   if (scSynth.mode === 'internal') {
     await scSynth.loadSynthDefFromFile('player', path.resolve(__dirname, playerSynthDefFilePath));

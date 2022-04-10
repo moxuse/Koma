@@ -13,6 +13,7 @@ import { allocReadBuffer } from '../../actions/buffer';
 import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
 import { player as Player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
+import { startRecord, stopRecord } from '../../actions/buffer/record';
 
 const WaveTableContainer = styled.li`
   user-select: none;
@@ -105,6 +106,8 @@ const WaveTable = ({
   deleteHandler,
   allocBuffer,
   handleLoadWaveTable,
+  handleStartRecord,
+  handleStopRecord,
   booted,
   sampleState,
   onMDIDReceiveAtChannel,
@@ -120,8 +123,11 @@ const WaveTable = ({
   booted: boolean;
   handlePlayer: any;
   handleUpdateTable: any;
+  handleStartRecord: any;
+  handleStopRecord: any;
   sampleState: SampleState;
   onMDIDReceiveAtChannel: number | undefined;
+
 }): JSX.Element => {
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [slice, setSlice] = useState<Slice | undefined>(undefined);
@@ -202,6 +208,10 @@ const WaveTable = ({
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {'[ x ]'}
       </StyledButton>
+      <div>
+        <span className={'button'} onClick={() => { handleStartRecord(11900); }}>{'[●]'}</span>
+        <span className={'button'} onClick={() => { handleStopRecord('/Users/moxuse/Desktop/fooo.wav'); }}>{'[□]'}</span>
+      </div>
     </WaveTableContainer>
   );
 };
@@ -224,6 +234,8 @@ function mapDispatchToProps(dispatch: any) {
     handleUpdateTable: (table: Table) => dispatch(updateWaveTableByTable(table)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
     handleLoadWaveTable: (table: Table) => dispatch(loadWaveTableByDialog(table)),
+    handleStartRecord: (bufnum: number) => dispatch(startRecord(bufnum)),
+    handleStopRecord: (writePath: string) => dispatch(stopRecord(writePath)),
   };
 }
 

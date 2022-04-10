@@ -38,6 +38,8 @@ declare global {
       effect: { amp: number, rate: number, pan: number, gain: number, points: Array<{ x: number, y: number }>, duration: number, trig: number, axisY: AxisYType }
     ) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
+    startRecordRequest: (bufnum: number) => void,
+    stopRecordRequest: (writePath: string) => void,
     saveStore: () => void,
     openStore: () => void,
     on: (channel: string, callback: IpcEvent) => void;
