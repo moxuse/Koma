@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Slice } from '../../model/Table';
 import styled from 'styled-components';
+import { SampleState } from '../../model/Sample';
 
 const width = 150;
 const height = 60;
@@ -16,8 +17,8 @@ const GraphContainer = styled.div`
   }
 `;
 
-const Graph = ({ id, bufferData, slice }: {
-  id: string; bufferData: Float32Array; slice: Slice | undefined;
+const Graph = ({ id, bufferData, slice, sampleState }: {
+  id: string; bufferData: Float32Array; slice: Slice | undefined; sampleState: SampleState;
 }): JSX.Element => {
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
   const [buffer, setBuffer] = useState<Float32Array>();
@@ -34,6 +35,11 @@ const Graph = ({ id, bufferData, slice }: {
       setContext(canvasContext);
     }
   }, []);
+  useEffect(() => {
+    if (sampleState === 'ALLOCATED') {
+      setBuffer(bufferData);
+    }
+  }, [sampleState]);
   useEffect(() => {
     if (buffer && context) {
       const pixelParSample = width / buffer.length;
@@ -58,7 +64,7 @@ const Graph = ({ id, bufferData, slice }: {
         );
       });
     }
-  }, [bufferData, context, slice]);
+  }, [buffer, bufferData, context, slice]);
   return (
     <GraphContainer>
       <canvas id={id} width={width} height={height} ref={graphRef} />

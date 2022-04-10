@@ -168,9 +168,9 @@ const WaveTable = ({
 
   const composeGraph = useMemo(() => {
     return (
-      <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} />
+      <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} sampleState={sampleState} />
     );
-  }, [table, bufferData]);
+  }, [table, bufferData, sampleState]);
   return (
     <WaveTableContainer key={table.getId()}>
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>

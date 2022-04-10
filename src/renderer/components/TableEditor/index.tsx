@@ -9,8 +9,8 @@ import styled from 'styled-components';
 const TableEditorArea = styled.div`
 `;
 
-const TableEditor = ({ children, tables, handleUpdate, isLoaded }: {
-  children: JSX.Element; tables: TableList; handleUpdate: any; isLoaded: boolean;
+const TableEditor = ({ children, tables, handleUpdate }: {
+  children: JSX.Element; tables: TableList; handleUpdate: any;
 }) => {
   const tableList = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
@@ -32,9 +32,6 @@ const TableEditor = ({ children, tables, handleUpdate, isLoaded }: {
 
   useEffect(() => {
     const onMousedown = (e: MouseEvent) => {
-      if (!isLoaded) {
-        return;
-      }
       setEditing(true);
       const target = e.target as HTMLElement;
       const rect = target?.getBoundingClientRect();
@@ -47,12 +44,9 @@ const TableEditor = ({ children, tables, handleUpdate, isLoaded }: {
     return () => {
       tableList.current?.removeEventListener('mousedown', onMousedown, false);
     };
-  }, [isLoaded, tables, id, editing]);
+  }, [tables, id, editing]);
   useEffect(() => {
     const onMousemove = (e: MouseEvent) => {
-      if (!isLoaded) {
-        return;
-      }
       if (editing) {
         const target: HTMLElement = e.target as HTMLElement;
         const rect = target?.getBoundingClientRect();
@@ -74,12 +68,9 @@ const TableEditor = ({ children, tables, handleUpdate, isLoaded }: {
     return () => {
       tableList.current?.removeEventListener('mousemove', onMousemove, false);
     };
-  }, [isLoaded, tables, id, editing]);
+  }, [tables, id, editing]);
   useEffect(() => {
     const onMouseup = () => {
-      if (!isLoaded) {
-        return;
-      }
       setEditing(false);
       setId(undefined);
       // const target = e.target as HTMLElement;
@@ -89,7 +80,7 @@ const TableEditor = ({ children, tables, handleUpdate, isLoaded }: {
     return () => {
       tableList.current?.removeEventListener('mouseup', onMouseup, false);
     };
-  }, [isLoaded, tables, id, editing]);
+  }, [tables, id, editing]);
   return (
     <TableEditorArea ref={tableList}>
       {children}
