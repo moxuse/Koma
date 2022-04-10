@@ -59,7 +59,7 @@ const Graph = ({ id, bufferData, slice }: {
       });
     }
   }, [bufferData, context, slice]);
-
+  console.log('~~~~~~~~~~~~~~~', id, width, graphRef);
   return (
     <GraphContainer>
       <canvas id={id} width={width} height={height} ref={graphRef} />

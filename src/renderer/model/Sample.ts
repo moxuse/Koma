@@ -11,7 +11,7 @@ const DefaultSample: SampleType = {
   id: '0',
   allocated: false,
   filePath: undefined,
-  buffer: undefined,
+  buffer: new Float32Array(),
 };
 
 export default class Sample extends Record(DefaultSample) {

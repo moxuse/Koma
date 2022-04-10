@@ -9,7 +9,7 @@ import Graph from './Graph';
 import GrainEditor from '../Tools/GrainEditor';
 import Tools from '../Tools';
 import styled, { css, keyframes } from 'styled-components';
-import { allocReadBuffer } from '../../actions/buffer';
+// import { allocReadBuffer } from '../../actions/buffer';
 import { player as Player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
 
@@ -99,7 +99,7 @@ const WaveTable = ({
   handlePlayer,
   handleUpdateTable,
   deleteHandler,
-  allocBuffer,
+  // allocBuffer,
   booted,
   isAllocated,
   onMDIDReceiveAtChannel,
@@ -110,7 +110,7 @@ const WaveTable = ({
   effect: Effect;
   bufferData: Float32Array | undefined;
   deleteHandler: any;
-  allocBuffer: any;
+  // allocBuffer: any;
   booted: boolean;
   handlePlayer: any;
   handleUpdateTable: any;
@@ -156,7 +156,7 @@ const WaveTable = ({
 
   useEffect(() => {
     if (booted && !isAllocated) {
-      allocBuffer(currentBufnum, sample);
+      // allocBuffer(currentBufnum, sample);
     }
   }, [booted, isAllocated, currentBufnum]);
 
@@ -165,7 +165,7 @@ const WaveTable = ({
       <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} />
     );
   }, [table, bufferData]);
-
+  console.log('~~~~~~~~~~~****', bufferData, table, sample, effect);
   return (
     <WaveTableContainer key={table.getId()}>
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
@@ -181,13 +181,13 @@ const WaveTable = ({
       </WaveTableHeader>
       <ResolutionContextProvider>
         <div>
-          {<GrainEditor table={table} effect={effect} />}
+          {<GrainEditor table={table} effect={effect} isLoaded={sample.getAllocated()} />}
           {bufferData ?
             composeGraph
             : <div>{'drag'}</div>
           }
         </div>
-        <Tools table={table} effect={effect} />
+        <Tools table={table} effect={effect} isLoaded={sample.getAllocated()} />
       </ResolutionContextProvider>
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {'[ x ]'}
@@ -213,7 +213,7 @@ function mapDispatchToProps(dispatch: any) {
     handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(Player(mode, bufnum, slice, effect)),
     deleteHandler: (table: Table, sample: Sample, effect: Effect) => dispatch(deleteWaveTable(table, sample, effect)),
     handleUpdateTable: (table: Table) => dispatch(updateWaveTableByTable(table)),
-    allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
+    // allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
   };
 }
 

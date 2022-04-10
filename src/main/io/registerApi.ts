@@ -24,7 +24,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
 
   scSynth = new SCSynth({
     numBuffers: optionNumBuffers,
-    device: 'Soundflower (2ch)',
+    // device: 'Soundflower (2ch)',
   });
   /**
    * Load Store file

@@ -26,7 +26,7 @@ const GraphContainer = styled.div`
   }
 `;
 
-const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Effect; handleUpdate: any }): JSX.Element => {
+const GrainEditor = ({ table, effect, isLoaded, handleUpdate }: { table: Table; effect: Effect; isLoaded: boolean; handleUpdate: any }): JSX.Element => {
   const { resolution } = React.useContext(ResolutionContext);
   const [points_, setPoints] = useState<GrainPoint[]>([]);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
@@ -41,6 +41,9 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
   }, [effect]);
 
   useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
     if (context && points_) {
       let prevPoint = { x: 0, y: 0 };
       if (points_.length === 0) {
@@ -58,7 +61,7 @@ const GrainEditor = ({ table, effect, handleUpdate }: { table: Table; effect: Ef
       });
       context.stroke();
     }
-  }, [context, graphRef, graphContainer, editing, points_]);
+  }, [isLoaded, context, graphRef, graphContainer, editing, points_]);
 
   const onMouseDown = (e: MouseEvent) => {
     const firstPoint = { x: e.offsetX, y: e.offsetY };

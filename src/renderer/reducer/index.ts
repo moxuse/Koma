@@ -17,6 +17,9 @@ import Sample from '../model/Sample';
 import Effect from '../model/Effect';
 
 const float32ArrayToBase64 = (f32: Float32Array) => {
+  if (!f32) {
+    return '';
+  }
   const uint8 = new Uint8Array(f32.buffer);
   return btoa(uint8.reduce((data, byte) => {
     return data + String.fromCharCode(byte);

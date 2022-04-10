@@ -11,7 +11,8 @@ import { loadSetting as LoadSetting, booted as Booted } from '../../actions/sett
 import { player } from '../../actions/buffer/player';
 import { midiOnReceive } from '../../actions/midi';
 import { connect } from 'react-redux';
-import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
+// import { loadWaveTableByDialog } from '../../actions/waveTables/byDialog';
+import { addEmptyWaveTable } from '../../actions/waveTables';
 import { openStore } from '../../actions/waveTables/openStore';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -204,7 +205,7 @@ function mapStateToProps(
 function mapDispatchToProps(dispatch: any) {
   return {
     handleOpenButton: () => dispatch(openStore()),
-    handlePlusButton: () => dispatch(loadWaveTableByDialog()),
+    handlePlusButton: () => dispatch(addEmptyWaveTable()),
     handlePlayer: (mode: TableMode, bufnum: number, slice: Slice, effect: Effect) => dispatch(player(mode, bufnum, slice, effect)),
     handleMidiOnReceive: (channel: number) => dispatch(midiOnReceive(channel)),
     loadSetting: () => dispatch(LoadSetting()),

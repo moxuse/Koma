@@ -4,8 +4,10 @@ import { LoadWaveTableAction } from '../actions/waveTables';
 import { LoadWaveTableByDialogAction } from '../actions/waveTables/byDialog';
 // eslint-disable-next-line import/no-cycle
 import { OpenStoreAction } from '../actions/waveTables/openStore';
+import { getNewId } from '../actions/helper';
 
 import TableList from '../model/TableList';
+import Table from '../model/Table';
 
 type ActionType = LoadWaveTableAction & LoadWaveTableByDialogAction & OpenStoreAction;
 
@@ -17,6 +19,15 @@ const tablesInitialState = {
 
 export const waveTables = (state = tablesInitialState, action: ActionType) => {
   switch (action.type) {
+    case 'ADD_EMPTY_WAVE_TABLE_REQUEST':
+      let newTables = TableList.appendTable(state.tables, action.payload.table!);
+      newTables = TableList.appendSample(newTables, action.payload.sample!);
+      newTables = TableList.appendEffect(newTables, action.payload.effect!);
+      return {
+        isFetching: false,
+        tables: newTables,
+        error: state.error,
+      };
     case 'LOAD_WAVE_TABLE_REQUEST':
       return {
         isFetching: action.payload.isFetching,

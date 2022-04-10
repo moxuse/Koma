@@ -28,7 +28,7 @@ const ResolutionSelector = () => {
 
   const onChange = useCallback((e: React.ChangeEvent) => {
     const target: HTMLSelectElement = e.target as HTMLSelectElement;
-    setResolution(parseInt(target.value));
+    setResolution(parseInt(target.value, 10));
   }, [resolution]);
 
   return (

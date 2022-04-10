@@ -138,9 +138,9 @@ export default class TableList extends Record(DefaultTableList) {
 
   getBufferDataForSampleId(id?: string): Float32Array | undefined {
     const filtered = this.get('samples').filter((s) => s.getId() === id);
-    if (filtered) {
+    if (filtered && filtered.get(0)) {
       return filtered.get(0)?.getBuffer();
     }
-    return undefined;
+    return new Float32Array();
   }
 }

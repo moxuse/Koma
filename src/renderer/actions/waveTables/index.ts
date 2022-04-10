@@ -15,6 +15,13 @@ export interface LoadWaveTableRequestPayload {
 /**
  * Action Creator
  */
+export const addEmptyWaveTableRequest = (
+  payload: LoadWaveTableRequestPayload,
+) => ({
+  type: 'ADD_EMPTY_WAVE_TABLE_REQUEST',
+  payload: payload,
+});
+
 export const loadWaveTableRequest = (
   payload: LoadWaveTableRequestPayload,
 ) => ({
@@ -65,6 +72,7 @@ export const updateWaveTableByEffectRequest = (
 });
 
 export type LoadWaveTableAction = (
+  | ReturnType<typeof addEmptyWaveTableRequest>
   | ReturnType<typeof loadWaveTableRequest>
   | ReturnType<typeof loadWaveTableSuccess>
   | ReturnType<typeof loadWaveTableFailure>
@@ -76,6 +84,34 @@ export type LoadWaveTableAction = (
 const removeEvents = () => {
   window.api.removeAllListeners('loadWaveTableSucceed');
   window.api.removeAllListeners('loadWaveTableFailed');
+};
+
+export const addEmptyWaveTable = () => (
+  dispatch: Dispatch<LoadWaveTableAction>,
+) => {
+  const sampleId = getNewId();
+  let s = new Sample();
+  s = s.set('id', sampleId);
+  let e = new Effect();
+  e = e.set('id', sampleId);
+  let table = new Table({
+    id: getNewId(),
+    mode: 'normal',
+    name: '',
+    bufnum: undefined,
+    sample: sampleId,
+    effect: sampleId,
+    slice: undefined,
+  });
+  table = table.set('id', getNewId());
+  dispatch(addEmptyWaveTableRequest({
+    isFetching: false,
+    table: table,
+    sample: s,
+    effect: e,
+    filePath: '',
+    error: undefined,
+  }));
 };
 
 export const loadWaveTables = (filePath_: string) => (

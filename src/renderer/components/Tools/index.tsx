@@ -60,17 +60,20 @@ const ToolsList = styled.ul`
   padding: 0;
 `;
 
-const Tools = ({ table, effect, handleUpdateAxisY }: {
-  table: Table; effect: Effect; handleUpdateAxisY: any;
+const Tools = ({ table, effect, handleUpdateAxisY, isLoaded }: {
+  table: Table; effect: Effect; handleUpdateAxisY: any; isLoaded: boolean;
 }) => {
   const getMode = () => {
     return table.getMode();
   };
 
   const onChange = useCallback((value: string) => {
+    if (!isLoaded) {
+      return;
+    }
     const newEff = effect.set('axisY', value as AxisYType);
     handleUpdateAxisY(table, newEff);
-  }, [table, effect]);
+  }, [isLoaded, table, effect]);
 
   return (
     <>
