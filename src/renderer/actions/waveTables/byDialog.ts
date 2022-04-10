@@ -51,7 +51,6 @@ export const loadWaveTableByDialog = (table: Table) => {
       error: undefined,
     }));
     window.api.on!('loadWaveTableByDialogSucceed', (_, { bufnum, filePath, data }) => {
-      console.log('~~~~~~~~~~~~~~~~~~loadWaveTableByDialogSucceed,', table.get('sample'), table.get('effect'), data.omitted);
       const s = new Sample({ id: table.get('sample'), state: 'ALLOCATED', filePath, buffer: data.omitted });
       const t = new Table({
         id: table.getId(),
