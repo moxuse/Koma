@@ -209,8 +209,8 @@ const WaveTable = ({
         {'[ x ]'}
       </StyledButton>
       <div>
-        <span className={'button'} onClick={() => { handleStartRecord(11900); }}>{'[●]'}</span>
-        <span className={'button'} onClick={() => { handleStopRecord('/Users/moxuse/Desktop/fooo.wav'); }}>{'[□]'}</span>
+        <span className={'button'} onClick={() => { handleStartRecord(9999); }}>{'[●]'}</span>
+        <span className={'button'} onClick={() => { handleStopRecord('/Users/moxuse/Desktop/vaaar.wav'); }}>{'[□]'}</span>
       </div>
     </WaveTableContainer>
   );

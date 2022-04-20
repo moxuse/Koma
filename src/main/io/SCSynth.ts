@@ -2,7 +2,6 @@ import * as dgram from 'dgram';
 import * as OSC from 'osc-js';
 import * as osc from '@supercollider/osc';
 // import sc from 'supercolliderjs';
-const sc = require('supercolliderjs');
 
 export type SCSynthMode = 'internal' | 'remote';
 
@@ -13,12 +12,15 @@ export type OSCMessageArg = Array<string | number | Buffer>;
 interface ServerOptions {
   sampleRate?: string;
   numBuffers?: string;
+  numInputBusChannels?: number;
+  numOutputBusChannels?: number;
   blockSize?: string;
   device?: string;
 }
 
 export default class SCSynth {
   mode: SCSynthMode;
+  sc: any;
   private eventId = 0;
   private nodeId = 8000;
   private bufnum = 600;
@@ -31,13 +33,14 @@ export default class SCSynth {
   private listenersInternal: Array<{ id: number; name: string; event: SCSynthEvent }>;
   private udpPort = 8000;
 
-  constructor(options: ServerOptions) {
+  constructor(options: ServerOptions, sc: any) {
     this.mode = 'remote';
     this.socket = dgram.createSocket('udp4');
     this.socket.bind(this.udpPort, 'localhost');
     this.listenersRemote = [];
     this.listenersInternal = [];
     this.options = options;
+    this.sc = sc;
   }
 
   /**
@@ -298,9 +301,8 @@ export default class SCSynth {
 
   startRecord(bufnum_: number, callback: (msg: any) => void) {
     this.currentRecordBufnum = bufnum_;
-    this.sendMsg(['/s_new', 'audioIn', 2000, 1, 0]);
-    this.sendMsg(['/s_new', 'recorder', 3000, 1, 0, 'bufNum', bufnum_]);
     this.bufferListener = this.subscribe('/buf_info', callback);
+    this.sendMsg(['/s_new', 'recorder', 9999, 1, 0, 'bufnum', bufnum_]);
   }
 
   stopRecord(path: string) {
@@ -323,8 +325,7 @@ export default class SCSynth {
       this.unsubscribe(this.bufferListener);
       this.writeBufferAsWav(this.currentRecordBufnum, path);
       setTimeout(() => {
-        this.sendMsg(['/n_free', 3000]);
-        this.sendMsg(['/n_free', 2000]);
+        this.sendMsg(['/n_free', 9999]);
         this.freeBuffer(this.currentRecordBufnum);
       }, 50);
     });
@@ -332,7 +333,7 @@ export default class SCSynth {
 
   private async tryBoot() {
     return new Promise((resolve) => {
-      sc.server.boot(this.options).then(async (server: any) => {
+      this.sc.server.boot(this.options).then(async (server: any) => {
         this.server = server;
         this.mode = 'internal';
         await this.initInternalListeners();
@@ -359,6 +360,17 @@ export default class SCSynth {
   }
 
   private async initInternalListeners() {
+    this.socket.on('message', (data: Buffer) => {
+      const msg = osc.unpackMessage(data);
+      this.listenersInternal.forEach(({ name, event }) => {
+        if (msg.address === name) {
+          event(msg.args);
+        }
+      });
+    });
+    this.socket.on('error', (err) => {
+      console.log(`client err: \n${err.stack}`);
+    });
     return this.server.receive.subscribe((msg: string[]) => {
       this.listenersInternal.forEach(({ name, event }) => {
         if (msg[0] === name) {

@@ -6,9 +6,14 @@ const dgram = require('dgram');
 const OSC = require('osc-js');
 const osc = require('@supercollider/osc');
 
-describe('void test', () => {
-  test('void test', () => {
-    expect(true).toEqual(true);
+
+describe('boot sc', () => {
+  it('boot compile & execute', async () => {
+    const server_ = await sc.server.boot();
+    const lang_ = await sc.lang.boot();
+    expect(server_).toBeTruthy();
+    expect(lang_.isReady()).toEqual(true);
+    return lang_;
   });
 });
 
@@ -48,7 +53,7 @@ describe('boot scLang', () => {
         loop{
           0.075.wait;
           count.postln;
-          count = count + 1;              
+          count = count + 1;
         };
       });
       t.play;

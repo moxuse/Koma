@@ -7,12 +7,6 @@ const sampleFilePath = __dirname + '\/../../../media/sound/sample.wav';
 
 const bufNum = 9000;
 
-describe('void test', () => {
-  test('void test', () => {
-    expect(true).toEqual(true);
-  });
-});
-
 /*
 describe('scStnth Class check internal server boot', () => {
   it('try boot and set internal mode', async () => {

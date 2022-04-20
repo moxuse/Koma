@@ -8,13 +8,9 @@ import SCSynth from './SCSynth';
 import SCLang from './SCLang';
 import fs from 'fs';
 
-const playerSynthDefFilePath = '../assets/synthDef/player.scd';
-const grainDurSynthDefFilePath = '../assets/synthDef/grainDur.scd';
-const grainRateSynthDefFilePath = '../assets/synthDef/grainRate.scd';
-const recorderSynthDefFilePath = '../assets/synthDef/recorder.scd';
-const audioInSynthDefFilePath = '../assets/synthDef/audioIn.scd';
-const bufRdSynthDefFilePath = '../assets/synthDef/bufRd.scd';
-const optionNumBuffers = '12000';
+const sc = require('supercolliderjs');
+
+const optionNumBuffers = '2048';
 
 let scSynth: SCSynth;
 let scLang: SCLang;
@@ -25,11 +21,15 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   console.log('register events for the api');
 
   scSynth = new SCSynth({
+    sampleRate: '44100',
     numBuffers: optionNumBuffers,
+    loadDefs: '0',
+    commandLineOptions: ['-C', '1', '-l', '1', '-R', '0', '-s', '1.26'],
+    echo: true,
     // device: 'Soundflower (2ch)',
-  });
+  }, sc);
 
-  scLang = new SCLang();
+  scLang = new SCLang(sc);
   /**
    * Load Store file
    * returns
@@ -163,15 +163,27 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    * 'startRecordSuccess'
    * 'startRecordFailure'
    */
-  ipcMain.on('startRecordRequest', (
+  ipcMain.on('startRecordRequest', async (
     e,
     bufnum: number,
   ) => {
     if (isDev) { console.log('start record request:', bufnum); }
     try {
-      scLang.startRecord(bufnum);
+      await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ",error));
       scSynth.startRecord(bufnum, (msg) => {
-        console.log("+++++++++++++++++++++++", msg[0], typeof msg[0]);
+        console.log("++++++++++++ZZZ0", msg, msg[0]);
+
+        // var buf = new Buffer.from(msg[0])
+        // var arr = new Int32Array(msg[0], 0, 10);
+
+        // console.log("++++++++++++ZZZ1",arr.length, arr);
+        // var d = new DataView(buf);
+        // for (let i = 0; i < 4; i++) {
+        //   console.log("++++++++++++set",d.setFloat32(i));
+        // }
+        // for (let i = 0; i < 4; i++) {
+        //   console.log("++++++++++++geet",d.getFloat32(i));
+        // }
       });
     } catch (err) {
       e.reply('startRecordFailure', err);
@@ -191,11 +203,9 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     writePath: string,
   ) => {
     if (isDev) { console.log('stop record request:', writePath); }
-    scSynth.stopRecord(writePath).then((e) => {
-      console.log("~~~~~~~~~~~~~~stopRecord end", e);
-      e.reply('stopRecordSuccess', e.value);
+    scSynth.stopRecord(writePath).then((arg) => {
+      e.reply('stopRecordSuccess', arg.value);
     }).catch((err: any) => {
-      console.log("~~~~~~~~~~~~~~stopRecord error", err);
       e.reply('stopRecordFailure', err);
     });
     scLang.stopRecord();
@@ -249,25 +259,20 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     const channel = parseInt(msg![0] as string, 10);
     window.webContents.send('onMIDIReceive', { channel: channel });
   });
+
   await scSynth.boot().then(() => {
     window.webContents.postMessage('booted', { mode: scSynth.mode });
   });
 
-  scLang.boot(); 
+  await scLang.boot()
+    .catch((error) => {
+      console.log('SCLang Error', error);
+    });
 
-  if (scSynth.mode === 'internal') {
-    await scSynth.loadSynthDefFromFile('player', path.resolve(__dirname, playerSynthDefFilePath));
-    await scSynth.loadSynthDefFromFile('grainDur', path.resolve(__dirname, grainDurSynthDefFilePath));
-    await scSynth.loadSynthDefFromFile('grainRate', path.resolve(__dirname, grainRateSynthDefFilePath));
-    await scSynth.loadSynthDefFromFile('bufRd', path.resolve(__dirname, bufRdSynthDefFilePath));
-    await scSynth.loadSynthDefFromFile('recorder', path.resolve(__dirname, recorderSynthDefFilePath));
-    await scSynth.loadSynthDefFromFile('audioIn', path.resolve(__dirname, audioInSynthDefFilePath));
-  } else {
-    const path_ = path.resolve(__dirname, '../assets/synthDef');
-    await scSynth.loadSynthDefFromSynthDef(path_);
-  }
+  const path_ = path.resolve(__dirname, '../assets/synthDef');
+  await scSynth.loadSynthDefFromSynthDef(path_);
 }
 
 export async function quitSC() {
-  return Promise.all([scSynth.quit()]);
+  return Promise.all([scSynth.quit(), scLang.quit()]);
 }

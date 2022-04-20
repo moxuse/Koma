@@ -1,5 +1,5 @@
 import path from 'path';
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, systemPreferences, dialog } from 'electron';
 // import loadDevtool from 'electron-load-devtool';
 import registerApi, { quitSC } from './io/registerApi';
 import fsExtra from 'fs-extra';
@@ -19,6 +19,34 @@ const execPath =
 //     hardResetMethod: 'exit',
 //   });
 // }
+
+async function askForMediaAccess(): Promise<boolean> {
+  try {
+    if (process.platform !== 'darwin') {
+      return true;
+    }
+
+    const status = await systemPreferences.getMediaAccessStatus('microphone');
+    console.log('Current microphone access status:', status);
+
+    if (status === 'not-determined') {
+      const success = await systemPreferences.askForMediaAccess('microphone');
+      console.log('Result of microphone access:', success.valueOf() ? 'granted' : 'denied');
+      return success.valueOf();
+    }
+
+    return status === 'granted';
+  } catch (error) {
+    console.error('Could not get microphone permission:', error);
+  }
+  return false;
+}
+
+askForMediaAccess().then((isGranted) => {
+  if (!isGranted) {
+    dialog.showErrorBox('Warning', 'Please Microphone Access to be Granted.');
+  }
+}).catch((err) => console.error(err));
 
 // make BrowserWindow
 const createWindow = () => {
