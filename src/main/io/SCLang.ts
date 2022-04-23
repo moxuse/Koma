@@ -1,7 +1,7 @@
 // const sc = require('supercolliderjs');
 
 // export type SCLangEvent = (msg: string[] | osc.OscValues | undefined) => void;
-const maxDuration = 12.0;
+const maxDuration = 2.0;
 
 export default class SCLang {
   private lang: any;
@@ -22,6 +22,7 @@ export default class SCLang {
   async quit() {
     this.lang.quit();
   }
+
 
   startRecord(bufnum: number) {
     return this.lang.interpret(

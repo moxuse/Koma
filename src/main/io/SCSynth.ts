@@ -32,6 +32,10 @@ export default class SCSynth {
   private listenersRemote: Array<{ id: number; name: string; event: SCSynthEvent }>;
   private listenersInternal: Array<{ id: number; name: string; event: SCSynthEvent }>;
   private udpPort = 8000;
+  private isRecording = false;
+  private recordingFrames = 0;
+  private recordingEndId: any;
+  private recordingCounter: any;
 
   constructor(options: ServerOptions, sc: any) {
     this.mode = 'remote';
@@ -186,7 +190,7 @@ export default class SCSynth {
     this.socket.send(Buffer.from(binary), 0, binary.byteLength, 57110, 'localhost');
   }
 
-  allocReadBuffer(file: string, bufnum: number | null) {
+  allocReadBuffer(file: string, bufnum: number | null | undefined) {
     return new Promise((resolve, reject) => {
       const failId = this.subscribe('/fail', () => {
         this.unsubscribe(failId);
@@ -295,17 +299,40 @@ export default class SCSynth {
     this.sendMsg(['/b_free', bufnum]);
   }
 
-  writeBufferAsWav(bufNum: number, filePath: string) {
-    this.sendMsg(['/b_write', bufNum, filePath, 'wav', 'int24']);
+  writeBufferAsWav(bufNum: number, filePath: string, numFrames: number) {
+    this.sendMsg(['/b_write', bufNum, filePath, 'wav', 'int24', numFrames, 0, 0]);
   }
 
-  startRecord(bufnum_: number, callback: (msg: any) => void) {
-    this.currentRecordBufnum = bufnum_;
+  startRecord(bufnum_: number, writePath: string, callback: (msg: any) => void, onEnd: (msg: any) => void) {
+    if (this.isRecording) {
+      return;
+    }
+    this.isRecording = true;
+    this.recordingFrames = 0;
+    this.currentRecordBufnum = this.nextBufnum();
     this.bufferListener = this.subscribe('/buf_info', callback);
+    this.recordingCounter = setInterval(() => {
+      this.recordingFrames += 2205;
+    }, 50);
+    this.recordingEndId = this.subscribe('/n_end', () => {
+      this.unsubscribe(this.recordingEndId);
+      this.unsubscribe(this.bufferListener);
+      clearTimeout(this.recordingCounter);
+      this.writeBufferAsWav(bufnum_, writePath, this.recordingFrames);
+      setTimeout(() => {
+        this.freeBuffer(bufnum_);
+      });
+      onEnd([this.currentRecordBufnum, writePath]);
+      this.isRecording = false;
+    });
     this.sendMsg(['/s_new', 'recorder', 9999, 1, 0, 'bufnum', bufnum_]);
+    return this.currentRecordBufnum;
   }
 
   stopRecord(path: string) {
+    this.isRecording = false;
+    this.unsubscribe(this.recordingEndId);
+    clearTimeout(this.recordingCounter);
     return new Promise((resolve, reject) => {
       const failId = this.subscribe('/fail', () => {
         this.unsubscribe(failId);
@@ -316,17 +343,17 @@ export default class SCSynth {
         this.unsubscribe(failId);
         this.unsubscribe(doneId);
         if (msg && msg[0] === '/b_write') {
-          const arg = { value: path };
+          const arg = { path: path, bufnum: this.currentRecordBufnum };
           resolve(arg);
         } else {
           reject(new Error('failed at /done msg'));
         }
       });
       this.unsubscribe(this.bufferListener);
-      this.writeBufferAsWav(this.currentRecordBufnum, path);
+      this.writeBufferAsWav(9999, path, this.recordingFrames);
       setTimeout(() => {
         this.sendMsg(['/n_free', 9999]);
-        this.freeBuffer(this.currentRecordBufnum);
+        this.freeBuffer(9999);
       }, 50);
     });
   }

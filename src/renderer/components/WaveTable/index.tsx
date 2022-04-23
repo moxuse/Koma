@@ -15,6 +15,8 @@ import { player as Player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
 import { startRecord, stopRecord } from '../../actions/buffer/record';
 
+const RECORD_SAMPLE_PATH = '/Users/moxuse/Desktop/';
+
 const WaveTableContainer = styled.li`
   user-select: none;
   display: flex;
@@ -209,8 +211,8 @@ const WaveTable = ({
         {'[ x ]'}
       </StyledButton>
       <div>
-        <span className={'button'} onClick={() => { handleStartRecord(9999); }}>{'[●]'}</span>
-        <span className={'button'} onClick={() => { handleStopRecord('/Users/moxuse/Desktop/vaaar.wav'); }}>{'[□]'}</span>
+        <span className={'button'} onClick={() => { handleStartRecord(table, sample, `${RECORD_SAMPLE_PATH}${ table.id }.wav`); }}>{'[●]'}</span>
+        <span className={'button'} onClick={() => { handleStopRecord(table, sample, `${RECORD_SAMPLE_PATH}${ table.id }.wav`); }}>{'[□]'}</span>
       </div>
     </WaveTableContainer>
   );
@@ -234,8 +236,8 @@ function mapDispatchToProps(dispatch: any) {
     handleUpdateTable: (table: Table) => dispatch(updateWaveTableByTable(table)),
     allocBuffer: (bufnum: number, sample: Sample) => dispatch(allocReadBuffer(bufnum, sample)),
     handleLoadWaveTable: (table: Table) => dispatch(loadWaveTableByDialog(table)),
-    handleStartRecord: (bufnum: number) => dispatch(startRecord(bufnum)),
-    handleStopRecord: (writePath: string) => dispatch(stopRecord(writePath)),
+    handleStartRecord: (table: Table, sample: Sample, writePath: string) => dispatch(startRecord(table, sample, writePath)),
+    handleStopRecord: (table: Table, sample: Sample, writePath: string) => dispatch(stopRecord(table, sample, writePath)),
   };
 }
 

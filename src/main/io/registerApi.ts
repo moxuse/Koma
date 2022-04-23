@@ -166,24 +166,26 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ipcMain.on('startRecordRequest', async (
     e,
     bufnum: number,
+    writePath: string,
   ) => {
     if (isDev) { console.log('start record request:', bufnum); }
     try {
+      const offset = 15;
       await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ",error));
-      scSynth.startRecord(bufnum, (msg) => {
-        console.log("++++++++++++ZZZ0", msg, msg[0]);
+      const recordBufnum = scSynth.startRecord(bufnum, writePath, (msg) => {
+        const arr = new Int8Array(msg[0]);
+        const readBuffers = [];
+        readBuffers[0] = arr.at(3);
+        for (let i = 0; i < 9; i++) {
+          readBuffers[i + 1] = (arr.at((i + 1) * 4 + offset));
+        }
 
-        // var buf = new Buffer.from(msg[0])
-        // var arr = new Int32Array(msg[0], 0, 10);
+        window.webContents.send('onRecordingBuffer', { bufnum: recordBufnum, buffers: readBuffers });
+      }, () => {
+        scLang.stopRecord();
 
-        // console.log("++++++++++++ZZZ1",arr.length, arr);
-        // var d = new DataView(buf);
-        // for (let i = 0; i < 4; i++) {
-        //   console.log("++++++++++++set",d.setFloat32(i));
-        // }
-        // for (let i = 0; i < 4; i++) {
-        //   console.log("++++++++++++geet",d.getFloat32(i));
-        // }
+        // loading wavetable;
+        window.webContents.send('onRecordEnd', { path: writePath });
       });
     } catch (err) {
       e.reply('startRecordFailure', err);
@@ -204,7 +206,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ) => {
     if (isDev) { console.log('stop record request:', writePath); }
     scSynth.stopRecord(writePath).then((arg) => {
-      e.reply('stopRecordSuccess', arg.value);
+      e.reply('stopRecordSuccess', arg.path);
     }).catch((err: any) => {
       e.reply('stopRecordFailure', err);
     });
