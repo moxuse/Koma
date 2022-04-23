@@ -1,6 +1,6 @@
 import { Record } from 'immutable';
 
-export type SampleState = 'NOT_ALLOCATED' | 'EMPTY' | 'ALLOCATED';
+export type SampleState = 'NOT_ALLOCATED' | 'EMPTY' | 'ALLOCATED' | 'UPDATING';
 
 export interface SampleType {
   id: string;

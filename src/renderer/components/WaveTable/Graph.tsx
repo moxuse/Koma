@@ -36,10 +36,10 @@ const Graph = ({ id, bufferData, slice, sampleState }: {
     }
   }, []);
   useEffect(() => {
-    if (sampleState === 'ALLOCATED') {
+    if (sampleState === 'ALLOCATED' || sampleState === 'UPDATING') {
       setBuffer(bufferData);
     }
-  }, [sampleState]);
+  }, [sampleState, bufferData]);
   useEffect(() => {
     if (buffer && context) {
       const pixelParSample = width / buffer.length;
