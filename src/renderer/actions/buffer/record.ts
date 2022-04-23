@@ -76,7 +76,7 @@ const loadWaveTableActions = (dispatch: Dispatch<RecordAction>, table: Table, sa
     error: undefined,
   }));
   window.api.on!('loadWaveTableSucceed', (_, { bufnum, filePath, data }) => {
-    const newSample = new Sample({ id: sample.id, state: 'ALLOCATED', filePath, buffer: data.omitted });
+    const newSample = new Sample({ id: sample.getId(), state: 'ALLOCATED', filePath, buffer: data.omitted });
     const newTale = new Table({
       id: table.getId(),
       mode: 'normal',
@@ -105,6 +105,7 @@ const loadWaveTableActions = (dispatch: Dispatch<RecordAction>, table: Table, sa
 };
 
 export const startRecord = (table: Table, sample: Sample, writePath: string) => {
+  let recordingBuffers: number[] = [];
   return (dispatch: Dispatch<RecordAction>) => {
     dispatch(startRecordRequest({
       isRecording: true,
@@ -122,7 +123,15 @@ export const startRecord = (table: Table, sample: Sample, writePath: string) => 
     window.api.startRecordRequest(table.getBufnum(), writePath);
 
     window.api.on!('onRecordingBuffer', (_, arg: { bufnum: number; buffers: [number] }) => {
-      console.log('~~~~~~~~~~', arg.bufnum, arg.buffers);
+      console.log(recordingBuffers.length, recordingBuffers.length + arg.buffers.length);
+      const newBuffer = new Float32Array(recordingBuffers.length + arg.buffers.length);
+      const appending = arg.buffers.map(v => v * 0.00390625);
+      newBuffer.set(recordingBuffers);
+      newBuffer.set(appending, recordingBuffers.length);
+      recordingBuffers = recordingBuffers.concat(appending);
+
+      const newSample = new Sample({ id: sample.getId(), state: 'ALLOCATED', filePath: sample.getFilePath(), buffer: newBuffer });
+      dispatch(updateWaveTableBySample(newSample));
     });
 
     window.api.on!('onRecordEnd', (_, arg: { path: string }) => {
