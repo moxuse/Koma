@@ -41,7 +41,7 @@ declare global {
     ) => void,
     allocBufferRequest: (nufnum: number, filePath: string) => void,
     startRecordRequest: (bufnum: number, writePath: string) => void,
-    stopRecordRequest: (writePath: string) => void,
+    stopRecordRequest: (bufnum: number, writePath: string) => void,
     saveStore: () => void,
     openStore: () => void,
     on: (channel: string, callback: IpcEvent) => void;

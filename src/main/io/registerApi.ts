@@ -202,10 +202,11 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
    */
   ipcMain.on('stopRecordRequest', (
     e,
+    bufnum: number,
     writePath: string,
   ) => {
     if (isDev) { console.log('stop record request:', writePath); }
-    scSynth.stopRecord(writePath).then((arg) => {
+    scSynth.stopRecord(bufnum, writePath).then((arg) => {
       e.reply('stopRecordSuccess', arg.path);
     }).catch((err: any) => {
       e.reply('stopRecordFailure', err);

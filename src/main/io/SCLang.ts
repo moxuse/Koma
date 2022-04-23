@@ -1,7 +1,7 @@
 // const sc = require('supercolliderjs');
 
 // export type SCLangEvent = (msg: string[] | osc.OscValues | undefined) => void;
-const maxDuration = 2.0;
+const maxDuration = 11.0;
 
 export default class SCLang {
   private lang: any;

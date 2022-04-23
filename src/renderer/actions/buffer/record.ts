@@ -165,6 +165,6 @@ export const stopRecord = (table: Table, sample: Sample, writePath: string) => {
       }));
       removeStopEvents();
     });
-    window.api.stopRecordRequest(writePath);
+    window.api.stopRecordRequest(table.getBufnum(), writePath);
   };
 };

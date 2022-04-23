@@ -329,7 +329,7 @@ export default class SCSynth {
     return this.currentRecordBufnum;
   }
 
-  stopRecord(path: string) {
+  stopRecord(bufnum: number, path: string) {
     this.isRecording = false;
     this.unsubscribe(this.recordingEndId);
     clearTimeout(this.recordingCounter);
@@ -350,10 +350,10 @@ export default class SCSynth {
         }
       });
       this.unsubscribe(this.bufferListener);
-      this.writeBufferAsWav(9999, path, this.recordingFrames);
+      this.writeBufferAsWav(bufnum, path, this.recordingFrames);
       setTimeout(() => {
         this.sendMsg(['/n_free', 9999]);
-        this.freeBuffer(9999);
+        this.freeBuffer(bufnum);
       }, 50);
     });
   }
