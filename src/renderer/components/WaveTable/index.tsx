@@ -58,6 +58,24 @@ const WaveTableChannel = styled.p`
   `}
 `;
 
+const RecordIndicator = styled.span`
+  font-size: 16px;
+  color: #f00;
+  margin-left: 10px;
+  animation: flash 1s linear infinite;
+  @keyframes flash {
+    0%,100% {
+      opacity: 1;
+    }
+    25%,75% {
+      opacity: 0.125;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+`;
+
 const WaveTableName = styled.p`
   flex-direction: row;
   font-size: 15px;
@@ -184,6 +202,12 @@ const WaveTable = ({
   }, [table]);
 
   useEffect(() => {
+    if (sampleState !== 'UPDATING') {
+      setIsRecording(false);
+    }
+  }, [sampleState]);
+
+  useEffect(() => {
     if (booted && sampleState === 'NOT_ALLOCATED') {
       allocBuffer(currentBufnum, sample);
     }
@@ -206,6 +230,10 @@ const WaveTable = ({
     );
   }, [isRecording, handleStartRecord, handleStopRecord, toggleIsRecording, sample, table]);
 
+  const recordIndicator = useMemo(() => {
+    return isRecording ? (<RecordIndicator>{'●'}</RecordIndicator>) : (<></>);
+  }, [isRecording]);
+
   const loadTaleButton = useMemo(() => {
     return (<span className={'button'} onClick={() => { handleLoadWaveTable(table); }} >{'[+]'}</span>);
   }, [table, handleLoadWaveTable]);
@@ -216,7 +244,7 @@ const WaveTable = ({
         {'[ > ]'}
       </StyledButton>
       <WaveTableHeader>
-        <WaveTableChannel triggered={triggered}>{`ch${channel}`}</WaveTableChannel>
+        <WaveTableChannel triggered={triggered}>{`ch${channel}`} {recordIndicator}</WaveTableChannel>
         <WaveTableName>
           {sampleState === 'EMPTY' || sampleState === 'UPDATING'
             ? (<div>{loadTaleButton}{recordButtons}</div>)
