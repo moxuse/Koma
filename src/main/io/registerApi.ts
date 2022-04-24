@@ -170,14 +170,14 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ) => {
     if (isDev) { console.log('start record request:', bufnum); }
     try {
-      const offset = 15;
+      const offset = 23;
       await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ",error));
       const recordBufnum = scSynth.startRecord(bufnum, writePath, (msg) => {
         const arr = new Int8Array(msg[0]);
         const readBuffers = [];
         readBuffers[0] = arr.at(3);
-        for (let i = 0; i < 9; i++) {
-          readBuffers[i + 1] = (arr.at((i + 1) * 4 + offset));
+        for (let i = 0; i < 19; i++) {
+          readBuffers[i + 2] = (arr.at((i + 2) * 4 + offset));
         }
 
         window.webContents.send('onRecordingBuffer', { bufnum: recordBufnum, buffers: readBuffers });

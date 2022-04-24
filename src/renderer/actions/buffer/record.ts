@@ -125,7 +125,7 @@ export const startRecord = (table: Table, sample: Sample, writePath: string) => 
     window.api.on!('onRecordingBuffer', (_, arg: { bufnum: number; buffers: [number] }) => {
       console.log(recordingBuffers.length, recordingBuffers.length + arg.buffers.length);
       const newBuffer = new Float32Array(recordingBuffers.length + arg.buffers.length);
-      const appending = arg.buffers.map((v) => v * 0.00390625);
+      const appending = arg.buffers.map((v) => v * 0.0078125);
       newBuffer.set(recordingBuffers);
       newBuffer.set(appending, recordingBuffers.length);
       recordingBuffers = recordingBuffers.concat(appending);

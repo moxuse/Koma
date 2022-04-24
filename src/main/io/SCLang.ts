@@ -34,7 +34,7 @@ export default class SCLang {
           var array, selected;
           0.5.wait;
           array = buffer.loadToFloatArray(count * 22050, 22000, {|arr|
-            selected = arr.select({|item, i| (i%2200) == 0 }); // 10 samples each task
+            selected = arr.select({|item, i| (i%1100) == 0 }); // 20 samples each task
           });
           resamples = selected.collect({|item, i| (item * 256).asInteger });
           NetAddr("localhost", 8000).sendMsg('/buf_info', resamples);

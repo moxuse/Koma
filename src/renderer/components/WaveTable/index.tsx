@@ -31,15 +31,16 @@ const WaveTableContainer = styled.li`
     display: inline-block;
     margin: 4px;
     max-height: 14px;
-    overflow: hidden;
     display: inline-flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center
   }
 `;
 
 const WaveTableHeader = styled.div`
   max-width: 90px;
   p {
+    margin: 4px 4px 0;
     word-wrap: break-word;
   }
   ul {
@@ -49,8 +50,7 @@ const WaveTableHeader = styled.div`
 `;
 
 const WaveTableChannel = styled.p`
-  
-  font-size: 14px;
+  font-size: 16px;
   color: #fff;
 
   ${(props: { triggered: boolean }) => props.triggered && css`
@@ -59,10 +59,20 @@ const WaveTableChannel = styled.p`
 `;
 
 const WaveTableName = styled.p`
+  flex-direction: row;
   font-size: 15px;
   color: #888;
+  
   .button {
     color: #fff;
+  }
+`;
+
+const RecordButton = styled.span`
+  
+  .button-item {
+    color: #fff;
+    margin-left: 4px;
   }
 `;
 
@@ -77,7 +87,7 @@ const WaveTableModeSelector = styled.li`
   cursor: pointer;
   color: ${(props: { selected: boolean }) => (props.selected ? '#aaa' : '#666')};
   display: inline-block;
-  margin-right: 4px;
+  margin-right: 3px;
 `;
 
 const StyledButton = styled.button`
@@ -131,6 +141,7 @@ const WaveTable = ({
   onMDIDReceiveAtChannel: number | undefined;
 
 }): JSX.Element => {
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [currentBufnum, setCurrentBufnum] = useState<number | undefined>(undefined);
   const [slice, setSlice] = useState<Slice | undefined>(undefined);
   const [triggered, setTriggered] = useState<boolean>(false);
@@ -163,6 +174,10 @@ const WaveTable = ({
     handleUpdateTable(newTable);
   }, [table]);
 
+  const toggleIsRecording = useCallback(() => {
+    setIsRecording(!isRecording);
+  }, [isRecording]);
+
   useEffect(() => {
     setCurrentBufnum(table.getBufnum());
     setSlice(table.getSlice());
@@ -179,6 +194,22 @@ const WaveTable = ({
       <Graph id={table.getId()} bufferData={bufferData!} slice={table.getSlice()} sampleState={sampleState} />
     );
   }, [table, bufferData, sampleState]);
+
+  const recordButtons = useMemo(() => {
+    return (
+      <RecordButton>
+        {isRecording
+          ? (<span className="button-item" onClick={() => { handleStopRecord(table, sample, `${RECORD_SAMPLE_PATH}${table.id}.wav`); toggleIsRecording(); }}>{'[■]'}</span>)
+          : (<span className="button-item" onClick={() => { handleStartRecord(table, sample, `${RECORD_SAMPLE_PATH}${table.id}.wav`); toggleIsRecording(); }}>{'[●]'}</span>)
+        }
+      </RecordButton>
+    );
+  }, [isRecording, handleStartRecord, handleStopRecord, toggleIsRecording, sample, table]);
+
+  const loadTaleButton = useMemo(() => {
+    return (<span className={'button'} onClick={() => { handleLoadWaveTable(table); }} >{'[+]'}</span>);
+  }, [table, handleLoadWaveTable]);
+
   return (
     <WaveTableContainer key={table.getId()}>
       <StyledButton isPlaying={playButtonActive} onClick={clickPlay}>
@@ -187,8 +218,8 @@ const WaveTable = ({
       <WaveTableHeader>
         <WaveTableChannel triggered={triggered}>{`ch${channel}`}</WaveTableChannel>
         <WaveTableName>
-          {sampleState === 'EMPTY'
-            ? (<span className={'button'} onClick={() => { handleLoadWaveTable(table); }}>{'[+]'}</span>)
+          {sampleState === 'EMPTY' || sampleState === 'UPDATING'
+            ? (<div>{loadTaleButton}{recordButtons}</div>)
             : table.getName()
           }
         </WaveTableName>
@@ -210,10 +241,6 @@ const WaveTable = ({
       <StyledButton isPlaying={playButtonActive} onClick={deleTable}>
         {'[ x ]'}
       </StyledButton>
-      <div>
-        <span className={'button'} onClick={() => { handleStartRecord(table, sample, `${RECORD_SAMPLE_PATH}${ table.id }.wav`); }}>{'[●]'}</span>
-        <span className={'button'} onClick={() => { handleStopRecord(table, sample, `${RECORD_SAMPLE_PATH}${ table.id }.wav`); }}>{'[□]'}</span>
-      </div>
     </WaveTableContainer>
   );
 };

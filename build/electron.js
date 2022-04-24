@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === 'production') {
         errorOnExist: false,
         preserveTimestamps: false,
         recursive: true,
-      })
+      }),
     ],
   });
 } else {
