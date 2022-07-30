@@ -1,12 +1,12 @@
 {
-  "name": "msplr",
+  "name": "Koma",
   "version": "0.9.1",
   "description": "A simple sampler app",
   "main": "dist/main/background.js",
   "homepage": "https://moxus.org",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/moxuse/msplr.git"
+    "url": "https://github.com/moxuse/Koma.git"
   },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n=react,electron -c=green,blue \"npm run dev:react\" \"npm run copy\" \"npm run dev:electron\"",
@@ -24,8 +24,8 @@
   },
   "author": "moxus.org",
   "build": {
-    "productName": "msplr",
-    "appId": "org.moxus.msplr",
+    "productName": "Koma",
+    "appId": "org.moxus.koma",
     "copyright": "All Rights Reserved, moxus.org",
     "asar": false,
     "mac": {

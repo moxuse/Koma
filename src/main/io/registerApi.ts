@@ -26,7 +26,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     loadDefs: '0',
     commandLineOptions: ['-C', '1', '-l', '1', '-R', '0', '-s', '1.26'],
     echo: true,
-    // device: 'Soundflower (2ch)',
+    device: 'Soundflower (2ch)',
   }, sc);
 
   scLang = new SCLang(sc);
@@ -56,7 +56,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ipcMain.on('loadWaveTableByDialog', async (e) => {
     const result = await dialog.showOpenDialog(window, {
       properties: ['openFile', 'openDirectory'],
-      filters: [{ name: 'msplr', extensions: ['wav'] }],
+      filters: [{ name: 'koma', extensions: ['wav'] }],
     });
     // .then((result) => {
     if (result.canceled) {
@@ -171,7 +171,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     if (isDev) { console.log('start record request:', bufnum); }
     try {
       const offset = 23;
-      await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ",error));
+      await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ", error));
       const recordBufnum = scSynth.startRecord(bufnum, writePath, (msg) => {
         const arr = new Int8Array(msg[0]);
         const readBuffers = [];
@@ -222,7 +222,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
       .executeJavaScript('localStorage.getItem("persist:root");', true)
       .then((data) => {
         dialog.showSaveDialog({
-          filters: [{ name: 'WaveTable', extensions: ['msplr'] }],
+          filters: [{ name: 'WaveTable', extensions: ['koma'] }],
         }).then((result) => {
           if (result.filePath) {
             const finalJson = data.replace(/\\"/g, '"').replace(/"{/g, '{').replace(/}"/g, '}');
@@ -241,7 +241,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
   ipcMain.on('openStore', (e) => {
     dialog.showOpenDialog(window, {
       properties: ['openFile', 'openDirectory'],
-      filters: [{ name: 'Msplr', extensions: ['msplr'] }],
+      filters: [{ name: 'Msplr', extensions: ['koma'] }],
     }).then((result) => {
       if (result.canceled) {
         e.reply('openStoreCanceled');
