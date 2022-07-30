@@ -1,5 +1,5 @@
-# msplr
-sampler app
+# Koma
+Simple sampler app
 
 
 ### Test Environment
