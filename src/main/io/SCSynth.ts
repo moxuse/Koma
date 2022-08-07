@@ -223,7 +223,7 @@ export default class SCSynth {
         }
       });
       if (this.mode === 'internal') {
-        this.server?.loadSynthDef(name, file).catch((e: Error) => {
+        this.server.loadSynthDef(name, file).catch((e: Error) => {
           reject(e);
         });
       } else {

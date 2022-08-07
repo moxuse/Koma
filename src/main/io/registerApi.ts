@@ -17,8 +17,9 @@ let scLang: SCLang;
 
 
 // API register
-export default async function registerApi(window: BrowserWindow, isDev: boolean): Promise<void> {
-  console.log('register events for the api');
+export default async function registerApi(window: BrowserWindow, resourcePath: string, isDev: boolean): Promise<void> {
+  console.log('register events for the api: resourcePath:');
+  const soundsPath = path.join(resourcePath, '../sounds');
 
   scSynth = new SCSynth({
     sampleRate: '44100',
@@ -26,7 +27,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     loadDefs: '0',
     commandLineOptions: ['-C', '1', '-l', '1', '-R', '0', '-s', '1.26'],
     echo: true,
-    device: 'Soundflower (2ch)',
+    // device: 'Soundflower (2ch)',
   }, sc);
 
   scLang = new SCLang(sc);
@@ -172,7 +173,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     try {
       const offset = 23;
       await scLang.startRecord(bufnum).catch(error => console.log("startRecord error: ", error));
-      const recordBufnum = scSynth.startRecord(bufnum, writePath, (msg) => {
+      const recordBufnum = scSynth.startRecord(bufnum, `${soundsPath}/${writePath}`, (msg) => {
         const arr = new Int8Array(msg[0]);
         const readBuffers = [];
         readBuffers[0] = arr.at(3);
@@ -185,7 +186,7 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
         scLang.stopRecord();
 
         // loading wavetable;
-        window.webContents.send('onRecordEnd', { path: writePath });
+        window.webContents.send('onRecordEnd', { path: `${soundsPath}/${writePath}` });
       });
     } catch (err) {
       e.reply('startRecordFailure', err);
@@ -205,8 +206,8 @@ export default async function registerApi(window: BrowserWindow, isDev: boolean)
     bufnum: number,
     writePath: string,
   ) => {
-    if (isDev) { console.log('stop record request:', writePath); }
-    scSynth.stopRecord(bufnum, writePath).then((arg) => {
+    if (isDev) { console.log('stop record request:', `${soundsPath}/${writePath}`); }
+    scSynth.stopRecord(bufnum, `${soundsPath}/${writePath}`).then((arg) => {
       e.reply('stopRecordSuccess', arg.path);
     }).catch((err: any) => {
       e.reply('stopRecordFailure', err);

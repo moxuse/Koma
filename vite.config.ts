@@ -16,6 +16,7 @@ export default defineConfig({
   plugins: [react(), eslint({
     include: ['./src/**/*.ts', './src/**/*.tsx'],
     fix: true,
+    throwOnError: false,
   })],
   build: {
     outDir: path.resolve(__dirname, './dist'),

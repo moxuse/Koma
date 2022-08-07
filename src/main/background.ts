@@ -2,6 +2,7 @@ import path from 'path';
 import { BrowserWindow, app, systemPreferences, dialog } from 'electron';
 // import loadDevtool from 'electron-load-devtool';
 import registerApi, { quitSC } from './io/registerApi';
+import fs from 'fs';
 import fsExtra from 'fs-extra';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -67,7 +68,18 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools({ mode: 'detach' }); // open devtool
   }
 
-  registerApi(mainWindow, isDev);
+  const resourcePath = process.env.ENV === 'production' ? process.resourcesPath : __dirname;
+  fs.access(path.join(resourcePath, '../sounds'), fs.constants.F_OK, (error) => {
+    if (error) {
+      if (error.code === 'ENOENT') {
+        fs.mkdir(path.join(resourcePath, '../sounds'), (e) => {
+          console.error('Failed to mkdir /sounds', e);
+        });
+      }
+    }
+  });
+
+  registerApi(mainWindow, resourcePath, isDev);
 
   // load app
   // let url = isDev ? path.join(__dirname, '../index.html') : path.join(__dirname, '../renderer/index.html');

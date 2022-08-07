@@ -153,15 +153,15 @@ export const stopRecord = (table: Table, sample: Sample, writePath: string) => {
       writePath: writePath,
       error: null,
     }));
-    window.api.on!('stopRecordSuccess', () => {
+    window.api.on!('stopRecordSuccess', (_, arg: string) => {
       dispatch(stopRecordSuccess({
         isRecording: false,
         bufnum: 0,
-        writePath: writePath,
+        writePath: arg,
         error: null,
       }));
       setTimeout(() => {
-        loadWaveTableActions(dispatch, table, sample, writePath);
+        loadWaveTableActions(dispatch, table, sample, arg);
       }, 500);
       removeStopEvents();
     });

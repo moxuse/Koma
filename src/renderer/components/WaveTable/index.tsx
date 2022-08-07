@@ -15,8 +15,6 @@ import { player as Player } from '../../actions/buffer/player';
 import { deleteWaveTable, updateWaveTableByTable } from '../../actions/waveTables';
 import { startRecord, stopRecord } from '../../actions/buffer/record';
 
-const RECORD_SAMPLE_PATH = '/Users/moxuse/Desktop/';
-
 const WaveTableContainer = styled.li`
   user-select: none;
   display: flex;
@@ -223,8 +221,8 @@ const WaveTable = ({
     return (
       <RecordButton>
         {isRecording
-          ? (<span className="button-item" onClick={() => { handleStopRecord(table, sample, `${RECORD_SAMPLE_PATH}${table.id}.wav`); toggleIsRecording(); }}>{'[■]'}</span>)
-          : (<span className="button-item" onClick={() => { handleStartRecord(table, sample, `${RECORD_SAMPLE_PATH}${table.id}.wav`); toggleIsRecording(); }}>{'[●]'}</span>)
+          ? (<span className="button-item" onClick={() => { handleStopRecord(table, sample, `${table.id}.wav`); toggleIsRecording(); }}>{'[■]'}</span>)
+          : (<span className="button-item" onClick={() => { handleStartRecord(table, sample, `${table.id}.wav`); toggleIsRecording(); }}>{'[●]'}</span>)
         }
       </RecordButton>
     );

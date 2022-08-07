@@ -18,7 +18,7 @@
     // "transpileOnly": true,
     // "transpiler": "ts-node/transpilers/swc-experimental",
     "compilerOptions": {
-      "target": "ES2015",
+      "target": "ES2020",
       "module": "CommonJS"
     }
   }
