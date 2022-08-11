@@ -1,0 +1,6 @@
+{
+  "sampleRate": "44100",
+  "numBuffers": "2048",
+  "device": "",
+  "echo": true
+}

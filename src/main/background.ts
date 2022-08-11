@@ -79,13 +79,22 @@ const createWindow = () => {
     }
   });
 
-  registerApi(mainWindow, resourcePath, isDev);
+  const optionPath = process.env.ENV === 'production'
+    ? path.join(process.resourcesPath, '../assets/serverOption.json')
+    : path.join(__dirname, '../assets/serverOption.json');
+  fs.readFile(optionPath, 'utf-8', (err, data) => {
+    if (err) throw err;
+    const serverOption = JSON.parse(data) as ServerOption;
+    registerApi(mainWindow, serverOption, resourcePath, isDev);
 
-  // load app
-  // let url = isDev ? path.join(__dirname, '../index.html') : path.join(__dirname, '../renderer/index.html');
-  // console.log('LOAD URL,', url);
-  // mainWindow.loadFile(url);
-  process.env.ENV === 'production' ? mainWindow.loadFile(path.join(__dirname, '../index.html')) : mainWindow.loadURL(`http://localhost:${process.env.PORT}`);
+    // load app
+    // let url = isDev ? path.join(__dirname, '../index.html') : path.join(__dirname, '../renderer/index.html');
+    // console.log('LOAD URL,', url);
+    // mainWindow.loadFile(url);
+    process.env.ENV === 'production'
+      ? mainWindow.loadFile(path.join(__dirname, '../index.html'))
+      : mainWindow.loadURL(`http://localhost:${process.env.PORT}`);
+  });
 };
 
 app.whenReady().then(async () => {

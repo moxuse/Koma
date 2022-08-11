@@ -7,6 +7,13 @@ declare global {
     api: ContextBridge;
   }
 
+  type ServerOption  = {
+    sampleRate: string,
+    numBuffers: string,
+    echo: boolean,
+    device: string,
+  }
+
   type TableMode = 'normal' | 'grain';
 
   type IcpEventArg =

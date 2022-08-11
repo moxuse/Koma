@@ -10,24 +10,23 @@ import fs from 'fs';
 
 const sc = require('supercolliderjs');
 
-const optionNumBuffers = '2048';
-
 let scSynth: SCSynth;
 let scLang: SCLang;
 
-
 // API register
-export default async function registerApi(window: BrowserWindow, resourcePath: string, isDev: boolean): Promise<void> {
+export default async function registerApi(
+  window: BrowserWindow,
+  serverOption: ServerOption,
+  resourcePath: string,
+  isDev: boolean
+): Promise<void> {
   console.log('register events for the api: resourcePath:');
   const soundsPath = path.join(resourcePath, '../sounds');
 
   scSynth = new SCSynth({
-    sampleRate: '44100',
-    numBuffers: optionNumBuffers,
+    ...serverOption,
     loadDefs: '0',
     commandLineOptions: ['-C', '1', '-l', '1', '-R', '0', '-s', '1.26'],
-    echo: true,
-    // device: 'Soundflower (2ch)',
   }, sc);
 
   scLang = new SCLang(sc);
@@ -132,7 +131,16 @@ export default async function registerApi(window: BrowserWindow, resourcePath: s
     e,
     bufnum: number,
     slice: ({ begin: number; end: number } | undefined),
-    effect: { amp: number; rate: number; pan: number; gain: number; points: Array<{ x: number; y: number }>; duration: number; trig: number; axisY: AxisYType },
+    effect: {
+      amp: number;
+      rate: number;
+      pan: number;
+      gain: number;
+      points: Array<{ x: number; y: number }>;
+      duration: number;
+      trig: number;
+      axisY: AxisYType;
+    },
   ) => {
     if (isDev) { console.log('grain play request:', effect.points.length, bufnum, slice, effect); }
     try {
